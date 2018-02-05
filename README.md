@@ -1,3 +1,4 @@
 # UrbanParks
-make this your remote repo for actually building the program
-leave project documentation in the old repo
+Make this your remote repo for actually building the program.
+
+Leave project documentation in the old repo just to keep this one less cluttered.
