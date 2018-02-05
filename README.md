@@ -1,2 +1,3 @@
 # UrbanParks
-repo for the program itself
+make this your remote repo for actually building the program
+leave project documentation in the old repo
