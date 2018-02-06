@@ -26,7 +26,7 @@ public class Job implements Serializable {
      * NON-STATIC FIELDS ****************************************************
      ************************************************************************/
 
-    public String jobName = "";
+    public String jobName;
 
     public LocalDateTime beginDateTime;
 
