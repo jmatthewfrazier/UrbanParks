@@ -1,7 +1,7 @@
 package tests;
 
 import model.Job;
-import model.JobMap;
+import model.JobCollection;
 import model.Park;
 import org.junit.After;
 import org.junit.Before;
@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class JobMapTest {
+public class JobCollectionTest {
 
-    private JobMap jobMap;
+    private JobCollection jobCollection;
 
     @Before
     public void setUp() {
-        jobMap = new JobMap();
+        jobCollection = new JobCollection();
     }
 
     /**
@@ -28,8 +28,8 @@ public class JobMapTest {
      * maximum in the system.
      */
     @Test
-    public void isNotAtCapacity_ManyFewerThanMaxJobsExist_True() {
-        assertTrue(jobMap.isNotAtCapacity());
+    public void canAddJob_ManyFewerThanMaxJobsExist_True() {
+        assertTrue(jobCollection.canAddJob());
     }
 
     /**
@@ -39,13 +39,13 @@ public class JobMapTest {
      * maximum in the system.
      */
     @Test
-    public void isNotAtCapacity_OneFewerJobsThanMaxExists_True() {
-        for (int i = 0; i < JobMap.MAX_CAPACITY - 1; i++) {
-            jobMap.addJob(new Job("Job " + i, new Park(),
+    public void canAddJob_OneFewerJobsThanMaxExists_True() {
+        for (int i = 0; i < JobCollection.MAX_CAPACITY - 1; i++) {
+            jobCollection.put("Job " + i, new Job("Job " + i, new Park(),
                     LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
-        assertTrue(jobMap.isNotAtCapacity());
+        assertTrue(jobCollection.canAddJob());
     }
 
     /**
@@ -55,13 +55,13 @@ public class JobMapTest {
      * Jobs in the system.
      */
     @Test
-    public void isNotAtCapacity_MaxJobsExist_False() {
-        for (int i = 0; i < JobMap.MAX_CAPACITY; i++) {
-            jobMap.addJob(new Job("Job " + i, new Park(),
+    public void canAddJob_MaxJobsExist_False() {
+        for (int i = 0; i < JobCollection.MAX_CAPACITY; i++) {
+            jobCollection.put("Job " + i, new Job("Job " + i, new Park(),
                     LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
-        assertFalse(jobMap.isNotAtCapacity());
+        assertFalse(jobCollection.canAddJob());
     }
 
     @After
