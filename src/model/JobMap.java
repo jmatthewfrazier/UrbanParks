@@ -1,9 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobMap {
+public class JobMap implements Serializable {
 
 
     public static int MAX_CAPACITY = 20;

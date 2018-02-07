@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 /*
@@ -12,7 +13,7 @@ import java.util.HashSet;
  *
  *
  */
-public abstract class User {
+public class User implements Serializable {
 
     //sprivate Enum pmRole = new Enum("Park Manager");
 
@@ -41,7 +42,11 @@ public abstract class User {
     private void setupUser() {
         //TODO-validate a user name, etc in the User class?
         //TODO-yes, how we do it in Job class also
-        
+        //add all user role types to the set
+        populateUserRolesSet();
+        verifyUserSystemName();
+        assignUserRole();
+
     }
 
     /**
