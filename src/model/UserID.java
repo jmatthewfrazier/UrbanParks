@@ -24,11 +24,6 @@ public final class UserID implements Comparable<UserID> {
         this.userID = userID;
     }
 
-    /**
-     * Compares two UserIDs. If
-     * @param other
-     * @return
-     */
     @Override
     public int compareTo(UserID other) {
         return this.userID.compareTo(other.userID);
