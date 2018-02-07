@@ -1,6 +1,8 @@
 package model;
 
-public class Park {
+import java.io.Serializable;
+
+public class Park implements Serializable {
 
     private String name;
 
