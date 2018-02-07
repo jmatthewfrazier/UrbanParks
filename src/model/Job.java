@@ -11,9 +11,9 @@ public class Job implements Serializable {
      */
     //TODO-is there a reason we are using "static" here? why not
     // setters/getters?
-    private static int MAX_NUM_DAYS_FROM_TODAY = 75;
+    private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
 
-    private static int MAX_JOB_LENGTH_IN_DAYS = 3;
+    private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
     /**
      * unique identifier for object serialization
@@ -41,11 +41,11 @@ public class Job implements Serializable {
 		validateJobVariables();
     }
 
-    public static int getMaximumValidDayRangeFromToday() {
+    public static final int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-    public static int getMaxJobLengthInDays() {
+    public static final int getMaxJobLengthInDays() {
         return MAX_JOB_LENGTH_IN_DAYS;
     }
 

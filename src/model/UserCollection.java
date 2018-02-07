@@ -1,27 +1,25 @@
 package model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Represents the collection of Users.
- *
- * @author Eli Shafer
- * @date 2/6/18
+ * Represents a collection of Users.
  */
-public class UserCollection extends HashMap<UserID, User> {
+public final class UserCollection extends HashMap<UserID, User>
+        implements Serializable{
 
     /**
      * Maps a UserID to a User if the UserID is not already contained within
      * this map's key set.
      *
-     * @param userID the key to the User
-     * @param user the User that is being entered into the map
-     * @return the user
+     * Pre: UserID does not exist within the collection.
      */
     @Override
-    public User put(UserID userID, User user) {
-        if (!this.containsKey(userID))
+    public final User put(UserID userID, User user) {
+        if (!this.containsKey(userID)) {
             super.put(userID, user);
+        }
         return user;
     }
 
