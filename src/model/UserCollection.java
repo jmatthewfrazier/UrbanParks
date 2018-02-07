@@ -32,7 +32,7 @@ public class UserCollection extends HashMap<UserCollection.UserID, User> {
      * @author Eli Shafer
      * @date 2/6/18
      */
-    public class UserID implements Comparable<UserID> {
+    public final class UserID implements Comparable<UserID> {
 
 
         String userID;

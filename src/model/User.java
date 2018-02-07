@@ -1,5 +1,9 @@
 package model;
 
+enum UserRole {
+    STAFF, PARKMANAGER, VOLUNTEER
+}
+
 /**
  * Urban Parks' User class for system user.
  * All roles in Urban Parks' system flow from this class.
@@ -10,14 +14,19 @@ package model;
  */
 public abstract class User {
 
-    //private Enum pmRole = new Enum("Park Manager");
+    private String firstName;
 
-    private String firstName = "";
-    private String lastName = "";
+    private String lastName;
 
-    private String userRole = ""; //should probably use Enums for roles.
-    private String userSystemName = ""; //their login name
-    // not a good place to store the password I think
+    private UserRole userRole;
+
+    // TODO
+    // Decide how to implement this
+    private UserCollection.UserID userID;
+
+//    their login name
+//    not a good place to store the password I think
+//    private String userSystemName;
 
     /**
      * @return the firstName
@@ -57,28 +66,29 @@ public abstract class User {
     /**
      * @return the userRole
      */
-    public String getUserRole() {
+    public UserRole getUserRole() {
         return userRole;
     }
 
     /**
      * @param userRole the userRole to set
      */
-    public void setUserRole(String userRole) {
+    public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
 
-    /**
-     * @return the userSystemName
-     */
-    public String getUserSystemName() {
-        return userSystemName;
-    }
 
-    /**
-     * @param userSystemName the userSystemName to set
-     */
-    public void setUserSystemName(String userSystemName) {
-        this.userSystemName = userSystemName;
-    }
+//    /**
+//     * @return the userSystemName
+//     */
+//    public String getUserSystemName() {
+//        return userSystemName;
+//    }
+//
+//    /**
+//     * @param userSystemName the userSystemName to set
+//     */
+//    public void setUserSystemName(String userSystemName) {
+//        this.userSystemName = userSystemName;
+//    }
 }
