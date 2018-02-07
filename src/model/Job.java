@@ -1,5 +1,7 @@
 package model;
 
+import Exceptions.InvalidJobException;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -36,12 +38,15 @@ public class Job implements Serializable {
 
 //	public UrbanParksSystemUserInterface ui;
 
-    public Job(String jobName,  Park jobPark,  LocalDateTime beginDate,
-               LocalDateTime endDate) {
+    public Job(final String jobName, final Park jobPark
+            , final LocalDateTime beginDate
+            , final LocalDateTime endDate) {
         this.jobName = jobName;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
 		this.jobLocation = jobPark;
+
+		validateJobVariables();
     }
 
     /************************************************************************
@@ -52,6 +57,18 @@ public class Job implements Serializable {
      * NON-STATIC METHODS ***************************************************
      ************************************************************************/
 
+    /**
+     * A method that checks all business rules a new instance of job is expected
+     * to follow.  TODO - we need to decide what happens if a user fails a business
+     * rule.  Do we throw an exception?  That seems kind of extreme but it may
+     * be the easiest way to go about things for now?
+     *
+     */
+    //throws InvalidJobException
+    private void validateJobVariables()  {
+
+    }
+
 
     public String createJobCollectionMapKey() {
         String retStr = null;
@@ -59,21 +76,30 @@ public class Job implements Serializable {
         return retStr;
     }
 
-    /*
+    /** TODO-here do we signal a successful add to a User in the job class or
+     * in the JobMap class?  I think the JobMap class since it will be the
+     * one actually adding the new Job.
      *
      */
     public boolean submitNewJob() {
         boolean retBool = false;
+        //signal it went wrong either here?
         if (isNewJobValid()) {
+            //or here for adds that aren't successful?
+            //or the JobMap class instead?
             retBool = submitValidatedJob();
         }
-
         return retBool;
     }
     /*
      * Examine job attributes and return whether the job fits the
      * specified validation criteria.  Additional criteria can be
      * added as needed.
+     * TODO-this is obviously not right logic, i think we first need to figure
+     * out how to manage failed business rule criteria.
+     * Exceptions?
+     * Only console messages?
+     * ???
      */
     public boolean isNewJobValid() {
         boolean retBool = false;
@@ -84,7 +110,9 @@ public class Job implements Serializable {
         if (isNewJobLengthValid()) {
             retBool = true;
         }
-
+        if (isJobWithinValidDateRange()) {
+            retBool = true;
+        }
         return retBool;
     }
 
