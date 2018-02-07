@@ -5,11 +5,16 @@ import java.util.Map;
 
 public class JobMap {
 
+
     public static int MAX_CAPACITY = 20;
 
     private Map<String, Job> jobMap;
 
+    /**
+     * constructor
+     */
     public JobMap() {
+
         jobMap = new HashMap<>();
     }
 
@@ -23,8 +28,8 @@ public class JobMap {
     public void addJob(Job jobToAdd) {
         if (isNotAtCapacity() && !jobMap.containsKey(jobToAdd.jobName))
             jobMap.put(jobToAdd.jobName, jobToAdd);
-        //TODO - do we need to account for this failing? notify the user it failed?
-    }
+        //TODO - we need to account for this failing?
+          }
 
     /**
      * Specifies if the collection is not at full capacity.
@@ -32,6 +37,7 @@ public class JobMap {
      * @return true if collection is not at capacity, false otherwise
      */
     public boolean isNotAtCapacity() {
+
         return (jobMap.size() < MAX_CAPACITY);
     }
 
