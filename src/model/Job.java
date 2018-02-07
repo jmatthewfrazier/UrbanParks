@@ -59,8 +59,10 @@ public class Job implements Serializable {
         return retStr;
     }
 
-    /*
+    // TODO: finish comment
+    /**
      *
+     * @return
      */
     public boolean submitNewJob() {
         boolean retBool = false;
@@ -70,10 +72,13 @@ public class Job implements Serializable {
 
         return retBool;
     }
-    /*
+    /**
      * Examine job attributes and return whether the job fits the
      * specified validation criteria.  Additional criteria can be
      * added as needed.
+     *
+     * TODO
+     * @return
      */
     public boolean isNewJobValid() {
         boolean retBool = false;
@@ -88,12 +93,15 @@ public class Job implements Serializable {
         return retBool;
     }
 
-    /*
+    /**
      * Accessor method to check if the length of a proposed new job is within
      * the maximum allowable time limit.
      *
      * If the proposed job length is longer than the max allowable time, will
      * return false.
+     *
+     * TODO
+     * @return
      */
     public boolean isNewJobLengthValid() {
         boolean retBool = false;
@@ -115,6 +123,11 @@ public class Job implements Serializable {
                 (LocalDateTime.now()) <= 0;
     }
 
+    // TODO
+    /**
+     *
+     * @return
+     */
     public boolean submitValidatedJob() {
         boolean retBool = false;
 
