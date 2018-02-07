@@ -40,9 +40,9 @@ public class JobCollectionTest {
      */
     @Test
     public void canAddJob_OneFewerJobsThanMaxExists_True() {
-        for (int i = 0; i < JobCollection.MAX_CAPACITY - 1; i++) {
-            jobCollection.put("Job " + i, new Job("Job " + i, new Park(),
-                    LocalDateTime.now().plusDays(i * 2),
+        for (int i = 0; i < JobCollection.getMaxCapacity() - 1; i++) {
+            jobCollection.put("Job " + i, new Job("Job " + i,
+                    new Park(), LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
         assertTrue(jobCollection.canAddJob());
@@ -56,9 +56,9 @@ public class JobCollectionTest {
      */
     @Test
     public void canAddJob_MaxJobsExist_False() {
-        for (int i = 0; i < JobCollection.MAX_CAPACITY; i++) {
-            jobCollection.put("Job " + i, new Job("Job " + i, new Park(),
-                    LocalDateTime.now().plusDays(i * 2),
+        for (int i = 0; i < JobCollection.getMaxCapacity(); i++) {
+            jobCollection.put("Job " + i, new Job("Job " + i,
+                    new Park(), LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
         assertFalse(jobCollection.canAddJob());

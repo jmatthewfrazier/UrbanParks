@@ -6,7 +6,7 @@ public class JobCollection extends HashMap<String, Job> {
 
     private static int MAX_CAPACITY = 20;
 
-    public int getMaxCapacity() {
+    public static int getMaxCapacity() {
         return MAX_CAPACITY;
     }
 

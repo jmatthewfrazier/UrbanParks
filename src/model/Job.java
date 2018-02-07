@@ -41,11 +41,11 @@ public class Job implements Serializable {
 		validateJobVariables();
     }
 
-    public int getMaximumValidDayRangeFromToday() {
+    public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-    public int getMaxJobLengthInDays() {
+    public static int getMaxJobLengthInDays() {
         return MAX_JOB_LENGTH_IN_DAYS;
     }
 
