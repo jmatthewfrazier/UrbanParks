@@ -13,15 +13,6 @@ public class JobMap {
         jobMap = new HashMap<>();
     }
 
-    public boolean addJobToCollection(Job jobToAdd) {
-        boolean retBool = false;
-        //get key String from jobToAdd
-        //put jobToAdd into hashmap
-        //return true if successful
-        //how to check success?
-        return retBool;
-    }
-
     /**
      * Adds a Job to the collection.
      *
@@ -32,6 +23,7 @@ public class JobMap {
     public void addJob(Job jobToAdd) {
         if (isNotAtCapacity() && !jobMap.containsKey(jobToAdd.jobName))
             jobMap.put(jobToAdd.jobName, jobToAdd);
+        //TODO - do we need to account for this failing? notify the user it failed?
     }
 
     /**
@@ -51,7 +43,9 @@ public class JobMap {
     }
 
 
-    /**
+    /** TODO - not sure we need this, we have a method to add things to it,
+     * TODO we will probably have to write another method with some logic
+     * TODO checks for deleting jobs too, so let's scrap this one?
      * @param jobHashMap the jobHashMap to set
 
     public void setJobHashMap(HashMap<String, Job> jobHashMap) {
