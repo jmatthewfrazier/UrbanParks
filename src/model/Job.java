@@ -1,7 +1,5 @@
 package model;
 
-import Exceptions.InvalidJobException;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -143,9 +141,16 @@ public class Job implements Serializable {
                 (LocalDateTime.now()) <= 0;
     }
 
+    //TODO-need to figure out how to couple this to the JobMap instance.
+
+    /**
+     *
+     * @return was the validated job successfully added or not?
+     */
     public boolean submitValidatedJob() {
         boolean retBool = false;
-
+        //talk with the JobMap here, but how?
+        //get back some input about adding this Job instance
         return retBool;
     }
 
