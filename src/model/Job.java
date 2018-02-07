@@ -13,9 +13,10 @@ public class Job implements Serializable {
      * The max number of days away from the current date that the end of a
      * new job can be specified.
      */
+    //TODO-is there a reason we are using "static" here? why not setters/getters?
     public static int MAX_NUM_DAYS_FROM_TODAY = 75;
 
-    public Long maxJobLengthInDays = (long) 3;
+    public static Long maxJobLengthInDays = (long) 3;
 
     /**
      * unique identifier for object serialization
