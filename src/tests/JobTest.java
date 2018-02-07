@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
+import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 public class JobTest {
@@ -27,6 +28,8 @@ public class JobTest {
      * LocalDateTime requires it to be of type Long
      */
     private Long maxJobDays = (long) 3;
+
+    public int MAX_NUM_DAYS_FROM_TODAY = 75;
 
     private String jobNameFoo = "A Job Named Foo";
 

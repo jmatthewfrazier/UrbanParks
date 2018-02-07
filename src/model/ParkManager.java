@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -13,18 +14,15 @@ import java.util.ArrayList;
  *
  *
  */
-public class ParkManager extends User {
+public class ParkManager extends User implements Serializable {
 
     //store of all parks this user manages / is authorized to add jobs for
     private ArrayList<Park> managedParkList  = new ArrayList<Park>();
 
 
     public ParkManager() {
-        this("Park", "Manager", new UserID("park_manager_default"));
-    }
+       // super();
 
-    public ParkManager(String firstName, String lastName, UserID userID) {
-        super(firstName, lastName, UserRole.PARKMANAGER, userID);
     }
 
 

@@ -1,8 +1,8 @@
 package model;
 
-import java.util.Objects;
+import java.io.Serializable;
 
-public class Park implements Comparable<Park> {
+public class Park implements Serializable {
 
     private String name;
 
@@ -29,30 +29,5 @@ public class Park implements Comparable<Park> {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-    }
-
-    @Override
-    public int compareTo(Park other) {
-        return name.compareTo(other.name);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this)
-            return true;
-        if (!(other instanceof Park))
-            return false;
-        Park o = (Park) other;
-        return this.name.equals(o.name)
-                && this.houseNumber == o.houseNumber
-                && this.street.equals(o.street)
-                && this.city.equals(o.city)
-                && this.state.equals(o.state)
-                && this.zipCode == o.zipCode;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, houseNumber, street, city, state, zipCode);
     }
 }
