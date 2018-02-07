@@ -1,5 +1,7 @@
 package model;
 
+import java.util.HashSet;
+
 /*
  * Urban Parks' User class for system user.
  * All roles in Urban Parks' system flow from this class.
@@ -19,7 +21,29 @@ public abstract class User {
 
     private String userRole = ""; //should probably use Enums for roles.
     private String userSystemName = ""; //their login name
-    // not a good place to store the password I think
+
+    private HashSet<String> possibleUserRolesSet;
+
+    public User(final String fName, final String lName
+                , final String uRole
+                , final String uLogin) {
+
+        possibleUserRolesSet = new HashSet<>();
+        firstName = fName;
+        lastName = lName;
+        userRole = uRole;
+        userSystemName = uLogin;
+
+        setupUser();
+
+    }
+
+    private void setupUser() {
+        //TODO-validate a user name, etc in the User class?
+        //TODO-yes, how we do it in Job class also
+        
+    }
+
     /**
      * @return the firstName
      */
