@@ -19,9 +19,12 @@ public class ParkManager extends User {
     private ArrayList<Park> managedParkList  = new ArrayList<Park>();
 
 
-    ParkManager() {
-        super();
+    public ParkManager() {
+        this("Park", "Manager", new UserID("park_manager_default"));
+    }
 
+    public ParkManager(String firstName, String lastName, UserID userID) {
+        super(firstName, lastName, UserRole.PARKMANAGER, userID);
     }
 
 

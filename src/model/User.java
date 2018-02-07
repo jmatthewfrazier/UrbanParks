@@ -22,11 +22,19 @@ public abstract class User {
 
     // TODO
     // Decide how to implement this
-    private UserCollection.UserID userID;
+    private UserID userID;
 
 //    their login name
 //    not a good place to store the password I think
 //    private String userSystemName;
+
+    public User(String firstName, String lastName, UserRole userRole,
+                UserID userID) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userRole = userRole;
+        this.userID = userID;
+    }
 
     /**
      * @return the firstName
