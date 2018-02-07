@@ -19,10 +19,12 @@ public class ParkManager extends User implements Serializable {
     //store of all parks this user manages / is authorized to add jobs for
     private ArrayList<Park> managedParkList  = new ArrayList<Park>();
 
-
     public ParkManager() {
-       // super();
+        this("Test", "Park Manager", new UserID("volunteer_default"));
+    }
 
+    public ParkManager(String firstName, String lastName, UserID userID) {
+       super(firstName, lastName, UserRole.PARK_MANAGER, userID);
     }
 
 
