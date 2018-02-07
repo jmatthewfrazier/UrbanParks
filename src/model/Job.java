@@ -5,27 +5,20 @@ import java.time.LocalDateTime;
 
 public class Job implements Serializable {
 
-    /************************************************************************
-     * STATIC FIELDS ********************************************************
-     ************************************************************************/
-
     /**
      * The max number of days away from the current date that the end of a
      * new job can be specified.
      */
-    //TODO-is there a reason we are using "static" here? why not setters/getters?
-    public static int MAX_NUM_DAYS_FROM_TODAY = 75;
+    //TODO-is there a reason we are using "static" here? why not
+    // setters/getters?
+    private static int MAX_NUM_DAYS_FROM_TODAY = 75;
 
-    public static Long maxJobLengthInDays = (long) 3;
+    private static int MAX_JOB_LENGTH_IN_DAYS = 3;
 
     /**
      * unique identifier for object serialization
      */
     private static final long serialVersionUID = 8341912696713916150L;
-
-    /************************************************************************
-     * NON-STATIC FIELDS ****************************************************
-     ************************************************************************/
 
     public String jobName;
 
@@ -48,17 +41,18 @@ public class Job implements Serializable {
 		validateJobVariables();
     }
 
-    /************************************************************************
-     * STATIC METHODS *******************************************************
-     ************************************************************************/
+    public int getMaximumValidDayRangeFromToday() {
+        return MAX_NUM_DAYS_FROM_TODAY;
+    }
 
-    /************************************************************************
-     * NON-STATIC METHODS ***************************************************
-     ************************************************************************/
+    public int getMaxJobLengthInDays() {
+        return MAX_JOB_LENGTH_IN_DAYS;
+    }
 
     /**
      * A method that checks all business rules a new instance of job is expected
-     * to follow.  TODO - we need to decide what happens if a user fails a business
+     * to follow.
+     * TODO - we need to decide what happens if a user fails a business
      * rule.  Do we throw an exception?  That seems kind of extreme but it may
      * be the easiest way to go about things for now?
      *
@@ -124,7 +118,8 @@ public class Job implements Serializable {
      */
     public boolean isNewJobLengthValid() {
         boolean retBool = false;
-        LocalDateTime maxValidJobEndDate = beginDateTime.plusDays(maxJobLengthInDays);
+        LocalDateTime maxValidJobEndDate =
+                beginDateTime.plusDays(MAX_JOB_LENGTH_IN_DAYS);
         if (maxValidJobEndDate.isAfter(this.endDateTime)) {
             retBool = true;
         }

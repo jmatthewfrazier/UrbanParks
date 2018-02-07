@@ -4,7 +4,11 @@ import java.util.HashMap;
 
 public class JobCollection extends HashMap<String, Job> {
 
-    public static int MAX_CAPACITY = 20;
+    private static int MAX_CAPACITY = 20;
+
+    public int getMaxCapacity() {
+        return MAX_CAPACITY;
+    }
 
     /**
      * Adds a Job to the collection.

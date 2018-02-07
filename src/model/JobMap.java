@@ -10,10 +10,7 @@ public class JobMap implements Serializable {
     public static int MAX_CAPACITY = 20;
 
     private Map<String, Job> jobMap;
-
-    /**
-     * constructor
-     */
+    
     public JobMap() {
 
         jobMap = new HashMap<>();

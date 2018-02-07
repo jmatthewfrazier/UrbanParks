@@ -20,7 +20,8 @@ public class ParkManager extends User implements Serializable {
     private ArrayList<Park> managedParkList  = new ArrayList<Park>();
 
     public ParkManager() {
-        this("Test", "Park Manager", new UserID("volunteer_default"));
+        this("Test", "Park Manager",
+                new UserID("volunteer_default"));
     }
 
     public ParkManager(String firstName, String lastName, UserID userID) {
