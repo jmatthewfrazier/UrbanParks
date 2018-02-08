@@ -18,27 +18,24 @@ public class Job implements Serializable {
     /**
      * unique identifier for object serialization
      */
-    private static final long serialVersionUID = 8341912696713916150L;
+//    private static final long serialVersionUID = 8341912696713916150L;
 
-    public String jobName;
+    private String name;
+    private Park park;
+    private JobID jobID;
+    private LocalDateTime beginDateTime;
+    private LocalDateTime endDateTime;
 
-    public LocalDateTime beginDateTime;
-
-    public LocalDateTime endDateTime;
-
-	public Park jobLocation;
-
-//	public UrbanParksSystemUserInterface ui;
-
-    public Job(final String jobName, final Park jobPark
-            , final LocalDateTime beginDate
-            , final LocalDateTime endDate) {
-        this.jobName = jobName;
+    public Job(final String name, final Park park, final JobID jobID,
+               final LocalDateTime beginDate,
+               final LocalDateTime endDate) {
+        this.name = name;
+        this.park = park;
+        this.jobID = jobID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
-		this.jobLocation = jobPark;
 
-		validateJobVariables();
+//		validateJobVariables();
     }
 
     public static final int getMaximumValidDayRangeFromToday() {
@@ -63,27 +60,28 @@ public class Job implements Serializable {
     }
 
 
-    public String createJobCollectionMapKey() {
-        String retStr = null;
-        //whatever fields will be used to create a unique key go here
-        return retStr;
-    }
+//    public String createJobCollectionMapKey() {
+//        String retStr = null;
+//        //whatever fields will be used to create a unique key go here
+//        return retStr;
+//    }
 
     /** TODO-here do we signal a successful add to a User in the job class or
      * in the JobMap class?  I think the JobMap class since it will be the
      * one actually adding the new Job.
      *
      */
-    public boolean submitNewJob() {
-        boolean retBool = false;
+//    public boolean submitNewJob() {
+//        boolean retBool = false;
         //signal it went wrong either here?
-        if (isNewJobValid()) {
+//        if (isNewJobValid()) {
             //or here for adds that aren't successful?
             //or the JobMap class instead?
-            retBool = submitValidatedJob();
-        }
-        return retBool;
-    }
+//            retBool = submitValidatedJob();
+//        }
+//        return retBool;
+//    }
+
     /*
      * Examine job attributes and return whether the job fits the
      * specified validation criteria.  Additional criteria can be
@@ -100,7 +98,7 @@ public class Job implements Serializable {
         //job length is (maxDays - 1)
         //job length is (maxDays)
         //job length is (maxDays + 1)
-        if (isNewJobLengthValid()) {
+        if (isJobLengthValid()) {
             retBool = true;
         }
         if (isJobWithinValidDateRange()) {
@@ -116,7 +114,7 @@ public class Job implements Serializable {
      * If the proposed job length is longer than the max allowable time, will
      * return false.
      */
-    public boolean isNewJobLengthValid() {
+    public boolean isJobLengthValid() {
         boolean retBool = false;
         LocalDateTime maxValidJobEndDate =
                 beginDateTime.plusDays(MAX_JOB_LENGTH_IN_DAYS);
@@ -139,16 +137,50 @@ public class Job implements Serializable {
 
     //TODO-need to figure out how to couple this to the JobMap instance.
 
-    /**
-     *
-     * @return was the validated job successfully added or not?
-     */
-    public boolean submitValidatedJob() {
-        boolean retBool = false;
-        //talk with the JobMap here, but how?
-        //get back some input about adding this Job instance
-        return retBool;
+//    /**
+//     *
+//     * @return was the validated job successfully added or not?
+//     */
+//    public boolean submitValidatedJob() {
+//        boolean retBool = false;
+//        //talk with the JobMap here, but how?
+//        //get back some input about adding this Job instance
+//        return retBool;
+//    }
+
+    public String getName() {
+        return name;
     }
+
+    public Park getPark() {
+        return park;
+    }
+
+    public LocalDateTime getBeginDateTime() {
+        return beginDateTime;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public void setPark(final Park park) {
+        this.park = park;
+    }
+
+    public void setBeginDateTime(final LocalDateTime time) {
+        this.beginDateTime = time;
+    }
+
+    public void setEndDateTime(final LocalDateTime time) {
+        this.endDateTime = time;
+    }
+
+
 
 }
 

@@ -11,6 +11,8 @@ enum UserRole {
  */
 public abstract class User implements Serializable {
 
+//    static final long serial
+
     private String firstName;
     private String lastName;
     private UserRole userRole;

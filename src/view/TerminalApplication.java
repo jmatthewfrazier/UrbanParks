@@ -1,7 +1,5 @@
 package view;
 
-import model.JobMap;
-
 public class TerminalApplication {
 
     // TODO

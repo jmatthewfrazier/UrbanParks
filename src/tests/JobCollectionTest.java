@@ -2,6 +2,7 @@ package tests;
 
 import model.Job;
 import model.JobCollection;
+import model.JobID;
 import model.Park;
 import org.junit.After;
 import org.junit.Before;
@@ -41,8 +42,9 @@ public class JobCollectionTest {
     @Test
     public void canAddJob_OneFewerJobsThanMaxExists_True() {
         for (int i = 0; i < JobCollection.getMaxCapacity() - 1; i++) {
-            jobCollection.put("Job " + i, new Job("Job " + i,
-                    new Park(), LocalDateTime.now().plusDays(i * 2),
+            JobID jobID = new JobID(i);
+            jobCollection.put(jobID, new Job("Job" + 0, new Park(), jobID,
+                    LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
         assertTrue(jobCollection.canAddJob());
@@ -57,8 +59,9 @@ public class JobCollectionTest {
     @Test
     public void canAddJob_MaxJobsExist_False() {
         for (int i = 0; i < JobCollection.getMaxCapacity(); i++) {
-            jobCollection.put("Job " + i, new Job("Job " + i,
-                    new Park(), LocalDateTime.now().plusDays(i * 2),
+            JobID jobID = new JobID(i);
+            jobCollection.put(jobID, new Job("Job" + 0, new Park(), jobID,
+                    LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
         assertFalse(jobCollection.canAddJob());

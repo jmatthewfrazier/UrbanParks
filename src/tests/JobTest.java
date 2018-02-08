@@ -69,7 +69,7 @@ public class JobTest {
 		//System.out.println(dayMaxDaysMinusOneDay.toString() + " << max days - 1");
 		Job jobMaxDaysMinusOne = new Job(jobNameFoo, parkWestside,
                 beginDateTime, dayMaxDaysMinusOneDay);
-		assertTrue(jobMaxDaysMinusOne.isNewJobLengthValid());
+		assertTrue(jobMaxDaysMinusOne.isJobLengthValid());
 		//fail("Not yet implemented");
 	}
 
@@ -80,7 +80,7 @@ public class JobTest {
 		//System.out.println(dayMaxDaysExactly.toString() + " << max days exactly");
 		Job jobMaxDaysExactly = new Job(jobNameFoo, parkWestside,
                 beginDateTime, dayMaxDaysExactly);
-		assertTrue(jobMaxDaysExactly.isNewJobLengthValid());
+		assertTrue(jobMaxDaysExactly.isJobLengthValid());
 		//fail("Not yet implemented");
 	}
 
@@ -91,7 +91,7 @@ public class JobTest {
 		//System.out.println(dayMaxDaysPlusOneDay.toString() + " << max days + 1");
 		Job jobMaxDaysPlusOne = new Job(jobNameFoo, parkWestside,
                 beginDateTime, dayMaxDaysPlusOneDay);
-		assertFalse(jobMaxDaysPlusOne.isNewJobLengthValid());
+		assertFalse(jobMaxDaysPlusOne.isJobLengthValid());
 		//fail("Not yet implemented");
 	}
 

@@ -1,8 +1,8 @@
 package model;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
-public class ParkSet extends HashSet<Park> {
+public class ParkCollection extends HashMap<ParkID, Park> {
 
     // TODO
     // Decide if we want to make this class or just use a normal HashSet or

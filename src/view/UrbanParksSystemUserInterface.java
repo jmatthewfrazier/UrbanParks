@@ -1,7 +1,5 @@
 package view;
 
-import model.JobMap;
-
 import java.util.HashMap;
 
 public class UrbanParksSystemUserInterface {
