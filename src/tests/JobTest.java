@@ -2,6 +2,7 @@ package tests;
 
 import model.Job;
 import model.Park;
+import model.ParkManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -18,6 +18,7 @@ public class JobMapTest {
 
     @Before
     public void setUp() {
+
         jobMap = new JobMap();
     }
 
@@ -29,6 +30,7 @@ public class JobMapTest {
      */
     @Test
     public void isNotAtCapacity_ManyFewerThanMaxJobsExist_True() {
+
         assertTrue(jobMap.isNotAtCapacity());
     }
 
