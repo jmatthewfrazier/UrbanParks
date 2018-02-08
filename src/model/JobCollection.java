@@ -28,25 +28,12 @@ public final class JobCollection extends HashMap<JobID, Job>
      */
     @Override
     public Job put(JobID key, Job value) {
-        if (canAddJob() && !this.containsKey(key))
+        if (isAtMaxCapacity() && !this.containsKey(key))
             super.put(key, value);
         return value;
     }
 
-    /**
-     * Adds a Job to the collection.
-     *
-     * Pre: Collection must contain less than max jobs and the Job name must
-     * be unique from other Jobs.
-     * @param newJob the Job that will be added
-     */
-
-    /**
-     * Specifies if the collection is not at full capacity.
-     *
-     * @return true if collection is not at capacity, false otherwise
-     */
-    public boolean canAddJob() {
+    public boolean isAtMaxCapacity() {
         return (size() < MAX_CAPACITY);
     }
 

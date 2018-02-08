@@ -5,20 +5,8 @@ import java.time.LocalDateTime;
 
 public final class Job implements Serializable {
 
-    /**
-     * The max number of days away from the current date that the end of a
-     * new job can be specified.
-     */
-    //TODO-is there a reason we are using "static" here? why not
-    // setters/getters?
     private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
-
     private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
-
-    /**
-     * unique identifier for object serialization
-     */
-//    private static final long serialVersionUID = 8341912696713916150L;
 
     private String name;
     private Park park;
@@ -92,20 +80,20 @@ public final class Job implements Serializable {
      * Only console messages?
      * ???
      */
-    public boolean isNewJobValid() {
-        boolean retBool = false;
-        //validate business case: job must be =< maxDays days in total length
-        //job length is (maxDays - 1)
-        //job length is (maxDays)
-        //job length is (maxDays + 1)
-        if (isJobLengthValid()) {
-            retBool = true;
-        }
-        if (isJobWithinValidDateRange()) {
-            retBool = true;
-        }
-        return retBool;
-    }
+//    public boolean isJobValid() {
+//        boolean retBool = false;
+//        //validate business case: job must be =< maxDays days in total length
+//        //job length is (maxDays - 1)
+//        //job length is (maxDays)
+//        //job length is (maxDays + 1)
+//        if (isJobLengthValid()) {
+//            retBool = true;
+//        }
+//        if (isJobWithinValidDateRange()) {
+//            retBool = true;
+//        }
+//        return retBool;
+//    }
 
     /*
      * Accessor method to check if the length of a proposed new job is within
