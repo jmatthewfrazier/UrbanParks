@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  *
  */
-public class ParkManager extends User implements Serializable {
+public final class ParkManager extends User implements Serializable {
 
     //store of all parks this user manages / is authorized to add jobs for
     private ArrayList<Park> managedParkList  = new ArrayList<Park>();

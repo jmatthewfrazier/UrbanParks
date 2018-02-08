@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ParkID {
+public final class ParkID implements Serializable {
 
 	private int parkID;
 

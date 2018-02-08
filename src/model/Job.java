@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Job implements Serializable {
+public final class Job implements Serializable {
 
     /**
      * The max number of days away from the current date that the end of a

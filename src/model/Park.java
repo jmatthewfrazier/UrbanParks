@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class Park implements Serializable {
+public final class Park implements Serializable {
 
     private String name;
 

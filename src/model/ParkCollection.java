@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class ParkCollection extends HashMap<ParkID, Park> {
+public class ParkCollection extends HashMap<ParkID, Park> implements
+		Serializable {
 
 	/**
 	 * Maps a ParkID to a Park if the ParkID is not already contained within
