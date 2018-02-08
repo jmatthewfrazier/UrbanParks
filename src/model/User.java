@@ -1,7 +1,10 @@
 package model;
 
 import java.io.Serializable;
-import java.util.HashSet;
+
+enum UserRole {
+    ADMIN, PARK_MANAGER, VOLUNTEER
+}
 
 /*
  * Urban Parks' User class for system user.
@@ -17,23 +20,25 @@ public class User implements Serializable {
 
     //sprivate Enum pmRole = new Enum("Park Manager");
 
-    private String firstName = "";
-    private String lastName = "";
+    private String firstName;
+    private String lastName;
 
-    private String userRole = ""; //should probably use Enums for roles.
-    private String userSystemName = ""; //their login name
+    private UserRole userRole; //should probably use Enums for roles.
+    private UserID userID; //their login name
 
-    private HashSet<String> possibleUserRolesSet;
+//    private HashSet<String> possibleUserRolesSet;
+
+
 
     public User(final String fName, final String lName
-                , final String uRole
-                , final String uLogin) {
+                , final UserRole userRole
+                , final UserID userID) {
 
-        possibleUserRolesSet = new HashSet<>();
-        firstName = fName;
-        lastName = lName;
-        userRole = uRole;
-        userSystemName = uLogin;
+//        possibleUserRolesSet = new HashSet<>();
+        this.firstName = fName;
+        this.lastName = lName;
+        this.userRole = userRole;
+        this.userID = userID;
 
         setupUser();
 
@@ -43,9 +48,9 @@ public class User implements Serializable {
         //TODO-validate a user name, etc in the User class?
         //TODO-yes, how we do it in Job class also
         //add all user role types to the set
-        populateUserRolesSet();
-        verifyUserSystemName();
-        assignUserRole();
+//        populateUserRolesSet();
+//        verifyUserSystemName();
+//        assignUserRole();
 
     }
 
@@ -76,25 +81,25 @@ public class User implements Serializable {
     /**
      * @return the userRole
      */
-    public String getUserRole() {
+    public UserRole getUserRole() {
         return userRole;
     }
     /**
      * @param userRole the userRole to set
      */
-    public void setUserRole(String userRole) {
+    public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
     /**
      * @return the userSystemName
      */
-    public String getUserSystemName() {
-        return userSystemName;
+    public UserID getUserSystemName() {
+        return userID;
     }
     /**
-     * @param userSystemName the userSystemName to set
+     * @param userID the userSystemName to set
      */
-    public void setUserSystemName(String userSystemName) {
-        this.userSystemName = userSystemName;
+    public void setUserSystemName(UserID userID) {
+        this.userID = userID;
     }
 }

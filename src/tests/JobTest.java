@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 public class JobTest {
@@ -66,7 +65,8 @@ public class JobTest {
 
 	@Test
 	public void testIsNewJobLengthValid_JobMaxDaysMinusOne_True() {
-		LocalDateTime dayMaxDaysMinusOneDay = beginDateTime.plusDays((maxJobDays - 2));
+		LocalDateTime dayMaxDaysMinusOneDay =
+				beginDateTime.plusDays((maxJobDays - 2));
 		//System.out.println(dayMaxDaysMinusOneDay.toString() + " << max days - 1");
 		Job jobMaxDaysMinusOne = new Job(jobNameFoo, parkWestside,
                 beginDateTime, dayMaxDaysMinusOneDay);
@@ -76,7 +76,8 @@ public class JobTest {
 
 	@Test
 	public void testIsNewJobLengthValid_JobMaxDaysExactly_True() {
-		LocalDateTime dayMaxDaysExactly = beginDateTime.plusDays((maxJobDays - 1));
+		LocalDateTime dayMaxDaysExactly =
+				beginDateTime.plusDays((maxJobDays - 1));
 		//System.out.println(dayMaxDaysExactly.toString() + " << max days exactly");
 		Job jobMaxDaysExactly = new Job(jobNameFoo, parkWestside,
                 beginDateTime, dayMaxDaysExactly);
@@ -86,7 +87,8 @@ public class JobTest {
 
 	@Test
 	public void testIsNewJobLengthValid_JobMaxDaysPlusOne_False() {
-		LocalDateTime dayMaxDaysPlusOneDay = beginDateTime.plusDays((maxJobDays));
+		LocalDateTime dayMaxDaysPlusOneDay =
+				beginDateTime.plusDays((maxJobDays));
 		//System.out.println(dayMaxDaysPlusOneDay.toString() + " << max days + 1");
 		Job jobMaxDaysPlusOne = new Job(jobNameFoo, parkWestside,
                 beginDateTime, dayMaxDaysPlusOneDay);
@@ -101,9 +103,11 @@ public class JobTest {
      */
     @Test
     public void isJobWithinValidDateRange_JobEndDateOneFewerThanMax_True() {
-        Job testJob = new Job("Test Job", parkEastside, LocalDateTime.now()
-                .plusDays(Job.MAX_NUM_DAYS_FROM_TODAY - 2), LocalDateTime.now()
-                .plusDays(Job.MAX_NUM_DAYS_FROM_TODAY - 1));
+        Job testJob = new Job("Test Job", parkEastside,
+		        LocalDateTime.now()
+				        .plusDays(Job.getMaximumValidDayRangeFromToday() - 2),
+		        LocalDateTime.now()
+				        .plusDays(Job.getMaximumValidDayRangeFromToday() - 1));
         assertTrue(testJob.isJobWithinValidDateRange());
     }
 
@@ -114,9 +118,11 @@ public class JobTest {
      */
     @Test
     public void isJobWithinValidDateRange_JobEndDateEqualsMax_True() {
-        Job testJob = new Job("Test Job", parkEastside, LocalDateTime.now()
-                .plusDays(Job.MAX_NUM_DAYS_FROM_TODAY - 1), LocalDateTime.now()
-                .plusDays(Job.MAX_NUM_DAYS_FROM_TODAY));
+        Job testJob = new Job("Test Job", parkEastside,
+		        LocalDateTime.now()
+				        .plusDays(Job.getMaximumValidDayRangeFromToday() - 1),
+		        LocalDateTime.now()
+                        .plusDays(Job.getMaximumValidDayRangeFromToday()));
         assertTrue(testJob.isJobWithinValidDateRange());
     }
 
@@ -127,9 +133,11 @@ public class JobTest {
      */
     @Test
     public void isJobWithinValidDateRange_JobEndDateOneGreaterThanMax_False() {
-        Job testJob = new Job("Test Job", parkEastside, LocalDateTime.now()
-                .plusDays(Job.MAX_NUM_DAYS_FROM_TODAY), LocalDateTime.now()
-                .plusDays(Job.MAX_NUM_DAYS_FROM_TODAY + 1));
+        Job testJob = new Job("Test Job", parkEastside,
+		        LocalDateTime.now()
+				        .plusDays(Job.getMaximumValidDayRangeFromToday()),
+		        LocalDateTime.now()
+                        .plusDays(Job.getMaximumValidDayRangeFromToday() + 1));
         assertTrue(testJob.isJobWithinValidDateRange());
     }
 
