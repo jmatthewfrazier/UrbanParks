@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-public final class JobID implements Comparable<JobID>{
+public final class JobID {
 	private final int jobID;
 
 	public JobID(int jobID) {
@@ -13,10 +13,10 @@ public final class JobID implements Comparable<JobID>{
 		return jobID;
 	}
 
-	@Override
-	public int compareTo(JobID o) {
-		return Integer.compare(this.getJobID(), o.getJobID());
-	}
+//	@Override
+//	public int compareTo(JobID o) {
+//		return Integer.compare(this.getJobID(), o.getJobID());
+//	}
 
 	@Override
 	public boolean equals(Object o) {
