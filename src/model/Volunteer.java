@@ -48,7 +48,9 @@ public class Volunteer extends User {
 	 * @param theCandidateJob the job that the Volunteer is trying to sign up for.
 	 * @return boolean value shows if the Volunteer can sign up for this job.
 	 */
-	public boolean isJobSameDay(Job theCandidateJob){
+	public boolean isJobSameDay(final Job theCandidateJob) 
+			throws JobInSameDayException {
+		/* Since we are doing exception returning boolean would not be sufficient
 		// Set flag initially to be false
 		boolean isJobSameDay = false;
 		// Check if Volunteer has jobs signed up
@@ -59,7 +61,20 @@ public class Volunteer extends User {
 			}
 		}
 		// Return the flag 
-		return isJobSameDay;
+		*/
+		if (!myIsSignedUp){
+			myJobs.add(theCandidateJob);
+		}
+		else{
+			for (Job job: myJobs){
+				if (job.isJobOverlapping(theCandidateJob))
+					throw new JobInSameDayException("Sorry, the job you " + 
+							"are applying extends across the job you have" +
+							" signed up already!!");
+			}
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -70,7 +85,9 @@ public class Volunteer extends User {
 	 * @param theCandidateJob the job that the Volunteer is trying to sign up for.
 	 * @return boolean value shows if the Volunteer can sign up for this job.
 	 */
-	public boolean isStartAtEndDate(Job theCandidateJob){
+	public boolean isStartAtEndDate(Job theCandidateJob) throws
+						JobStartAtEndDateException {
+		/*
 		// Set flag initially to be false
 		boolean isJobStartAtEndDate = false;
 		// Check if Volunteer has jobs signed up
@@ -80,8 +97,22 @@ public class Volunteer extends User {
 						|| isJobStartAtEndDate);
 			}
 		}
-		// Return the flag 
-		return isJobStartAtEndDate;
+		// Return the flag
+		*/
+		
+		if (!myIsSignedUp){
+			myJobs.add(theCandidateJob);
+		}
+		else{
+			for (Job job: myJobs){
+				if (job.isStartAtEndDate(theCandidateJob))
+					throw new JobStartAtEndDateException("Sory, " + 
+							"the job you are applying starts at " + 
+							"the end date of one of your signed up jobs!");
+			}
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -92,18 +123,34 @@ public class Volunteer extends User {
 	 * @param theCandidateJob the job that the Volunteer is trying to sign up for.
 	 * @return boolean value shows if the Volunteer can sign up for this job.
 	 */
-	public boolean isEndAtStartDate(Job theCandidateJob){
+	public boolean isEndAtStartDate(Job theCandidateJob) throws
+					JobEndAtStartDateException {
+		/*
 		// Set flag initially to be false
-				boolean isJobEndAtStartDate = false;
-				// Check if Volunteer has jobs signed up
-				if (myIsSignedUp){
-					for (Job jobs: myJobs){
-						isJobEndAtStartDate = (jobs.isEndAtStartDate(theCandidateJob)
-								|| isJobEndAtStartDate);
-					}
-				}
-				// Return the flag 
-				return isJobEndAtStartDate;
+		boolean isJobEndAtStartDate = false;
+		// Check if Volunteer has jobs signed up
+		if (myIsSignedUp){
+			for (Job jobs: myJobs){
+				isJobEndAtStartDate = (jobs.isEndAtStartDate(theCandidateJob)
+						|| isJobEndAtStartDate);
+			}
+		}
+		// Return the flag 
+		*/
+		
+		if (!myIsSignedUp){
+			myJobs.add(theCandidateJob);
+		}
+		else{
+			for(Job job: myJobs){
+				if (job.isEndAtStartDate(theCandidateJob))
+					throw new JobEndAtStartDateException("Sorry, " +
+							"the job you are applying ends at the " +
+							"date of one of your signed up jobs!!" );
+			}
+		}
+		 
+		return true;
 	}
 	
 	/**
@@ -115,12 +162,16 @@ public class Volunteer extends User {
 	 * @return true if the job start date is more than or equal to the minimum number of calendar days out that the 
 	 * volunteer is allowed to sign up for, false otherwise.
 	 */
-	public boolean isMoreThanMinimumDaysOut(Job candidateJob) {
+	public boolean isMoreThanMinimumDaysOut(Job candidateJob) throws
+						LessThanMinimumDaysAwayException{
 		boolean beyondMin = true;
 		
-		if (candidateJob.dateDifference() < MINIMUM_SIGNUP_DAYS_OUT)
+		if (candidateJob.dateDifference() < MINIMUM_SIGNUP_DAYS_OUT){
 			beyondMin = false;
-		
+			throw new LessThanMinimumDaysAwayException("Sorry, " +
+					"the job you are applying is less than the " +
+					"minimum days away from one of your signed up jobs!!");
+		}		
 		return beyondMin;
 	}
 	
