@@ -21,7 +21,7 @@ public class TerminalApplication {
 
         //fire up the UI and pass it the system's job storage collection
         UrbanParksSystemUserInterface newInterface =
-                new UrbanParksSystemUserInterface(systemJobCollection);
+                new UrbanParksSystemUserInterface(/*systemJobCollection*/);
 
         //run the actual program
         newInterface.runInterface();
