@@ -22,15 +22,13 @@ public final class Job implements Serializable {
         this.ID = ID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
-
-//		validateJobVariables();
     }
 
-    public static final int getMaximumValidDayRangeFromToday() {
+    public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-    public static final int getMaxJobLengthInDays() {
+    public static int getMaxJobLengthInDays() {
         return MAX_JOB_LENGTH_IN_DAYS;
     }
 

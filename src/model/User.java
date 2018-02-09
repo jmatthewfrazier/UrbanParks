@@ -18,7 +18,7 @@ public abstract class User implements Serializable {
     private UserRole userRole;
     private UserID userID;
 
-    public User(final String firstName, final String lastName,
+    protected User(final String firstName, final String lastName,
                 final UserRole userRole, final UserID userID) {
         this.firstName = firstName;
         this.lastName = lastName;
