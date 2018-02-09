@@ -4,37 +4,43 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public final class JobCollection extends HashMap<JobID, Job>
-        implements Serializable {
+public final class JobCollection implements Serializable {
+
+    private Map<JobID, Job> jobMap;
 
     private static final int MAX_CAPACITY = 20;
 
     public JobCollection() {
-        super();
+        jobMap = new HashMap<>();
+    }
+
+    public final void addJob(Job job) {
+        if (isAtMaxCapacity() && !jobMap.containsKey(job.getID()))
+            jobMap.put(job.getID(), job);
+    }
+
+    public final Job getJob(JobID jobID) {
+        return jobMap.get(jobID);
     }
 
     public static int getMaxCapacity() {
         return MAX_CAPACITY;
     }
 
-    /**
-     * Adds a Job to the collection.
-     *
-     * Pre: Collection must contain less than max jobs and the Job name must
-     * be unique from other Jobs.
-     * @param key the Job's ID
-     * @param value the Job that will be added
-     */
-    @Override
-    public Job put(JobID key, Job value) {
-        if (isAtMaxCapacity() && !this.containsKey(key))
-            super.put(key, value);
-        return value;
+    public List<Job> getAlphabetizedList() {
+        return null;
+    }
+
+    public List<Job> getChronologicalList() {
+
+        return null;
     }
 
     public boolean isAtMaxCapacity() {
-        return (size() < MAX_CAPACITY);
+        return (jobMap.size() < MAX_CAPACITY);
     }
 
     public static class AlphabeticalComparator implements  Comparator<Job> {

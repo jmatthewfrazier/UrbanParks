@@ -10,16 +10,16 @@ public final class Job implements Serializable {
 
     private String name;
     private Park park;
-    private JobID jobID;
+    private JobID ID;
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
 
-    public Job(final String name, final Park park, final JobID jobID,
+    public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
                final LocalDateTime endDate) {
         this.name = name;
         this.park = park;
-        this.jobID = jobID;
+        this.ID = ID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
 
@@ -144,6 +144,10 @@ public final class Job implements Serializable {
         return park;
     }
 
+    public JobID getID() {
+        return ID;
+    }
+
     public LocalDateTime getBeginDateTime() {
         return beginDateTime;
     }
@@ -167,8 +171,5 @@ public final class Job implements Serializable {
     public void setEndDateTime(final LocalDateTime time) {
         this.endDateTime = time;
     }
-
-
-
 }
 

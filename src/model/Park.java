@@ -16,6 +16,8 @@ public final class Park implements Serializable {
 
     private int zipCode;
 
+    private ParkID ID;
+
     public Park() {
         this("Default name", 1000, "Apple St.",
                 "Seattle", "WA", 98105);
@@ -29,5 +31,9 @@ public final class Park implements Serializable {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
+    }
+
+    public ParkID getID() {
+        return ID;
     }
 }

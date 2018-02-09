@@ -46,7 +46,7 @@ public abstract class User implements Serializable {
         return userRole;
     }
 
-    public final UserID getUserSystemName() {
+    public final UserID getID() {
         return userID;
     }
 

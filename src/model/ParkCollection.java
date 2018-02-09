@@ -2,9 +2,15 @@ package model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
-public class ParkCollection extends HashMap<ParkID, Park> implements
-		Serializable {
+public class ParkCollection implements Serializable {
+
+	private Map<ParkID, Park> parkMap;
+
+	public ParkCollection() {
+	    parkMap = new HashMap<>();
+    }
 
 	/**
 	 * Maps a ParkID to a Park if the ParkID is not already contained within
@@ -12,13 +18,13 @@ public class ParkCollection extends HashMap<ParkID, Park> implements
 	 *
 	 * Pre: ParkID does not exist within the collection.
 	 */
-	@Override
-	public final Park put(ParkID parkID, Park park) {
-		if (!this.containsKey(parkID)) {
-			super.put(parkID, park);
+	public final void addPark(Park park) {
+		if (!parkMap.containsKey(park.getID())) {
+			parkMap.put(park.getID(), park);
 		}
-		return park;
 	}
 
-
+    public final Park getPark(ParkID parkID) {
+	    return parkMap.get(parkID);
+    }
 }
