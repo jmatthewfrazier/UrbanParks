@@ -8,6 +8,7 @@ public final class Job implements Serializable {
     private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
     private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
+
     private String name;
     private Park park;
     private JobID ID;
@@ -21,7 +22,9 @@ public final class Job implements Serializable {
         this.park = park;
         this.ID = ID;
         this.beginDateTime = beginDate;
+//        this.myStartDate = beginDateTime.toLocalDate();
         this.endDateTime = endDate;
+//        this.myEndDate = endDateTime.toLocalDate();
     }
 
     public static int getMaximumValidDayRangeFromToday() {
@@ -145,6 +148,56 @@ public final class Job implements Serializable {
     public JobID getID() {
         return ID;
     }
+    
+    // The following would be the methods needed for the acceptance tests
+    // for #1
+    
+    /**
+	 * Calculates and returns the number of days between the current date and the start date of this job.
+	 * 
+	 * @return the number of days between the current date and the start date of this job.
+	 */
+	public int dateDifference() {
+//		LocalDateTime now = LocalDate.now();
+//		return (int) Math.abs(now.until(myStartDate, ChronoUnit.DAYS));
+		return 0;
+	}
+	
+	/**
+	 * Check if the job the Volunteer is applying is extend across with
+	 * the jobs that he already signed up.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isJobOverlapping(Job theCandidateJob){
+		return this.endDateTime.isBefore(theCandidateJob.beginDateTime);
+	}
+	
+	/**
+	 * Check if the job the Volunteer is applying starts at the end date
+	 * of the jobs that he already signed up.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isStartAtEndDate(Job theCandidateJob){
+//		return this.myEndDate.equals(theCandidateJob.myStartDate);
+		return false;
+	}
+	
+	/**
+	 * Check if the job the Volunteer is applying ends at the start date
+	 * of the jobs that he already signed up.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isEndAtStartDate(Job theCandidateJob){
+//		return this.myStartDate.equals(theCandidateJob.myEndDate);
+		return false;
+
+	}
 
     public LocalDateTime getBeginDateTime() {
         return beginDateTime;

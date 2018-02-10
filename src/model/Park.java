@@ -36,4 +36,8 @@ public final class Park implements Serializable {
     public ParkID getID() {
         return ID;
     }
+
+    public String getName() {
+        return name;
+    }
 }
