@@ -1,7 +1,6 @@
 package tests;
 
 import model.Job;
-import model.JobCollection;
 import model.Park;
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class JobCollectionTest {
+public class JobMapTest {
 
     private JobCollection jobCollection;
 

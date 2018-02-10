@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class Park implements Serializable {
+public final class Park implements Serializable {
 
     private String name;
 
@@ -15,6 +15,8 @@ public class Park implements Serializable {
     private String state;
 
     private int zipCode;
+
+    private ParkID ID;
 
     public Park() {
         this("Default name", 1000, "Apple St.",
@@ -29,5 +31,13 @@ public class Park implements Serializable {
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
+    }
+
+    public ParkID getID() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
     }
 }

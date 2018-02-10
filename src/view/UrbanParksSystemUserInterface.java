@@ -26,6 +26,60 @@ public class UrbanParksSystemUserInterface {
 	private final String BREAK = "=============================URBAN PARKS" + 
 		"=============================\n";
 
+    //instance to for job storage while the user is interacting with the program
+    public JobMap systemJobCollection;
+
+    //what about taking in Date fields that are not a String?
+    private HashMap<String, Object> newJobInfoMap = new HashMap<String, Object>();
+
+    /**
+     * @return the newJobInfoMap
+     */
+    public HashMap<String, Object> getNewJobInfoMap() {
+        return newJobInfoMap;
+    }
+
+
+    public UrbanParksSystemUserInterface () {
+        JobMap systemJobCollection = new JobMap();
+        UserCollection systemUserCollection = new UserCollection();
+        ParkSet systemParkSet = new ParkSet();
+    }
+    //tighter coupling than is ideal but an easy way to get going on the project.
+//    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
+//        systemJobCollection = mainSystemJobCollection;
+//        setupNewJobHashMap();
+//    }
+
+    private void importCollections() {
+
+    }
+
+    private void exportCollections() {
+
+    }
+
+    public void setupNewJobHashMap() {
+        //new jobs have 5 params so far
+        //first param: starting date
+
+        //now that it is setup, if a new job is submitted it can replace the
+        //values of the corresponding keys
+
+    }
+
+    public void editNewJobHashMap(String keyStringValue, Object newValueObject) {
+        newJobInfoMap.replace(keyStringValue, newValueObject);
+    }
+
+    /**
+     * @return the newJobInfoMap
+     */
+    public void populateNewJobFromMap(HashMap<String, Object> populatedJobInfoMap) {
+//        Date startDate = populatedJobInfoMap.get("job begin date");
+    }
+
+
 	public void runInterface() throws IOException {
 		
 		System.out.println("Welcome to Urban Parks.");
