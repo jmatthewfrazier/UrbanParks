@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.*;
+
 /**
  * This is the Volunteer class that extends the user abstract class.
  * 
@@ -23,11 +25,12 @@ public final class Volunteer extends User {
 	 * Constructor for Volunteer class.
 	 * 
 	 */
-    public Volunteer() {
+    public Volunteer(JobMap paramJobMap) {
         this("Test", "Volunteer",
                 new UserID("volunteer_default"));
         myJobs = theParamJobMap;
 		myIsSignedUp = true;
+
     }
 
     /**
@@ -139,7 +142,7 @@ public final class Volunteer extends User {
 		}		
 		return beyondMin;
 	}
-	
+	/**
 	public void signupForNewJob(Job theCandidateJob) 
 						throws SignupForNewJobException{
 		if (myIsSignedUp){
@@ -154,7 +157,7 @@ public final class Volunteer extends User {
 			}
 			catch(JobStartAtEndDateException e){
 				throw new SignupForNewJobException(e.getMsgString());
-			}
+			} 
 			try{
 				isEndAtStartDate(theCandidateJob);
 			}
@@ -172,5 +175,30 @@ public final class Volunteer extends User {
 		myJobs.addJob(theCandidateJob);//Should we change this? 
 								//Otherwise it would go through the exceptions 
 								//again.
-	}
+	}*/
+
+    public void registerForJobInCollection(final Job jobToAdd)
+            throws VolunteerJobRegistrationException {
+        //String retStr = "";
+        try {
+            jobToAdd.addNewVolunteer(this);
+        }
+        catch(VolunteerDailyJobLimitException e ) {
+            throw new VolunteerJobRegistrationException(e.getMsgString());
+        }
+        catch(VolunteerSignUpStartDateException e) {
+            throw new VolunteerJobRegistrationException(e.getMsgString());
+        }
+//        catch (InvalidJobEndDateException e) {
+//            throw new VolunteerJobRegistrationException(e.getMsgString());
+//        }
+        //this should not really ever happen, because if a job already has this
+        //userId associated with it, then it should never display to the Volunteer
+        //object in the first place, right?
+        catch (DuplicateVolunteerUserIDException e) {
+            throw new VolunteerJobRegistrationException(e.getMsgString());
+        }
+
+    }
+    //end of Volunteer class
 }
