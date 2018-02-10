@@ -11,30 +11,28 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobMap implements Serializable {
+public class JobMap extends HashMap<JobID, Job> implements Serializable {
 
     /**
      * The max number of days away from the current date that the end of a
      * new job can be specified.
      */
-    //TODO-is there a reason we were using "static" here?
-
     private int MAX_NUM_DAYS_FROM_TODAY = 75;
 
     private int MAX_JOB_LENGTH_IN_DAYS = 3;
 
     private int MAX_CAPACITY = 20;
 
-    //these still need setters/getters 
+    //these still need setters/getters
     private LocalDateTime beginDateTime;
 
     private LocalDateTime endDateTime;
 
-    private Map<String, Job> jobMap;
+    private Map<JobID, Job> jobMap;
     
     public JobMap() {
-
-        jobMap = new HashMap<>();
+        super();
+        //jobMap = new HashMap<>();
     }
 
     /**
@@ -45,7 +43,7 @@ public class JobMap implements Serializable {
      * @param jobToAdd the Job that will be added
      */
     //no need to override the put from hashmap
-    public void addJob(Job jobToAdd) throws MaxPendingJobsException,
+    public void addJob(final JobID jobIDToAdd, final Job jobToAdd) throws MaxPendingJobsException,
             InvalidJobLengthException, InvalidJobEndDateException,
             JobCollectionDuplicateKeyException {
         //check if the job is at capacity first
@@ -61,17 +59,14 @@ public class JobMap implements Serializable {
         } else if (!isJobWithinValidDateRange()) { //check to see if the job's end date is acceptable
             throw new InvalidJobEndDateException("Sorry, the end date of that" +
                     "job is too far in the future");
-        } else if (jobMap.containsKey(jobToAdd.jobName)) { //check to see if the job is already present in the map
+        } else if (jobMap.containsKey(jobToAdd.getJobName())) { //check to see if the job is already present in the map
             throw new JobCollectionDuplicateKeyException("A Job matching that" +
                     "key value is already present in the Job collection.");
         } else { //all checks passed, add the job to the JobMap
-            jobMap.put(jobToAdd.jobName, jobToAdd);
+            this.put(jobIDToAdd, jobToAdd);
         }
 
     }
-
-    //the put method will return a value, either null or the new put value,
-    //should we use that for anything?
 
     /**
      * Specifies if the collection is at full capacity.
@@ -115,9 +110,15 @@ public class JobMap implements Serializable {
     /**
      * @return the jobHashMap
      */
-    public Map<String, Job> getJobHashMap() {
+    public Map<JobID, Job> getJobMap() {
         return jobMap;
     }
+
+//    public JobID getJobIDForJob(final Job jobToGetIDFor) {
+//        for (Job j in this.) {
+//
+//        }
+//    }
 
 
     /** TODO - not sure we need this, we have a method to add things to it,

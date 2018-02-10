@@ -1,9 +1,6 @@
 package model;
 
-import exceptions.InvalidJobEndDateException;
-import exceptions.InvalidJobLengthException;
-import exceptions.JobCollectionDuplicateKeyException;
-import exceptions.MaxPendingJobsException;
+import exceptions.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,42 +22,39 @@ public class ParkManager extends User implements Serializable {
     //TODO-actually this probably belongs in aPark, not here
     private ArrayList<Park> managedParkList  = new ArrayList<Park>();
 
-    private JobMap jobCollection;
+    private JobMap jobMap;
 
     public ParkManager(JobMap paramJobMap) {
         this("Test", "Park Manager",
                 new UserID("park_manager_default"));
-        jobCollection = paramJobMap;
-        //aren't we supposed to call super somewhere in here?
+        jobMap = paramJobMap;
+
     }
 
     public ParkManager(String firstName, String lastName, UserID userID) {
        super(firstName, lastName, UserRole.PARK_MANAGER, userID);
     }
 
-    //return type may need to be a boolean instead.
-    public String addNewJobToCollection(final Job jobToAdd) {
-        String retStr = "";
+
+    public void addNewJobToCollection(final Job jobToAdd)
+            throws AddNewParkJobException{
+        //String retStr = "";
             try {
-                jobCollection.addJob(jobToAdd);
+                jobMap.addJob(jobToAdd);
             }
             catch(MaxPendingJobsException e) {
-                retStr = e.getMsgString();
+                throw new AddNewParkJobException(e.getMsgString());
             }
             catch(InvalidJobLengthException e) {
-                retStr = e.getMsgString();
+                throw new AddNewParkJobException(e.getMsgString());
             }
             catch (InvalidJobEndDateException e) {
-                retStr = e.getMsgString();
+                throw new AddNewParkJobException(e.getMsgString());
             }
             catch (JobCollectionDuplicateKeyException e) {
-                retStr = e.getMsgString();
+                throw new AddNewParkJobException(e.getMsgString());
             }
-            //by here it has made it through all exceptions,
-            //so let's add the job and signal success
-        retStr = getAddJobSuccessfulMsg(jobToAdd);
 
-        return retStr;
     }
 
     public String getAddJobSuccessfulMsg(final Job addedJob) {

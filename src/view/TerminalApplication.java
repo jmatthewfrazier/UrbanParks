@@ -1,6 +1,8 @@
 package view;
 
 import model.JobMap;
+import model.ParkSet;
+import model.UserCollection;
 
 public class TerminalApplication {
 
@@ -17,11 +19,9 @@ public class TerminalApplication {
 
     public static void main(String[] args) {
         //create the actual collection to store jobs in
-        JobMap systemJobCollection = new JobMap();
-
         //fire up the UI and pass it the system's job storage collection
         UrbanParksSystemUserInterface newInterface =
-                new UrbanParksSystemUserInterface(systemJobCollection);
+                new UrbanParksSystemUserInterface();
 
         //run the actual program
         newInterface.runInterface();
