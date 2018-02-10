@@ -16,7 +16,7 @@ public class Job implements Serializable {
 //     */
 //    //TODO-is there a reason we are using "static" here? why not
 //    // setters/getters?
-    private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
+    private final int MAX_NUM_DAYS_FROM_TODAY = 75;
 //
 //    private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
@@ -24,6 +24,7 @@ public class Job implements Serializable {
      * unique identifier for object serialization
      */
     private static final long serialVersionUID = 8341912696713916150L;
+
 
     private String name;
 
@@ -43,9 +44,15 @@ public class Job implements Serializable {
                final LocalDateTime beginDate,
                final LocalDateTime endDate) {
         this.name = jobName;
-        this.beginDateTime = beginDate;
-        this.endDateTime = endDate;
-		this.park = jobPark;
+        this.beginDateTime = beginDate.toLocalDate();
+        this.park = jobPark;
+        this.endDateTime = endDate.toLocalDate();
+   }
+
+    public int getMaximumValidDayRangeFromToday() {
+        return MAX_NUM_DAYS_FROM_TODAY;
+    }
+
 
 		usersRegistered = new UserCollection();
     }
@@ -81,6 +88,52 @@ public class Job implements Serializable {
     public JobID getID() {
         return ID;
     }
+    
+    // The following would be the methods needed for the acceptance tests
+    // for #1
+    
+    /**
+	 * Calculates and returns the number of days between the current date and the start date of this job.
+	 * 
+	 * @return the number of days between the current date and the start date of this job.
+	 */
+	public int dateDifference() {
+		LocalDateTime now = LocalDate.now();
+		return (int) Math.abs(now.until(myStartDate, ChronoUnit.DAYS));
+	}
+	
+	/**
+	 * Check if the job the Volunteer is applying is extend across with
+	 * the jobs that he already signed up.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isJobOverlapping(Job theCandidateJob){
+		return this.endDateTime.isBefore(theCandidateJob.beginDateTime);
+	}
+	
+	/**
+	 * Check if the job the Volunteer is applying starts at the end date
+	 * of the jobs that he already signed up.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isStartAtEndDate(Job theCandidateJob){
+		return this.myEndDate.equals(theCandidateJob.myStartDate);
+	}
+	
+	/**
+	 * Check if the job the Volunteer is applying ends at the start date
+	 * of the jobs that he already signed up.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isEndAtStartDate(Job theCandidateJob){
+		return this.myStartDate.equals(theCandidateJob.myEndDate);
+	}
 
     public LocalDateTime getBeginDateTime() {
         return beginDateTime;
