@@ -3,9 +3,15 @@ package view;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.Locale;
 import java.util.Scanner;
 
 import model.Job;
+import model.Park;
 import model.User;
 
 public class UrbanParksSystemUserInterface {
@@ -20,7 +26,7 @@ public class UrbanParksSystemUserInterface {
 	private final String BREAK = "=============================URBAN PARKS" + 
 		"=============================\n";
 
-	public void runInterface() {
+	public void runInterface() throws IOException {
 		
 		System.out.println("Welcome to Urban Parks.");
 		System.out.println("\nPress Enter to proceed.");
@@ -29,6 +35,7 @@ public class UrbanParksSystemUserInterface {
 		}
 		
 		console.close();
+		input.close();
 	}
 	
 	private void signIn() {
@@ -66,7 +73,7 @@ public class UrbanParksSystemUserInterface {
 	
 	private void volunteerMenu() {
 		System.out.println(BREAK);
-		System.out.println("Park Manager Menu for " + 
+		System.out.println("Volunteer Menu for " + 
 				currentUser.getUserSystemName()); 
 		System.out.println();
 		System.out.println("1. Sign up for a job");
@@ -83,11 +90,6 @@ public class UrbanParksSystemUserInterface {
 		} else if (choice == 3) {
 			logout();
 		}
-		
-	}
-	
-	private void parkManagerMenu() {
-		// TO DO
 	}
 	
 	private void displayOpenJobs() {
@@ -134,28 +136,129 @@ public class UrbanParksSystemUserInterface {
 		System.out.println("Would you like to sign up for this job?");
 		System.out.println("Enter Y for yes or N for no: ");
 		
-		try {
-			String option = input.readLine();
-			if (option.equalsIgnoreCase("y")) {
-				// TO DO - ADD JOB TO USER'S LIST/ADD USER TO JOB'S LIST
-			} else if (option.equalsIgnoreCase("n")) {
-				displayOpenJobs();
-			} else {
-				System.out.println("You entered an invalid input.");
-				System.out.println(" Pleae Enter Y for yes or N for no: ");
-				
-				// TO DO - JUMP BACK TO GET INPUT (MAKE AN INPUT METHOD?)
+		String option = "";
+		do {
+			try {
+				option = input.readLine();
+				if (option.equalsIgnoreCase("y")) {
+					
+					// TO DO - ADD JOB TO USER'S LIST/ADD USER TO JOB'S LIST
+					
+					displayOpenJobs();
+				} else if (option.equalsIgnoreCase("n")) {
+					displayOpenJobs();
+				} else {
+					System.out.println("You entered an invalid input.");
+					System.out.println(" Pleae Enter Y for yes or N for no: ");
+				}
+			} catch (IOException e) {
+				System.out.println("Input error");
 			}
-		} catch (IOException e) {
-			System.out.println("Input error");
-		}
+		} while(!option.equalsIgnoreCase("y") || !option.equalsIgnoreCase("n"));
 	}
 	
 	private void displayYourJobs() {
-		// TO DO
+		System.out.println(BREAK);
+		System.out.println("Jobs " + currentUser.getUserSystemName() + 
+				"is signed up for: ");
+		System.out.println();
+		
+		// TO DO - SHOW JOBS
+		
+		System.out.println("Press Enter to go back to Volunteer Menu.");
+		if (console.hasNextLine()) {
+			volunteerMenu();
+		}
+	}
+	
+	private void parkManagerMenu() {
+		int choice = -1;
+		
+		System.out.println(BREAK);
+		System.out.println("Park Manager Menu for " + 
+				currentUser.getUserSystemName()); 
+		System.out.println();
+		System.out.println("1. Submit a new job");
+		System.out.println("2. Log out");
+		
+		do {
+			System.out.println();
+			System.out.print("Please enter a number from the menu: ");
+			if (console.hasNextInt()) {
+				choice = console.nextInt();
+				if (choice == 1) {
+					createJob();
+				} else if (choice == 2) {
+					logout();
+				}
+			} else {
+				System.out.println();
+				System.out.println("You entered an invalid choice.");
+				System.out.print("Please enter a number from the menu: ");
+			}
+		}while(choice < 0);
+	}
+	
+	private void createJob() {
+		String title, description, temp;
+		Park park;
+		LocalDateTime startDate, endDate;
+		
+		System.out.println(BREAK);
+		System.out.println("Park Manager: " + currentUser.getUserSystemName()); 
+		System.out.println();
+		System.out.println("PLEASE ENTER THE NEW JOB INFORMATION"); 
+		System.out.println();
+		
+		System.out.print("Please enter a job title: "); 
+		try {
+			title = input.readLine();
+		} catch (IOException e) {
+			System.out.println("Input error");
+		}	
+		System.out.println();
+		
+		startDate = getDate("start");
+		endDate = getDate("finish");
+		
+		
+		
+		
+		
+	}
+	
+	private LocalDateTime getDate(String description) {
+		boolean valid = false;
+		LocalDateTime date = null;
+		String in;
+		DateTimeFormatter formatter = DateTimeFormatter
+				.ofPattern("MM-dd-uuuu", Locale.US)
+				.withResolverStyle(ResolverStyle.STRICT);
+		
+		do {
+			System.out.print("Please enter a " + description + " date for " + 
+					"the job (in the form MM-DD-YYYY): "); 
+			try {
+				in = input.readLine();
+				try {
+					date = LocalDateTime.parse(in, formatter);
+					if () {
+						valid = true;
+					}
+				}catch (DateTimeParseException e) {
+					System.out.println("\nYou entered an invalid date.");
+				}
+			} catch (IOException e) {
+				System.out.println("\nInput error.");
+			}	
+			System.out.println();
+		}while (!valid);
+		
+		return date;
 	}
 	
 	private void logout() {
-		// TO DO
+		currentUser = null;
+		signIn();
 	}
 }
