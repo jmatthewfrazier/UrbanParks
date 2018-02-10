@@ -34,6 +34,14 @@ public class UrbanParksSystemUserInterface {
 //        setupNewJobHashMap();
 //    }
 
+    private void importCollections() {
+
+    }
+
+    private void exportCollections() {
+
+    }
+
     public void setupNewJobHashMap() {
         //new jobs have 5 params so far
         //first param: starting date

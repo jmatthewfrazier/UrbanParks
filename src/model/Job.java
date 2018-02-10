@@ -1,107 +1,141 @@
 package model;
 
-import exceptions.DuplicateVolunteerUserIDException;
-import exceptions.VolunteerDailyJobLimitException;
-import exceptions.VolunteerSignUpStartDateException;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
-public class Job implements Serializable {
+public final class Job implements Serializable {
 
-//    /**
-//     * The max number of days away from the current date that the end of a
-//     * new job can be specified.
-//     */
-//    //TODO-is there a reason we are using "static" here? why not
-//    // setters/getters?
-    private final int MAX_NUM_DAYS_FROM_TODAY = 75;
-//
-//    private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
-
-    /**
-     * unique identifier for object serialization
-     */
-    private static final long serialVersionUID = 8341912696713916150L;
+    private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
+    private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
 
     private String name;
-
+    private Park park;
     private JobID ID;
-
     private LocalDateTime beginDateTime;
-
     private LocalDateTime endDateTime;
 
-    private Park park;
-
-    private UserCollection usersRegistered;
-
-
-    public Job(final String jobName,
-               final Park jobPark,
+    public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
                final LocalDateTime endDate) {
-        this.name = jobName;
-        this.beginDateTime = beginDate.toLocalDate();
-        this.park = jobPark;
-        this.endDateTime = endDate.toLocalDate();
-   }
+        this.name = name;
+        this.park = park;
+        this.ID = ID;
+        this.beginDateTime = beginDate;
+//        this.myStartDate = beginDateTime.toLocalDate();
+        this.endDateTime = endDate;
+//        this.myEndDate = endDateTime.toLocalDate();
+    }
 
-    public int getMaximumValidDayRangeFromToday() {
+    public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-
-		usersRegistered = new UserCollection();
-    }
-
-    public static final int getMaximumValidDayRangeFromToday() {
-
-        return MAX_NUM_DAYS_FROM_TODAY;
-    }
-
-
-//    public int getThisJobLengthInDays() {
-//        int jobLength = this.endDateTime.
-//        return MAX_JOB_LENGTH_IN_DAYS;
-//    }
-
-    public void addVolunteerToThisJob(final Volunteer volToAdd) throws
-            VolunteerSignUpStartDateException, VolunteerDailyJobLimitException,
-            DuplicateVolunteerUserIDException {
-        //TODO-again, this is incomplete logic, just a few example lines!!
-        if (isUserJobOverlapping(volToAdd)) {
-            throw new VolunteerSignUpStartDateException("Sorry bro," +
-                    "only one job per day!");
-        }
-
+    public static int getMaxJobLengthInDays() {
+        return MAX_JOB_LENGTH_IN_DAYS;
     }
 
     /**
-     * Check if the job the Volunteer is applying is extend across with
-     * the jobs that he already signed up.
+     * A method that checks all business rules a new instance of job is expected
+     * to follow.
+     * TODO - we need to decide what happens if a user fails a business
+     * rule.  Do we throw an exception?  That seems kind of extreme but it may
+     * be the easiest way to go about things for now?
      *
-
-     * @return boolean value indicates whether or not the Volunteer can get the job.
      */
-    public boolean isUserJobOverlapping(final Volunteer volToCheck){
+    //throws InvalidJobException
+    private void validateJobVariables()  {
+
+    }
+
+
+//    public String createJobCollectionMapKey() {
+//        String retStr = null;
+//        //whatever fields will be used to create a unique key go here
+//        return retStr;
+//    }
+
+    /** TODO-here do we signal a successful add to a User in the job class or
+     * in the JobMap class?  I think the JobMap class since it will be the
+     * one actually adding the new Job.
+     *
+     */
+//    public boolean submitNewJob() {
+//        boolean retBool = false;
+        //signal it went wrong either here?
+//        if (isNewJobValid()) {
+            //or here for adds that aren't successful?
+            //or the JobMap class instead?
+//            retBool = submitValidatedJob();
+//        }
+//        return retBool;
+//    }
+
+    /*
+     * Examine job attributes and return whether the job fits the
+     * specified validation criteria.  Additional criteria can be
+     * added as needed.
+     * TODO-this is obviously not right logic, i think we first need to figure
+     * out how to manage failed business rule criteria.
+     * Exceptions?
+     * Only console messages?
+     * ???
+     */
+//    public boolean isJobValid() {
+//        boolean retBool = false;
+//        //validate business case: job must be =< maxDays days in total length
+//        //job length is (maxDays - 1)
+//        //job length is (maxDays)
+//        //job length is (maxDays + 1)
+//        if (isJobLengthValid()) {
+//            retBool = true;
+//        }
+//        if (isJobWithinValidDateRange()) {
+//            retBool = true;
+//        }
+//        return retBool;
+//    }
+
+    /*
+     * Accessor method to check if the length of a proposed new job is within
+     * the maximum allowable time limit.
+     *
+     * If the proposed job length is longer than the max allowable time, will
+     * return false.
+     */
+    public boolean isJobLengthValid() {
         boolean retBool = false;
-        //check all the jobs this person is signed up for
-        for (Job j : volToCheck.getJobsCurrentlyRegisteredForMap().values()) {
-            //TODO-this logic is not adewquate!!! this is only meant to be an example!
-            if (j.beginDateTime.toLocalDate().equals(this.getEndDateTime().toLocalDate())) {
-                //that only checks one day out of the entire job span
-                retBool = true;
-                break;
-            }
+        LocalDateTime maxValidJobEndDate =
+                beginDateTime.plusDays(MAX_JOB_LENGTH_IN_DAYS);
+        if (maxValidJobEndDate.isAfter(this.endDateTime)) {
+            retBool = true;
         }
+
         return retBool;
     }
 
-    //other access methods here
-    //do the checking like from Yulin's
+    /**
+     * Specifies if this Job is within a valid date range.
+     *
+     * @return true if the Job is within the valid date range, false otherwise
+     */
+    public boolean isJobWithinValidDateRange() {
+        return endDateTime.minusDays(MAX_NUM_DAYS_FROM_TODAY).compareTo
+                (LocalDateTime.now()) <= 0;
+    }
+
+    //TODO-need to figure out how to couple this to the JobMap instance.
+
+//    /**
+//     *
+//     * @return was the validated job successfully added or not?
+//     */
+//    public boolean submitValidatedJob() {
+//        boolean retBool = false;
+//        //talk with the JobMap here, but how?
+//        //get back some input about adding this Job instance
+//        return retBool;
+//    }
 
     public String getName() {
         return name;
@@ -124,8 +158,9 @@ public class Job implements Serializable {
 	 * @return the number of days between the current date and the start date of this job.
 	 */
 	public int dateDifference() {
-		LocalDateTime now = LocalDate.now();
-		return (int) Math.abs(now.until(myStartDate, ChronoUnit.DAYS));
+//		LocalDateTime now = LocalDate.now();
+//		return (int) Math.abs(now.until(myStartDate, ChronoUnit.DAYS));
+		return 0;
 	}
 	
 	/**
@@ -147,7 +182,8 @@ public class Job implements Serializable {
 	 * @return boolean value indicates whether or not the Volunteer can get the job.
 	 */
 	public boolean isStartAtEndDate(Job theCandidateJob){
-		return this.myEndDate.equals(theCandidateJob.myStartDate);
+//		return this.myEndDate.equals(theCandidateJob.myStartDate);
+		return false;
 	}
 	
 	/**
@@ -158,7 +194,9 @@ public class Job implements Serializable {
 	 * @return boolean value indicates whether or not the Volunteer can get the job.
 	 */
 	public boolean isEndAtStartDate(Job theCandidateJob){
-		return this.myStartDate.equals(theCandidateJob.myEndDate);
+//		return this.myStartDate.equals(theCandidateJob.myEndDate);
+		return false;
+
 	}
 
     public LocalDateTime getBeginDateTime() {
@@ -184,7 +222,5 @@ public class Job implements Serializable {
     public void setEndDateTime(final LocalDateTime time) {
         this.endDateTime = time;
     }
-
-
 }
 
