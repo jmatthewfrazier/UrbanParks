@@ -1,5 +1,6 @@
 package model;
 
+
 import exceptions.*;
 
 public class Volunteer extends User {
