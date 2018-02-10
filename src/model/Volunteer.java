@@ -1,14 +1,15 @@
 package model;
 
-
 /**
  * This is the Volunteer class that extends the user abstract class.
  * 
- * @author Yulin Wang
- * @version 2/8/2018
+ * @author Yulin, Eli
+ * @version 2/9/2018
  *
  */
-public class Volunteer extends User {
+
+public final class Volunteer extends User {
+
 	/**
 	 * A default minimum number of calendar days after the current date that a job begins and a volunteer may sign up 
 	 * for.
@@ -22,45 +23,46 @@ public class Volunteer extends User {
 	 * Constructor for Volunteer class.
 	 * 
 	 */
-	public Volunteer(JobMap theParamJobMap){
-		this("Test", "Volunteer",
-				new UserID("Volunteer_default"));
-		myJobs = theParamJobMap;
+    public Volunteer() {
+        this("Test", "Volunteer",
+                new UserID("volunteer_default"));
+        myJobs = theParamJobMap;
 		myIsSignedUp = true;
-	}
-	
-	/**
+    }
+
+    /**
 	 * This would be the constructor for Volunteer that has no 
 	 * jobs signed up before.
 	 * 
 	 * a new Volunteer Object. 
-	 * @param theFname the First name of the Volunteer.
-	 * @param theLname the Last name of the Volunteer.
-	 * @param theUserID the User ID of the Volunteer.
+	 * @param firstName the First name of the Volunteer.
+	 * @param lastName the Last name of the Volunteer.
+	 * @param userID the User ID of the Volunteer.
 	 */
-	public Volunteer(String theFname, String theLname, 
-					UserID theUserID){
-		super(theFname, theLname, UserRole.VOLUNTEER, userID);
-		myIsSignedUp = false;
-	}
-	
-	/**
+    public Volunteer(String firstName, String lastName, UserID userID) {
+        super(firstName, lastName, UserRole.VOLUNTEER, userID);
+        myIsSignedUp = false;
+    }
+    
+    
+    /**
 	 * This is the constructor for Volunteer that has jobs signed
 	 * up already.
 	 * 
-	 * @param theFname the First name of the Volunteer.
-	 * @param theLname the Last name of the Volunteer.
-	 * @param theUserID the User ID of the Volunteer.
-	 * @param theJobs a JobMap object that has jobs stored within.
+	 * a new Volunteer Object. 
+	 * @param firstName the First name of the Volunteer.
+	 * @param lastName the Last name of the Volunteer.
+	 * @param userID the User ID of the Volunteer.
+	 * @param theJobs the jobs that volunteer signed up already.
 	 */
-	public Volunteer(String theFname, String theLname, 
-			UserID theUserID, JobMap theJobs){
-		super(theFname, theLname, UserRole.VOLUNTEER, userID);
-		myJobs = theJobs;
-		myIsSignedUp = true;
-	}
-	
-	/**
+   public Volunteer(String firstName, String lastName, UserID userID,
+		   				JobMap theJobs) {
+       super(firstName, lastName, UserRole.VOLUNTEER, userID);
+       myJobs = theJobs;
+       myIsSignedUp = false;
+   }
+   
+   /**
 	 * This method would handle the situation when the volunteer is trying 
 	 * to sign up for jobs that extend across the job(s) already signed up for.
 	 * 
