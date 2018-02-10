@@ -3,18 +3,21 @@ package model;
 
 import exceptions.*;
 
+import java.util.HashMap;
+
 public class Volunteer extends User {
 
     private JobMap volunteerJobMap;
 
-    private JobMap jobsCurrentlyRegisteredForMap;
+    private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
 
     public Volunteer(JobMap paramJobMap) {
         this("Test", "Volunteer",
                 new UserID("volunteer_default"));
 
         volunteerJobMap = paramJobMap;
-        jobsCurrentlyRegisteredForMap = new JobMap();
+
+        jobsCurrentlyRegisteredForMap = new HashMap<>();
     }
 
     public Volunteer(String firstName, String lastName, UserID userID) {
@@ -26,7 +29,7 @@ public class Volunteer extends User {
             throws VolunteerJobRegistrationException {
         //String retStr = "";
         try { //let's see if we can sign up for this job
-            jobToRegisterFor.addNewVolunteer(this);
+            jobToRegisterFor.addUserToThisJob(this);
         }
         catch(VolunteerDailyJobLimitException e ) {
             throw new VolunteerJobRegistrationException(e.getMsgString());
@@ -46,7 +49,7 @@ public class Volunteer extends User {
         //now we need to track this Job for comparisons in the future
         //so let's get some info from the system's job map:
 
-        JobID newVolunteerJobID = volunteerJobMap.
+        jobsCurrentlyRegisteredForMap.put(jobToRegisterFor.getID(), jobToRegisterFor);
 
     }
     //end of Volunteer class

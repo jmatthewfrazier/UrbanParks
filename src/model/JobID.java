@@ -1,23 +1,38 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-/**
- * Created by dave on 2/9/18.
- */
-public class JobID implements Serializable {
+public final class JobID implements Serializable {
+    private final int jobID;
 
-    private String jobID;
-
-    // TODO LATER ON: PASSWORD
-
-    public JobID(String paramJobID) {
-
-        this.jobID = paramJobID;
+    public JobID(int jobID) {
+        this.jobID = jobID;
     }
 
-    public final String getUserID() {
+    public final int getJobID() {
+        return jobID;
+    }
 
-        return this.jobID;
+//	@Override
+//	public int compareTo(JobID o) {
+//		return Integer.compare(this.getJobID(), o.getJobID());
+//	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof JobID)) {
+            return false;
+        }
+        JobID other = (JobID) o;
+        return this.getJobID() == other.getJobID();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(jobID);
     }
 }
