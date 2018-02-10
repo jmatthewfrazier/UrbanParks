@@ -1,6 +1,6 @@
 package model;
 
-public class Volunteer extends User {
+public final class Volunteer extends User {
 
     public Volunteer() {
         this("Test", "Volunteer",
