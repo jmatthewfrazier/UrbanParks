@@ -61,12 +61,38 @@ public class Job implements Serializable {
 //        return MAX_JOB_LENGTH_IN_DAYS;
 //    }
 
-    public void addUserToThisJob(final User userToAdd) throws
+    public void addVolunteerToThisJob(final Volunteer volToAdd) throws
             VolunteerSignUpStartDateException, VolunteerDailyJobLimitException,
             DuplicateVolunteerUserIDException {
+        //TODO-again, this is incomplete logic, just a few example lines!!
+        if (isUserJobOverlapping(volToAdd)) {
+            throw new VolunteerSignUpStartDateException("Sorry bro," +
+                    "only one job per day!");
+        }
 
-        //blah blah add a user to this job
     }
+
+    /**
+     * Check if the job the Volunteer is applying is extend across with
+     * the jobs that he already signed up.
+     *
+
+     * @return boolean value indicates whether or not the Volunteer can get the job.
+     */
+    public boolean isUserJobOverlapping(final Volunteer volToCheck){
+        boolean retBool = false;
+        //check all the jobs this person is signed up for
+        for (Job j : volToCheck.getJobsCurrentlyRegisteredForMap().values()) {
+            //TODO-this logic is not adewquate!!! this is only meant to be an example!
+            if (j.beginDateTime.toLocalDate().equals(this.getEndDateTime().toLocalDate())) {
+                //that only checks one day out of the entire job span
+                retBool = true;
+                break;
+            }
+        }
+        return retBool;
+    }
+
     //other access methods here
     //do the checking like from Yulin's
 

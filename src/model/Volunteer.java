@@ -29,7 +29,7 @@ public class Volunteer extends User {
             throws VolunteerJobRegistrationException {
         //String retStr = "";
         try { //let's see if we can sign up for this job
-            jobToRegisterFor.addUserToThisJob(this);
+            jobToRegisterFor.addVolunteerToThisJob(this);
         }
         catch(VolunteerDailyJobLimitException e ) {
             throw new VolunteerJobRegistrationException(e.getMsgString());
@@ -51,6 +51,10 @@ public class Volunteer extends User {
 
         jobsCurrentlyRegisteredForMap.put(jobToRegisterFor.getID(), jobToRegisterFor);
 
+    }
+
+    public HashMap<JobID, Job> getJobsCurrentlyRegisteredForMap() {
+        return jobsCurrentlyRegisteredForMap;
     }
     //end of Volunteer class
 }
