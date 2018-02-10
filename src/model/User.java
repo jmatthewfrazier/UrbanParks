@@ -11,12 +11,14 @@ enum UserRole {
  */
 public abstract class User implements Serializable {
 
+//    static final long serial
+
     private String firstName;
     private String lastName;
     private UserRole userRole;
     private UserID userID;
 
-    public User(final String firstName, final String lastName,
+    protected User(final String firstName, final String lastName,
                 final UserRole userRole, final UserID userID) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,7 +46,7 @@ public abstract class User implements Serializable {
         return userRole;
     }
 
-    public final UserID getUserSystemName() {
+    public final UserID getID() {
         return userID;
     }
 
