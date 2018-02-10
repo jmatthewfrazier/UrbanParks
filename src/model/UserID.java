@@ -10,10 +10,14 @@ public final class UserID implements Serializable /* Comparable<UserID> */ {
     // TODO LATER ON: PASSWORD
 
     public UserID(String userID) {
+
         this.userID = userID;
     }
 
-    public final String getUserID() { return this.userID; }
+    public final String getUserID() {
+
+        return this.userID;
+    }
 
     public int compareTo(UserID other) {
         return this.userID.compareTo(other.userID);

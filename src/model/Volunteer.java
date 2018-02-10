@@ -2,15 +2,9 @@ package model;
 
 import exceptions.*;
 
-/**
- * This is the Volunteer class that extends the user abstract class.
- * 
- * @author Yulin, Eli
- * @version 2/9/2018
- *
- */
-
 public final class Volunteer extends User {
+
+private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
 
 	/**
 	 * A default minimum number of calendar days after the current date that a job begins and a volunteer may sign up 
@@ -18,19 +12,21 @@ public final class Volunteer extends User {
 	 */
 	public static final int MINIMUM_SIGNUP_DAYS_OUT = 2;
 	/** Collection of jobs that the volunteer has signed up for. */
-	private JobMap myJobs;
+	private JobCollection myJobs;
 	/** Flag indicates whether or not the Volunteer had job signed up. */
 	private boolean myIsSignedUp;
+  
 	/**
 	 * Constructor for Volunteer class.
 	 * 
 	 */
-    public Volunteer(JobMap paramJobMap) {
+
+    public Volunteer(JobCollection paramJobMap) {
         this("Test", "Volunteer",
                 new UserID("volunteer_default"));
-        myJobs = theParamJobMap;
-		myIsSignedUp = true;
-
+        myJobs = paramJobMap;
+		    myIsSignedUp = true;
+        jobsCurrentlyRegisteredForMap = new HashMap<>();
     }
 
     /**
@@ -44,7 +40,9 @@ public final class Volunteer extends User {
 	 */
     public Volunteer(String firstName, String lastName, UserID userID) {
         super(firstName, lastName, UserRole.VOLUNTEER, userID);
-        myIsSignedUp = false;
+
+        jobsCurrentlyRegisteredForMap = new HashMap<>();
+
     }
     
     
@@ -177,11 +175,11 @@ public final class Volunteer extends User {
 								//again.
 	}*/
 
-    public void registerForJobInCollection(final Job jobToAdd)
+    public void registerForJobInCollection(final Job jobToRegisterFor)
             throws VolunteerJobRegistrationException {
         //String retStr = "";
-        try {
-            jobToAdd.addNewVolunteer(this);
+        try { //let's see if we can sign up for this job
+            jobToRegisterFor.addUserToThisJob(this);
         }
         catch(VolunteerDailyJobLimitException e ) {
             throw new VolunteerJobRegistrationException(e.getMsgString());
@@ -189,15 +187,19 @@ public final class Volunteer extends User {
         catch(VolunteerSignUpStartDateException e) {
             throw new VolunteerJobRegistrationException(e.getMsgString());
         }
-//        catch (InvalidJobEndDateException e) {
-//            throw new VolunteerJobRegistrationException(e.getMsgString());
-//        }
+
         //this should not really ever happen, because if a job already has this
         //userId associated with it, then it should never display to the Volunteer
         //object in the first place, right?
         catch (DuplicateVolunteerUserIDException e) {
             throw new VolunteerJobRegistrationException(e.getMsgString());
         }
+        //ok, by now all the checks should have been performed
+        //that tells me the Volunteer has successfully registered for the Job
+        //now we need to track this Job for comparisons in the future
+        //so let's get some info from the system's job map:
+
+        jobsCurrentlyRegisteredForMap.put(jobToRegisterFor.getID(), jobToRegisterFor);
 
     }
     //end of Volunteer class

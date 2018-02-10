@@ -1,5 +1,9 @@
 package view;
 
+import model.JobMap;
+import model.ParkSet;
+import model.UserCollection;
+
 import java.util.HashMap;
 
 public class UrbanParksSystemUserInterface {
@@ -18,20 +22,22 @@ public class UrbanParksSystemUserInterface {
         return newJobInfoMap;
     }
 
-    //tighter coupling than is ideal but an easy way to get going on the project.
-    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
-        systemJobCollection = mainSystemJobCollection;
-        setupNewJobHashMap();
+
+    public UrbanParksSystemUserInterface () {
+        JobMap systemJobCollection = new JobMap();
+        UserCollection systemUserCollection = new UserCollection();
+        ParkSet systemParkSet = new ParkSet();
     }
+    //tighter coupling than is ideal but an easy way to get going on the project.
+//    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
+//        systemJobCollection = mainSystemJobCollection;
+//        setupNewJobHashMap();
+//    }
 
     public void setupNewJobHashMap() {
         //new jobs have 5 params so far
         //first param: starting date
-        newJobInfoMap.put("job begin date", "1/1/1"); //replace with actual date object
-        newJobInfoMap.put("job end date", "2/2/2"); //replace with actual date object
-        newJobInfoMap.put("job name", "job_name_here");
-        newJobInfoMap.put("job park", "job_park_here");  //replace with actual park object
-        //newJobInfoMap.put("system UI", "this"); //is this still needed?
+
         //now that it is setup, if a new job is submitted it can replace the
         //values of the corresponding keys
 

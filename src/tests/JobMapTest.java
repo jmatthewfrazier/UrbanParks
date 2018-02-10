@@ -1,8 +1,6 @@
 package tests;
 
 import model.Job;
-import model.JobCollection;
-import model.JobID;
 import model.Park;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class JobCollectionTest {
+public class JobMapTest {
 
     private JobCollection jobCollection;
 
@@ -30,7 +28,7 @@ public class JobCollectionTest {
      */
     @Test
     public void canAddJob_ManyFewerThanMaxJobsExist_True() {
-        assertTrue(jobCollection.isAtMaxCapacity());
+        assertTrue(jobCollection.canAddJob());
     }
 
     /**
@@ -42,12 +40,11 @@ public class JobCollectionTest {
     @Test
     public void canAddJob_OneFewerJobsThanMaxExists_True() {
         for (int i = 0; i < JobCollection.getMaxCapacity() - 1; i++) {
-            JobID jobID = new JobID(i);
-            jobCollection.put(jobID, new Job("Job" + 0, new Park(), jobID,
-                    LocalDateTime.now().plusDays(i * 2),
+            jobCollection.put("Job " + i, new Job("Job " + i,
+                    new Park(), LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
-        assertTrue(jobCollection.isAtMaxCapacity());
+        assertTrue(jobCollection.canAddJob());
     }
 
     /**
@@ -59,12 +56,11 @@ public class JobCollectionTest {
     @Test
     public void canAddJob_MaxJobsExist_False() {
         for (int i = 0; i < JobCollection.getMaxCapacity(); i++) {
-            JobID jobID = new JobID(i);
-            jobCollection.put(jobID, new Job("Job" + 0, new Park(), jobID,
-                    LocalDateTime.now().plusDays(i * 2),
+            jobCollection.put("Job " + i, new Job("Job " + i,
+                    new Park(), LocalDateTime.now().plusDays(i * 2),
                     LocalDateTime.now().plusDays(i * 2 + 2)));
         }
-        assertFalse(jobCollection.isAtMaxCapacity());
+        assertFalse(jobCollection.canAddJob());
     }
 
     @After
