@@ -1,8 +1,5 @@
 package view;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -10,6 +7,9 @@ import java.time.format.ResolverStyle;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Job;
 import model.JobCollection;
@@ -20,17 +20,21 @@ import model.UserCollection;
 import model.UserID;
 import model.UserRole;
 
+<<<<<<< HEAD
 public class UrbanParksSystemUserInterface {
 	
 	private Scanner console = new Scanner(System.in);
 	
 	private User currentUser = null;
+
+	private JobCollection jobs;
+
+    private UserCollection users;
+
+    private ParkCollection parks;
 	
 	private final String BREAK = "=============================URBAN PARKS" + 
 		"=============================\n";
-
-    //instance to for job storage while the user is interacting with the program
-    public JobCollection systemJobCollection;
 
     //what about taking in Date fields that are not a String?
     private HashMap<String, Object> newJobInfoMap = 
@@ -43,13 +47,15 @@ public class UrbanParksSystemUserInterface {
         return newJobInfoMap;
     }
 
+    UrbanParksSystemUserInterface() {
+        jobs = new JobCollection();
+        users = new UserCollection();
+        parks = new ParkCollection();
 
-    public UrbanParksSystemUserInterface () {
-        JobCollection systemJobCollection = new JobCollection();
+//        JobMap systemJobCollection = new JobMap();
         UserCollection systemUserCollection = new UserCollection();
         ParkCollection systemParkSet = new ParkCollection();
-        
-        
+
     }
     //tighter coupling than is ideal but an easy way to get going on the project.
 //    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
@@ -57,13 +63,42 @@ public class UrbanParksSystemUserInterface {
 //        setupNewJobHashMap();
 //    }
 
+    // TODO
     private void importCollections() {
+        try {
+            FileInputStream fileIn = new FileInputStream("data.bin");
+            ObjectInputStream ois = new ObjectInputStream(fileIn);
 
+            List<Object> woi = (ArrayList<Object>) ois.readObject();
+
+            jobs = (JobCollection) woi.get(0);
+            users = (UserCollection) woi.get(1);
+            parks = (ParkCollection) woi.get(2);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    // TODO
     private void exportCollections() {
+        try {
+            FileOutputStream out = new FileOutputStream("data.bin");
+            ObjectOutputStream oos = new ObjectOutputStream(out);
 
+            List<Object> collections = new ArrayList<>(); // look at this later
+            collections.add(jobs);
+            collections.add(users);
+            collections.add(parks);
+            oos.writeObject(collections);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+//    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
+//        systemJobCollection = mainSystemJobCollection;
+//        setupNewJobHashMap();
+//    }
 
     public void setupNewJobHashMap() {
         //new jobs have 5 params so far
@@ -79,7 +114,7 @@ public class UrbanParksSystemUserInterface {
     }
 
     /**
-     * @return the newJobInfoMap
+     *  the newJobInfoMap
      */
     public void populateNewJobFromMap(HashMap<String, Object> populatedJobInfoMap) {
 //        Date startDate = populatedJobInfoMap.get("job begin date");
