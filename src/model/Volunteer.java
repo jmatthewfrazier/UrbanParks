@@ -95,8 +95,12 @@ private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
     public HashMap<JobID, Job> getJobsCurrentlyRegisteredForMap() {
         return jobsCurrentlyRegisteredForMap;
     }
+    
+    public JobCollection getSignedUpJobs() {
+    	return myJobs;
+    }
 
-
+    /**
      public void signupForNewJob(Job theCandidateJob)
      throws SignupForNewJobException{
      if (myIsSignedUp){
@@ -129,7 +133,7 @@ private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
      myJobs.addJob(theCandidateJob);//Should we change this?
      //Otherwise it would go through the exceptions
      //again.
-     }
+     }*/
 
     //end of Volunteer class
 }

@@ -1,12 +1,12 @@
 package exceptions;
 
 /**
- * Created by dave on 2/7/18.
+ * Created by dave on 2/8/18.
  */
-public class InvalidJobLengthException extends Exception {
+public class JobCollectionDuplicateKeyException extends Exception {
     private String msgString = "";
 
-    public InvalidJobLengthException(final String paramString) {
+    public JobCollectionDuplicateKeyException(final String paramString) {
 
         this.msgString = paramString;
     }
@@ -14,5 +14,4 @@ public class InvalidJobLengthException extends Exception {
     public String getMsgString() {
         return msgString;
     }
-
 }
