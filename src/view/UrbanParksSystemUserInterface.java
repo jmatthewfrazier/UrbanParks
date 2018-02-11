@@ -50,19 +50,11 @@ public class UrbanParksSystemUserInterface {
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
-
-//        JobMap systemJobCollection = new JobMap();
-        UserCollection systemUserCollection = new UserCollection();
-        ParkCollection systemParkSet = new ParkCollection();
-
     }
-    //tighter coupling than is ideal but an easy way to get going on the project.
-//    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
-//        systemJobCollection = mainSystemJobCollection;
-//        setupNewJobHashMap();
-//    }
 
-    // TODO
+    /**
+     * Retrieves the stored data and creates program accessible collections.
+     */
     private void importCollections() {
         try {
             FileInputStream fileIn = new FileInputStream("data.bin");
@@ -78,7 +70,9 @@ public class UrbanParksSystemUserInterface {
         }
     }
 
-    // TODO
+    /**
+     * Writes all modified data to the stored collections.
+     */
     private void exportCollections() {
         try {
             FileOutputStream out = new FileOutputStream("data.bin");
@@ -92,31 +86,6 @@ public class UrbanParksSystemUserInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-//    public UrbanParksSystemUserInterface(JobMap mainSystemJobCollection) {
-//        systemJobCollection = mainSystemJobCollection;
-//        setupNewJobHashMap();
-//    }
-
-    public void setupNewJobHashMap() {
-        //new jobs have 5 params so far
-        //first param: starting date
-
-        //now that it is setup, if a new job is submitted it can replace the
-        //values of the corresponding keys
-
-    }
-
-    public void editNewJobHashMap(String keyStringValue, Object newValueObject) {
-        newJobInfoMap.replace(keyStringValue, newValueObject);
-    }
-
-    /**
-     *  the newJobInfoMap
-     */
-    public void populateNewJobFromMap(HashMap<String, Object> populatedJobInfoMap) {
-//        Date startDate = populatedJobInfoMap.get("job begin date");
     }
 
     /**
@@ -145,7 +114,8 @@ public class UrbanParksSystemUserInterface {
 		do {
 			if (console.hasNextLine()) {
 				UserID id = new UserID(console.nextLine());
-
+				
+				users
 				// TO DO - TRY FIND USER IN COLLECTION
 				// TO DO - CATCH USER NOT FOUND EXCEPTION
 				// 		   "That user name was not found. Please try again."
