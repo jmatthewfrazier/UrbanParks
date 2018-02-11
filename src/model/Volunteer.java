@@ -1,12 +1,18 @@
 package model;
 
-import exceptions.*;
+import exceptions.LessThanMinDaysAwayException;
+import exceptions.VolunteerDailyJobLimitException;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public final class Volunteer extends User {
 
-private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
+	private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
+
+	private List<Job> jobList;
 
 	/**
 	 * A default minimum number of calendar days after the current date that a job begins and a volunteer may sign up 
@@ -22,10 +28,10 @@ private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
 	 * Constructor for Volunteer class.
 	 * 
 	 */
-
     public Volunteer(JobCollection paramJobMap) {
         this("Test", "Volunteer",
                 new UserID("volunteer_default"));
+        jobList = new ArrayList<>();
         myJobs = paramJobMap;
 		    myIsSignedUp = true;
         jobsCurrentlyRegisteredForMap = new HashMap<>();
@@ -47,6 +53,10 @@ private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
 
     }
 
+    public int getMinDaysAwaySignUp() {
+    	return MINIMUM_SIGNUP_DAYS_OUT;
+    }
+
     /**
 	 * This is the constructor for Volunteer that has jobs signed
 	 * up already.
@@ -64,41 +74,75 @@ private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
        myIsSignedUp = false;
    }
 
-    public void registerForJobInCollection(final Job jobToRegisterFor)
-            throws VolunteerJobRegistrationException {
+//    public void registerForJobInCollection(final Job newJob)
+//            throws VolunteerJobRegistrationException {
+//
+//        try { //let's see if we can sign up for this job
+//            newJob.addVolunteer(this);
+//        }
+//        catch(VolunteerDailyJobLimitException e) {
+//            throw new VolunteerDailyJobLimitException(e.getMsgString());
+//        }
 
-        try { //let's see if we can sign up for this job
-            jobToRegisterFor.addVolunteerToThisJob(this);
-        }
-        catch(VolunteerDailyJobLimitException e ) {
-            throw new VolunteerJobRegistrationException(e.getMsgString());
-        }
-        catch(VolunteerSignUpStartDateException e) {
-            throw new VolunteerJobRegistrationException(e.getMsgString());
-        }
+
+//        catch(VolunteerSignUpStartDateException e) {
+//            throw new VolunteerJobRegistrationException(e.getMsgString());
+//        }
 
         //this should not really ever happen, because if a job already has this
         //userId associated with it, then it should never display to the Volunteer
-        //object in the first place, right?
-        catch (DuplicateVolunteerUserIDException e) {
-            throw new VolunteerJobRegistrationException(e.getMsgString());
-        }
+//        //object in the first place, right?
+//        catch (DuplicateVolunteerUserIDException e) {
+//            throw new VolunteerJobRegistrationException(e.getMsgString());
+//        }
         //ok, by now all the checks should have been performed
         //that tells me the Volunteer has successfully registered for the Job
         //now we need to track this Job for comparisons in the future
         //so let's get some info from the system's job map:
 
-        jobsCurrentlyRegisteredForMap.put(jobToRegisterFor.getID(), jobToRegisterFor);
-
-    }
+//        jobsCurrentlyRegisteredForMap.put(newJob.getID(), newJob);
+//
+//    }
 
     public HashMap<JobID, Job> getJobsCurrentlyRegisteredForMap() {
         return jobsCurrentlyRegisteredForMap;
     }
-    
-    public JobCollection getSignedUpJobs() {
-    	return myJobs;
+
+    public List<Job> getJobList() {
+   	    return new ArrayList<>(jobList);
     }
+
+    public void signUpForJob(Job newJob) throws VolunteerDailyJobLimitException,
+		    LessThanMinDaysAwayException {
+
+   	    if (newJob.getBeginDateTime().compareTo(LocalDateTime.now()) <
+		        getMinDaysAwaySignUp()) {
+   	    	throw new LessThanMinDaysAwayException();
+        }
+
+
+		for (Job job : jobList) {
+			if (job.isStartAtEndDate(newJob)) {
+				throw new VolunteerDailyJobLimitException("Candidate job " +
+						"begins on a date of a job that the volunteer is " +
+						"currently signed up for.");
+			} else if (job.isEndAtStartDate(newJob)) {
+				throw new VolunteerDailyJobLimitException("Candidate job " +
+						"ends on a date of a job that the volunteer is " +
+						"currently signed up for.");
+			}
+		}
+		jobList.add(newJob);
+
+    }
+
+    public List<Job> getChronologicalJobList() {
+   	    ArrayList<Job> chronologicalList = new ArrayList<>(jobList);
+		        chronologicalList.sort(Job.getChronologicalJobComparator());
+   	    return chronologicalList;
+    }
+
+
 
     /**
      public void signupForNewJob(Job theCandidateJob)

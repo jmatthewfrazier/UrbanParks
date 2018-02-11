@@ -142,14 +142,7 @@ public final class JobCollection implements Serializable {
     }
 
 
-    public static class ChoronologicalComparator implements Comparator<Job> {
-        @Override
-        public int compare(Job o1, Job o2) {
-            LocalDateTime t1 = o1.getBeginDateTime();
-            LocalDateTime t2 = o2.getEndDateTime();
-            return t1.compareTo(t2);
-        }
-    }
+
     
     public boolean containsJob(Job theJob) {
     	boolean hasJob = false;

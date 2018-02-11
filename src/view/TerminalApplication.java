@@ -1,9 +1,5 @@
 package view;
 
-import model.JobMap;
-import model.ParkSet;
-import model.UserCollection;
-
 public class TerminalApplication {
 
     // TODO

@@ -1,14 +1,19 @@
 package model;
 
+import exceptions.VolunteerDailyJobLimitException;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public final class Job implements Serializable {
 
     private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
     private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
-
+	private List<Volunteer> volunteerList;
     private String name;
     private Park park;
     private JobID ID;
@@ -19,6 +24,7 @@ public final class Job implements Serializable {
     public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
                final LocalDateTime endDate, final String description) {
+    	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
         this.ID = ID;
@@ -36,6 +42,34 @@ public final class Job implements Serializable {
     public static int getMaxJobLengthInDays() {
         return MAX_JOB_LENGTH_IN_DAYS;
     }
+
+    public void addVolunteer(final Volunteer volunteer)
+		    throws VolunteerDailyJobLimitException {
+
+    	for (Job job : volunteer.getJobList()) {
+    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
+				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
+    			if (this.getBeginDateTime().equals(date) || this
+					    .getEndDateTime().equals(date)) {
+    				throw new VolunteerDailyJobLimitException();
+			    }
+		    }
+	    }
+
+        this.volunteerList.add(volunteer);
+    }
+
+	public static Comparator<Job> getChronologicalJobComparator() {
+    	class ChronologicalComparator implements  Comparator<Job> {
+			@Override
+			public int compare(Job o1, Job o2) {
+				String s1 = o1.getName();
+				String s2 = o2.getName();
+				return s1.compareTo(s2);
+			}
+		}
+		return new ChronologicalComparator();
+	}
 
     /**
      * A method that checks all business rules a new instance of job is expected
@@ -83,7 +117,8 @@ public final class Job implements Serializable {
      * Only console messages?
      * ???
      */
-//    public boolean isJobValid() {
+//    public b
+// boolean isJobValid() {
 //        boolean retBool = false;
 //        //validate business case: job must be =< maxDays days in total length
 //        //job length is (maxDays - 1)
@@ -184,8 +219,8 @@ public final class Job implements Serializable {
 	 * @return boolean value indicates whether or not the Volunteer can get the job.
 	 */
 	public boolean isStartAtEndDate(Job theCandidateJob){
-//		return this.myEndDate.equals(theCandidateJob.myStartDate);
-		return false;
+		return this.endDateTime.equals(theCandidateJob.beginDateTime);
+//		return false;
 	}
 	
 	/**
@@ -195,9 +230,11 @@ public final class Job implements Serializable {
 	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
 	 * @return boolean value indicates whether or not the Volunteer can get the job.
 	 */
-	public boolean isEndAtStartDate(Job theCandidateJob){
-//		return this.myStartDate.equals(theCandidateJob.myEndDate);
-		return false;
+	public boolean isEndAtStartDate(Job theCandidateJob) {
+
+
+		return this.beginDateTime.equals(theCandidateJob.endDateTime);
+//		return false;
 
 	}
 

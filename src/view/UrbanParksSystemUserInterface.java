@@ -1,33 +1,14 @@
 package view;
 
+import exceptions.*;
+import model.*;
+
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Scanner;
-
-import exceptions.InvalidJobEndDateException;
-import exceptions.InvalidJobLengthException;
-import exceptions.JobCollectionDuplicateKeyException;
-import exceptions.MaxPendingJobsException;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import model.Job;
-import model.JobCollection;
-import model.JobID;
-import model.Park;
-import model.ParkCollection;
-import model.ParkID;
-import model.User;
-import model.UserCollection;
-import model.UserID;
-import model.UserRole;
-import model.Volunteer;
+import java.util.*;
 
 public class UrbanParksSystemUserInterface {
 	
@@ -222,7 +203,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println();
 		
 		for (Job job : jobs.getChronologicalList()) {
-			if (!((Volunteer) currentUser).getSignedUpJobs().containsJob(job)) {
+			if (!((Volunteer) currentUser).getJobList().contains(job)) {
 				System.out.printf("|%-9s|", count);
 				System.out.printf("%-50s|", job.getName());
 				System.out.printf("%-20s|", job.getPark().getName());
@@ -281,23 +262,13 @@ public class UrbanParksSystemUserInterface {
 			option = console.next();
 			if (option.equalsIgnoreCase("y")) {
 				try {
-					((Volunteer) currentUser).getSignedUpJobs().addJob(job);
-				} catch(MaxPendingJobsException e) {
-
-					// TO DO - ADD TEXT
-					
-				} catch(InvalidJobLengthException e) {
-					
-					// TO DO - ADD TEXT
-					
-				} catch(InvalidJobEndDateException e) {
-					
-					// TO DO - ADD TEXT
-					
-				} catch(JobCollectionDuplicateKeyException e) {
-					
-					// TO DO - ADD TEXT
-					
+					((Volunteer) currentUser).signUpForJob(job);
+				} catch (LessThanMinDaysAwayException e) {
+					// TODO
+					e.printStackTrace();
+				} catch (VolunteerDailyJobLimitException e) {
+					// TODO
+					e.printStackTrace();
 				} finally {
 					
 					// TO DO - CONFIRMATION MESSAGE AND/OR PRESS ENTER TO RETURN
@@ -328,7 +299,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println();
 		
 		Volunteer temp = (Volunteer) currentUser;
-		for (Job job : temp.getSignedUpJobs().getChronologicalList()) {
+		for (Job job : temp.getChronologicalJobList()) {
 			System.out.printf("%-50s|", job.getName());
 			System.out.printf("%-20s|", job.getPark().getName());
 			System.out.printf("%-10s|", 
