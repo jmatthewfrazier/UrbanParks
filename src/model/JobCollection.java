@@ -29,7 +29,7 @@ public final class JobCollection implements Serializable {
 
     private LocalDateTime endDateTime;
 
-    private Map<JobID, Job> jobMap;
+    public Map<JobID, Job> jobMap;
 
     public JobCollection() {
         jobMap = new HashMap<>();

@@ -19,6 +19,7 @@ import java.util.List;
 
 import model.Job;
 import model.JobCollection;
+import model.JobID;
 import model.Park;
 import model.ParkCollection;
 import model.ParkID;
@@ -107,6 +108,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println("Welcome to Urban Parks.");
 		System.out.println("\nPress Enter to proceed.");
 		if (console.hasNextLine()) {
+			console.nextLine();
 			signIn();
 		}
 		
@@ -121,7 +123,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println(BREAK);
 		System.out.println("Urban Parks - Sign In");
 		System.out.println();
-		
+
 		do {
 			System.out.print("Please enter your user ID: ");
 			if (console.hasNextLine()) {
@@ -131,9 +133,11 @@ public class UrbanParksSystemUserInterface {
 				} else {
 					System.out.print("That user ID was not found. " + 
 							"Please try again.");
+					console.nextLine();
 				}
-			}				
+			}
 		}while(currentUser == null);	
+		console.nextLine();
 		
 		welcomeMessage();
 	}
@@ -261,19 +265,12 @@ public class UrbanParksSystemUserInterface {
 	 * @param job is the job the user wants to view.
 	 */
 	private void displayJobInfo(Job job) {
-		String formatDate;
-		
 		System.out.println(BREAK);
 		System.out.println("User: " + currentUser.getID());
 		System.out.println();
-		System.out.println("JOB DETAILS:"); 
-		System.out.println();
-		System.out.println("Job Name:\t" + job.getName()); 		
-		formatDate = job.getBeginDateTime().format(formatter);
-		System.out.println("Start Date:\t" + formatDate); 
-		formatDate = job.getEndDateTime().format(formatter);
-		System.out.println("End Date:\t" + formatDate);
-		System.out.println("Location:\t" + job.getPark().getName());
+		
+		displayJobInfo(job.getName(), job.getID(), job.getBeginDateTime(), 
+				job.getEndDateTime(), job.getPark(), job.getDescription());
 		
 		System.out.println();
 		System.out.println("Would you like to sign up for this job?");
@@ -368,6 +365,11 @@ public class UrbanParksSystemUserInterface {
 				if (choice < 1 || choice > 2) {
 					System.out.println("\nYou entered an incorrect value.");
 				}
+				if (choice == 1 && jobs.isAtMaxCapacity()) {
+					System.out.println("There is already the max number of " +
+							"jobs in the system. Please try again later.");
+					choice = 0;
+				}
 			} else {
 				System.out.println("\nYou entered an incorrect value.");
 			}
@@ -386,8 +388,8 @@ public class UrbanParksSystemUserInterface {
 	 */
 	private void createJob() {
 		String title, description;
-		Park park;
-		int id;
+		Park park = null;
+		JobID id = null;
 		LocalDateTime startDate, endDate;
 		boolean flag = false;
 		
@@ -403,10 +405,44 @@ public class UrbanParksSystemUserInterface {
 		title = console.nextLine();
 		System.out.println();
 		
-		startDate = getDate("start");
-		endDate = getDate("finish");
+		do {
+			System.out.print("Please enter a job ID number (up to 5 digits): ");
+			if (console.hasNextInt()) {
+				int number = console.nextInt();
+				if (String.valueOf(number).length() <= 5) {
+					id = new JobID(number);
+					if (jobs.jobMap.containsKey(id)) {
+						System.out.println("That job already exists. Please " + 
+								"try a different ID.");
+					} else {
+						flag = true;
+					}
+				}
+			} else {
+				System.out.println("Please enter a number up to 5 digits " + 
+						"for the job ID.");
+			}
+		}while(!flag);
+		flag = false;
+		System.out.println();
 		
-		// TO DO - TEST FOR DATE CONFLICTS
+		do {
+			startDate = getDate("start");
+			endDate = getDate("finish");
+			flag = true;
+			if (jobs.isNewJobLengthValid()) {
+				System.out.println("The job specified is too long. Please " + 
+					"enter a smaller date range.");
+				flag = false;
+			}
+			if (jobs.isJobWithinValidDateRange()) {
+				System.out.println("The job end date is too far away " + 
+					"from the current date. Please enter a closer date.");
+				flag = false;
+			}
+		} while(!flag);
+		flag = false;
+		System.out.println();
 		
 		do {
 			System.out.print("Please enter the Park ID: "); 
@@ -417,15 +453,15 @@ public class UrbanParksSystemUserInterface {
 				System.out.println("Sorry, that's not a valid Park ID. " + 
 						"Please Try again.");
 			}
-		} while(flag == false);
+		} while(!flag);
+		flag = false;
 		
 		System.out.println();
-		
 		System.out.println("Please enter a description for the job: ");
 		description = console.nextLine();
 		System.out.println();
 		
-		displayJobInfo(title, startDate, endDate, park, description);
+		displayJobInfo(title, id, startDate, endDate, park, description);
 		System.out.println();
 		System.out.println("Would you like to submit this job?");
 		
@@ -438,33 +474,39 @@ public class UrbanParksSystemUserInterface {
 						description);
 				try {
 					jobs.addJob(newJob);
+					flag = true;
 				} catch(MaxPendingJobsException e) {
-
-					// TO DO - ADD TEXT
-					
+					System.out.println("There is already the max number of " +
+							"jobs in the system. Please try again later.");
+					flag = false;
 				} catch(InvalidJobLengthException e) {
-					
-					// TO DO - ADD TEXT
-					
+					System.out.println("The job specified is too long." + 
+							"Please enter a smaller date range.");
+					flag = false;
 				} catch(InvalidJobEndDateException e) {
-					
-					// TO DO - ADD TEXT
-					
+					System.out.println("The job end date is too far away " + 
+							"from the current date. Please enter a closer " + 
+							"date.");
+					flag = false;
 				} catch(JobCollectionDuplicateKeyException e) {
-					
-					// TO DO - ADD TEXT
-					
-				} finally {
-					
-					// TO DO - CONFIRMATION MESSAGE AND/OR PRESS ENTER TO RETURN
-					
-				}				
+					System.out.println("That job already exists. Please " + 
+							"try entering a different job.");
+					flag = false;
+				}		
 			} else if (option.equalsIgnoreCase("n")) {
+				flag = true;
 				parkManagerMenu();
 			} else {
 				System.out.println("\nYou entered an invalid input.");
 			}
-		} while(!option.equalsIgnoreCase("y") || !option.equalsIgnoreCase("n"));
+		} while(!flag);
+		
+		System.out.println();
+		System.out.println("You successfully added a new job!");
+		System.out.println("Press Enter to proceed.");
+		if (console.hasNextLine()) {
+			parkManagerMenu();
+		}
 	}
 	
 	/**
@@ -498,13 +540,15 @@ public class UrbanParksSystemUserInterface {
 		return date;
 	}
 	
-	private void displayJobInfo(String jobName, LocalDateTime start, 
-			LocalDateTime finish, Park park, String description) {
+	private void displayJobInfo(String jobName, JobID jobID, 
+			LocalDateTime start, LocalDateTime finish, Park park, 
+			String description) {
 		String formatDate;
 		
 		System.out.println("JOB DETAILS:"); 
 		System.out.println();
-		System.out.println("Job Name:\t" + jobName); 		
+		System.out.println("Job Name:\t" + jobName); 	
+		System.out.println("Job ID:\t" + jobID);
 		formatDate = start.format(formatter);
 		System.out.println("Start Date:\t" + formatDate); 
 		formatDate = finish.format(formatter);
