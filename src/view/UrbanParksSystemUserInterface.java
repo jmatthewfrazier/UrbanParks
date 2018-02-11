@@ -20,7 +20,6 @@ import model.UserCollection;
 import model.UserID;
 import model.UserRole;
 
-<<<<<<< HEAD
 public class UrbanParksSystemUserInterface {
 	
 	private Scanner console = new Scanner(System.in);
