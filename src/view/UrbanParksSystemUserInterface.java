@@ -400,17 +400,21 @@ public class UrbanParksSystemUserInterface {
 		do {
 			startDate = getDate("start");
 			endDate = getDate("finish");
+
+//			Job newJob = new Job(title, park, id, startDate, endDate,
+//					description);
+
 			flag = true;
-			if (jobs.isNewJobLengthValid()) {
-				System.out.println("The job specified is too long. Please " + 
-					"enter a smaller date range.");
-				flag = false;
-			}
-			if (jobs.isJobWithinValidDateRange()) {
-				System.out.println("The job end date is too far away " + 
-					"from the current date. Please enter a closer date.");
-				flag = false;
-			}
+//			if (jobs.isNewJobLengthValid()) {
+//				System.out.println("The job specified is too long. Please " +
+//					"enter a smaller date range.");
+//				flag = false;
+//			}
+//			if (jobs.isJobWithinValidDateRange()) {
+//				System.out.println("The job end date is too far away " +
+//					"from the current date. Please enter a closer date.");
+//				flag = false;
+//			}
 		} while(!flag);
 		flag = false;
 		System.out.println();
@@ -426,7 +430,7 @@ public class UrbanParksSystemUserInterface {
 			}
 		} while(!flag);
 		flag = false;
-		
+
 		System.out.println();
 		System.out.println("Please enter a description for the job: ");
 		description = console.nextLine();
@@ -441,7 +445,7 @@ public class UrbanParksSystemUserInterface {
 			System.out.println("Enter Y for yes or N for no: ");
 			option = console.next();
 			if (option.equalsIgnoreCase("y")) {
-				Job newJob = new Job(title, park, id, startDate, endDate, 
+				Job newJob = new Job(title, park, id, startDate, endDate,
 						description);
 				try {
 					jobs.addJob(newJob);

@@ -2,10 +2,6 @@ package model;
 
 import java.io.Serializable;
 
-public enum UserRole {
-    PARK_MANAGER, VOLUNTEER
-}
-
 /**
  * Represents an Urban Parks user.
  */
@@ -24,17 +20,7 @@ public abstract class User implements Serializable {
         this.lastName = lastName;
         this.userRole = userRole;
         this.userID = userID;
-//        setupUser();
     }
-
-//    private void setupUser() {
-//        //TODO-validate a user name, etc in the User class?
-//        //TODO-yes, how we do it in Job class also
-//        add all user role types to the set
-//        populateUserRolesSet();
-//        verifyUserSystemName();
-//        assignUserRole();
-//    }
 
     public final String getFirstName() {
         return firstName;
