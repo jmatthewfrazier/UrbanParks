@@ -95,6 +95,10 @@ private HashMap<JobID, Job> jobsCurrentlyRegisteredForMap;
     public HashMap<JobID, Job> getJobsCurrentlyRegisteredForMap() {
         return jobsCurrentlyRegisteredForMap;
     }
+    
+    public JobCollection getSignedUpJobs() {
+    	return myJobs;
+    }
 
     /**
      public void signupForNewJob(Job theCandidateJob)

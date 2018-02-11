@@ -7,6 +7,12 @@ import java.time.format.ResolverStyle;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
+
+import exceptions.InvalidJobEndDateException;
+import exceptions.InvalidJobLengthException;
+import exceptions.JobCollectionDuplicateKeyException;
+import exceptions.MaxPendingJobsException;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +21,19 @@ import model.Job;
 import model.JobCollection;
 import model.Park;
 import model.ParkCollection;
+import model.ParkID;
 import model.User;
 import model.UserCollection;
 import model.UserID;
 import model.UserRole;
+import model.Volunteer;
 
 public class UrbanParksSystemUserInterface {
 	
 	private Scanner console = new Scanner(System.in);
+	
+	private DateTimeFormatter formatter = 
+			DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	private User currentUser = null;
 
@@ -108,19 +119,20 @@ public class UrbanParksSystemUserInterface {
 	 */
 	private void signIn() {
 		System.out.println(BREAK);
-		System.out.println("Urban Parks - Sign In\n");
-		System.out.print("Please enter your user ID: ");
+		System.out.println("Urban Parks - Sign In");
+		System.out.println();
 		
 		do {
+			System.out.print("Please enter your user ID: ");
 			if (console.hasNextLine()) {
 				UserID id = new UserID(console.nextLine());
-				
-				users
-				// TO DO - TRY FIND USER IN COLLECTION
-				// TO DO - CATCH USER NOT FOUND EXCEPTION
-				// 		   "That user name was not found. Please try again."
-				
-			}
+				if (users.containsUserID(id)) {
+					currentUser = users.getUser(id);
+				} else {
+					System.out.print("That user ID was not found. " + 
+							"Please try again.");
+				}
+			}				
 		}while(currentUser == null);	
 		
 		welcomeMessage();
@@ -190,34 +202,56 @@ public class UrbanParksSystemUserInterface {
 	 */
 	private void displayOpenJobs() {
 		boolean jobSelected = false;
+		ArrayList<Job> availableJobs = new ArrayList<Job>();
+		int count = 1;
 		
 		System.out.println(BREAK);
 		System.out.println("Jobs available for " + 
 				currentUser.getID() + "to sign up for:"); 
 		System.out.println();
 		
-		// TO DO - SHOW LIST OF JOBS
-		// TO DO - REMOVE JOBS WITH DATE CONFLICTS (OR ERROR MESSAGE ON SIGN UP)
-		// TO DO - PROVIDE OPTION TO GO BACK
+		System.out.printf("|%-9s|%-50s|%-20s|%-10s|%-10s|\n",
+				"OPTION", "JOB NAME", "PARK", "START DATE", "END DATE");
+		for (int i = 1; i <= 105; i++) {
+			System.out.print("-");
+		}
+		System.out.println();
+		
+		for (Job job : jobs.getChronologicalList()) {
+			if (!((Volunteer) currentUser).getSignedUpJobs().containsJob(job)) {
+				System.out.printf("|%-9s|", count);
+				System.out.printf("%-50s|", job.getName());
+				System.out.printf("%-20s|", job.getPark().getName());
+				System.out.printf("%-10s|", 
+						job.getBeginDateTime().format(formatter));
+				System.out.printf("%-10s|\n", 
+						job.getEndDateTime().format(formatter));
+				availableJobs.add(job);
+				count++;
+			}
+		}
 		
 		System.out.println();
 		System.out.println("Please enter the number from a job you want " + 
-		"to see more details for: ");
+		"to see more details for or " + count + " to go back: ");
 		
 		do {
 			if (console.hasNextInt()) { 
 				int jobNumber = console.nextInt();
-				
-				// TO DO - GET JOB IDENTIFIER FROM LIST
-				
-				jobSelected = true;
-
+				if (jobNumber >= 1 || jobNumber < count) {
+					jobSelected = true;
+					displayJobInfo(availableJobs.get(jobNumber - 1));
+				} else if (jobNumber == count) {
+					jobSelected = true;
+					volunteerMenu();
+				} else {
+					System.out.println("You entered an invalid number.");
+				}
 			} else {
-				System.out.println("You entered an invalid character. Please " + 
-						"enter a number only.");
+				System.out.println("You entered an invalid character. Please" + 
+						" enter a number only.");
 			}
 		}while(jobSelected == false);
-		displayJobInfo(/*JOB*/);
 	}
 	
 	/**
@@ -227,8 +261,6 @@ public class UrbanParksSystemUserInterface {
 	 * @param job is the job the user wants to view.
 	 */
 	private void displayJobInfo(Job job) {
-		DateTimeFormatter formatter = 
-				DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String formatDate;
 		
 		System.out.println(BREAK);
@@ -251,9 +283,29 @@ public class UrbanParksSystemUserInterface {
 			System.out.println("Enter Y for yes or N for no: ");
 			option = console.next();
 			if (option.equalsIgnoreCase("y")) {
-				
-				// TO DO - ADD VOLUNTEER TO JOB/JOB TO VOLUNTEER
-				
+				try {
+					((Volunteer) currentUser).getSignedUpJobs().addJob(job);
+				} catch(MaxPendingJobsException e) {
+
+					// TO DO - ADD TEXT
+					
+				} catch(InvalidJobLengthException e) {
+					
+					// TO DO - ADD TEXT
+					
+				} catch(InvalidJobEndDateException e) {
+					
+					// TO DO - ADD TEXT
+					
+				} catch(JobCollectionDuplicateKeyException e) {
+					
+					// TO DO - ADD TEXT
+					
+				} finally {
+					
+					// TO DO - CONFIRMATION MESSAGE AND/OR PRESS ENTER TO RETURN
+					
+				}
 			} else if (option.equalsIgnoreCase("n")) {
 				displayOpenJobs();
 			} else {
@@ -271,9 +323,24 @@ public class UrbanParksSystemUserInterface {
 				" is signed up for: ");
 		System.out.println();
 		
-		// TO DO - SHOW JOBS
+		System.out.printf("|%-50s|%-20s|%-10s|%-10s|\n", "JOB NAME", "PARK", 
+				"START DATE", "END DATE");
+		for (int i = 1; i <= 95; i++) {
+			System.out.print("-");
+		}
+		System.out.println();
 		
-		System.out.println("Press Enter to go back to Volunteer Menu.");
+		Volunteer temp = (Volunteer) currentUser;
+		for (Job job : temp.getSignedUpJobs().getChronologicalList()) {
+			System.out.printf("%-50s|", job.getName());
+			System.out.printf("%-20s|", job.getPark().getName());
+			System.out.printf("%-10s|", 
+					job.getBeginDateTime().format(formatter));
+			System.out.printf("%-10s|\n", 
+					job.getEndDateTime().format(formatter));
+		}
+		
+		System.out.println("Press Enter to go back to the Volunteer Menu.");
 		if (console.hasNextLine()) {
 			volunteerMenu();
 		}
@@ -320,7 +387,11 @@ public class UrbanParksSystemUserInterface {
 	private void createJob() {
 		String title, description;
 		Park park;
+		int id;
 		LocalDateTime startDate, endDate;
+		boolean flag = false;
+		
+		// TO DO - CREATE ID (USER OR AUTO-GENERATED?)
 		
 		System.out.println(BREAK);
 		System.out.println("Park Manager: " + currentUser.getID()); 
@@ -337,10 +408,16 @@ public class UrbanParksSystemUserInterface {
 		
 		// TO DO - TEST FOR DATE CONFLICTS
 		
-		System.out.print("Please enter the Park name: "); 
-		String parkName = console.nextLine();
-		
-		// TO DO - FIND PARK IN COLLECTION
+		do {
+			System.out.print("Please enter the Park ID: "); 
+			int parkID = console.nextInt();
+			if (parks.parkMap.containsKey(parkID)) {
+				park = parks.getPark(new ParkID(parkID));
+			} else {
+				System.out.println("Sorry, that's not a valid Park ID. " + 
+						"Please Try again.");
+			}
+		} while(flag == false);
 		
 		System.out.println();
 		
@@ -357,9 +434,31 @@ public class UrbanParksSystemUserInterface {
 			System.out.println("Enter Y for yes or N for no: ");
 			option = console.next();
 			if (option.equalsIgnoreCase("y")) {
-				
-				// TO DO - ADD JOB TO COLLECTION
-				
+				Job newJob = new Job(title, park, id, startDate, endDate, 
+						description);
+				try {
+					jobs.addJob(newJob);
+				} catch(MaxPendingJobsException e) {
+
+					// TO DO - ADD TEXT
+					
+				} catch(InvalidJobLengthException e) {
+					
+					// TO DO - ADD TEXT
+					
+				} catch(InvalidJobEndDateException e) {
+					
+					// TO DO - ADD TEXT
+					
+				} catch(JobCollectionDuplicateKeyException e) {
+					
+					// TO DO - ADD TEXT
+					
+				} finally {
+					
+					// TO DO - CONFIRMATION MESSAGE AND/OR PRESS ENTER TO RETURN
+					
+				}				
 			} else if (option.equalsIgnoreCase("n")) {
 				parkManagerMenu();
 			} else {
@@ -401,8 +500,6 @@ public class UrbanParksSystemUserInterface {
 	
 	private void displayJobInfo(String jobName, LocalDateTime start, 
 			LocalDateTime finish, Park park, String description) {
-		DateTimeFormatter formatter = 
-				DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String formatDate;
 		
 		System.out.println("JOB DETAILS:"); 
@@ -420,9 +517,8 @@ public class UrbanParksSystemUserInterface {
 	 * Logs the current user out so a different user can log in.
 	 */
 	private void logout() {
+		exportCollections();
 		currentUser = null;
 		signIn();
-		
-		// TO DO - RESET COLLECTIONS?
 	}
 }

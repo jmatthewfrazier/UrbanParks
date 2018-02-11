@@ -150,4 +150,14 @@ public final class JobCollection implements Serializable {
             return t1.compareTo(t2);
         }
     }
+    
+    public boolean containsJob(Job theJob) {
+    	boolean hasJob = false;
+    	for (Job job : this.getChronologicalList()) {
+    		if (theJob.equals(job)) {
+    			hasJob = true;
+    		}
+    	}
+    	return hasJob;
+    }
 }

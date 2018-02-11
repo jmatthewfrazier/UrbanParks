@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ParkCollection implements Serializable {
 
-	private Map<ParkID, Park> parkMap;
+	public Map<ParkID, Park> parkMap;
 
 	public ParkCollection() {
 	    parkMap = new HashMap<>();

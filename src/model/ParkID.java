@@ -6,6 +6,10 @@ import java.util.Objects;
 public final class ParkID implements Serializable {
 
 	private int parkID;
+	
+    public ParkID(int parkID) {
+        this.parkID = parkID;
+    }
 
 	@Override
 	public boolean equals(Object other) {
