@@ -14,10 +14,11 @@ public final class Job implements Serializable {
     private JobID ID;
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
+    private String description;
 
     public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
-               final LocalDateTime endDate) {
+               final LocalDateTime endDate, final String description) {
         this.name = name;
         this.park = park;
         this.ID = ID;
@@ -25,6 +26,7 @@ public final class Job implements Serializable {
 //        this.myStartDate = beginDateTime.toLocalDate();
         this.endDateTime = endDate;
 //        this.myEndDate = endDateTime.toLocalDate();
+        this.description = description;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
@@ -206,6 +208,10 @@ public final class Job implements Serializable {
     public LocalDateTime getEndDateTime() {
         return endDateTime;
     }
+    
+    public String getDescription() {
+    	return description;
+    }
 
     public void setName(final String name) {
         this.name = name;
@@ -221,6 +227,10 @@ public final class Job implements Serializable {
 
     public void setEndDateTime(final LocalDateTime time) {
         this.endDateTime = time;
+    }
+    
+    public void getDescription(final String description) {
+    	this.description = description;
     }
 }
 

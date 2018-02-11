@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-enum UserRole {
+public enum UserRole {
     PARK_MANAGER, VOLUNTEER
 }
 

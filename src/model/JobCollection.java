@@ -60,7 +60,6 @@ public final class JobCollection implements Serializable {
         } else if (!isNewJobLengthValid()) { //check to see if the job length is valid
             throw new InvalidJobLengthException("Sorry, the length of this job" +
                     "is too many days.");
-
         } else if (!isJobWithinValidDateRange()) { //check to see if the job's end date is acceptable
             throw new InvalidJobEndDateException("Sorry, the end date of that" +
                     "job is too far in the future");
