@@ -31,13 +31,6 @@ public class UrbanParksSystemUserInterface {
     private HashMap<String, Object> newJobInfoMap = 
     		new HashMap<String, Object>();
 
-    /**
-     * @return the newJobInfoMap
-     */
-    public HashMap<String, Object> getNewJobInfoMap() {
-        return newJobInfoMap;
-    }
-
     UrbanParksSystemUserInterface() {
 	    console = new Scanner(System.in);
 	    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -70,7 +63,7 @@ public class UrbanParksSystemUserInterface {
 		    jobs = (JobCollection) woi.get(0);
 		    users = (UserCollection) woi.get(1);
 		    parks = (ParkCollection) woi.get(2);
-
+			fileIn.close();
 	    } catch (FileNotFoundException e) {
 		    System.out.println("File not found.");
 	    } catch (IOException e) {
@@ -104,7 +97,7 @@ public class UrbanParksSystemUserInterface {
      * Starts the user interface with the welcome screen.
      */
 	public void runInterface() {
-		
+		importCollections();
 		System.out.println("Welcome to Urban Parks.");
 		System.out.println("\nPress Enter to proceed.");
 		if (console.hasNextLine()) {
