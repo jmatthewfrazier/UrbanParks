@@ -278,6 +278,7 @@ public class UrbanParksSystemUserInterface {
 				System.out.println("\nYou entered an incorrect value.");
 			}
 		}while(choice < 1 || choice > 3);
+		console.nextLine();
 
 		if (choice == 1) {
 			displayOpenJobs();
@@ -477,9 +478,6 @@ public class UrbanParksSystemUserInterface {
 		LocalDateTime startDate, endDate;
 		boolean flag = false;
 		Job newJob;
-		
-		// TO DO - CREATE ID (USER OR AUTO-GENERATED?)
-		
 		System.out.println(BREAK);
 		System.out.println("Park Manager: " + currentUser.getFullName());
 		System.out.println();
@@ -653,7 +651,6 @@ public class UrbanParksSystemUserInterface {
 	 * Logs the current user out so a different user can log in.
 	 */
 	private void logout() {
-		console.nextLine();
 		exportCollections();
 		currentUser = null;
 		signIn();
