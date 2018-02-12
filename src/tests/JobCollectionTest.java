@@ -8,7 +8,6 @@ import model.Job;
 import model.JobCollection;
 import model.JobID;
 import model.Park;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,23 +25,11 @@ public class JobCollectionTest {
         jobCollection = new JobCollection();
     }
 
-    /**
-     * This tests that a Job can be added only when there is below the
-     * maximum number of Jobs already contained in the system.
-     * Specifically, it tests the result when there are many fewer Jobs than
-     * maximum in the system.
-     */
     @Test
     public void isAtMaxCapacity_ManyFewerThanMaxJobsExist_False() {
         assertFalse(jobCollection.isAtMaxCapacity());
     }
 
-    /**
-     * This tests that a Job can be added only when there is below the
-     * maximum number of Jobs already contained in the system.
-     * Specifically, it tests the result when there is one fewer Jobs than
-     * maximum in the system.
-     */
     @Test
     public void isAtMaxCapacity_OneFewerJobsThanMaxExists_False() {
         for (int i = 0; i < JobCollection.getMaxCapacity() - 1; i++) {
@@ -60,12 +47,6 @@ public class JobCollectionTest {
         assertFalse(jobCollection.isAtMaxCapacity());
     }
 
-    /**
-     * This tests that a Job can be added only when there is below the
-     * maximum number of Jobs already contained in the system.
-     * Specifically, it tests the result when there is the maximum number of
-     * Jobs in the system.
-     */
     @Test
     public void isAtMaxCapacity_MaxJobsExist_True() {
         for (int i = 0; i < JobCollection.getMaxCapacity(); i++) {
@@ -80,9 +61,5 @@ public class JobCollectionTest {
             }
         }
         assertTrue(jobCollection.isAtMaxCapacity());
-    }
-
-    @After
-    public void tearDown() {
     }
 }

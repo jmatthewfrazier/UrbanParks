@@ -53,14 +53,9 @@ public final class Job implements Serializable {
     }
 
     public boolean isJobLengthValid() {
-        boolean retBool = false;
-        LocalDateTime maxValidJobEndDate =
-                beginDateTime.plusDays(MAX_JOB_LENGTH_IN_DAYS);
-        if (maxValidJobEndDate.isAfter(this.endDateTime)) {
-            retBool = true;
-        }
-
-        return retBool;
+	    LocalDateTime maxValidJobEndDate =
+			    beginDateTime.plusDays(MAX_JOB_LENGTH_IN_DAYS);
+        return maxValidJobEndDate.isAfter(this.endDateTime);
     }
 
     /**
