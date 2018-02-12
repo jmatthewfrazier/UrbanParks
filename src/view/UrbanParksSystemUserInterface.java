@@ -403,6 +403,7 @@ public class UrbanParksSystemUserInterface {
 		
 		// TO DO - CREATE ID (USER OR AUTO-GENERATED?)
 		
+		
 		System.out.println(BREAK);
 		System.out.println("Park Manager: " + currentUser.getFullName());
 		System.out.println();
@@ -460,8 +461,10 @@ public class UrbanParksSystemUserInterface {
 		do {
 			System.out.print("Please enter the Park ID: "); 
 			int parkID = console.nextInt();
-			if (parks.parkMap.containsKey(parkID)) {
+			console.nextLine();
+			if (parks.parkMap.containsKey(new ParkID(parkID))) {
 				park = parks.getPark(new ParkID(parkID));
+				flag = true;
 			} else {
 				System.out.println("Sorry, that's not a valid Park ID. " + 
 						"Please Try again.");
