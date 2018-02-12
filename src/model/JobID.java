@@ -14,11 +14,6 @@ public final class JobID implements Serializable {
         return jobID;
     }
 
-//	@Override
-//	public int compareTo(JobID o) {
-//		return Integer.compare(this.getJobID(), o.getJobID());
-//	}
-
     @Override
     public boolean equals(Object o) {
         if (o == this) {
