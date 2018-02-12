@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
@@ -30,23 +29,13 @@ public class JobTest {
      */
     private Long maxJobDays = (long) 3;
 
-    public int MAX_NUM_DAYS_FROM_TODAY = 75;
-
     private String jobNameFoo = "A Job Named Foo";
 
     private String jobNameBar = "A Job Named Bar";
 
     private LocalDateTime beginDateTime;
-    
-    private LocalDate beginDate;
-    
+
     private LocalDateTime endDateTime;
-    
-    private LocalDate endDate;
-
-    private LocalDateTime beginDateTimeMaxLengthMinusOneDay;
-
-    private LocalDateTime beginDateTimePlusMaxDays;
 
 	private Park parkWestside;
 
@@ -56,11 +45,9 @@ public class JobTest {
     public void setUp() {
 
         beginDateTime = LocalDateTime.now();
-        beginDate = beginDateTime.toLocalDate();
+//        beginDate = beginDateTime.toLocalDate();
         endDateTime = beginDateTime.plusDays(maxJobDays);
-        endDate = endDateTime.toLocalDate();
-        
-        //System.out.println(beginDateTime.toString());
+//        endDate = endDateTime.toLocalDate();
 
 		parkWestside = new Park();
 		parkEastside = new Park();
@@ -97,8 +84,8 @@ public class JobTest {
     @Test
     public void isEndAtStartDate_EndAtStartDate_True(){
     	final Job job = new Job(jobNameBar, parkEastside, new JobID(2),
-    			beginDateTime.plusDays(maxJobDays), 
-    			beginDateTime.plusDays(2*maxJobDays), "test job2");
+    			beginDateTime.plusDays(maxJobDays + 2),
+    			beginDateTime.plusDays(2 * maxJobDays + 2), "test job2");
     	
     	final Job testJob = new Job(jobNameFoo, parkWestside, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
@@ -110,8 +97,8 @@ public class JobTest {
     @Test
     public void isEndAtStartDate_NotEndAtStartDate_False(){
     	final Job job = new Job(jobNameBar, parkEastside, new JobID(2),
-    			beginDateTime.plusDays(maxJobDays-1), 
-    			beginDateTime.plusDays(2*maxJobDays-1), "test job2");
+    			beginDateTime.plusDays(maxJobDays - 1),
+    			beginDateTime.plusDays(2 * maxJobDays - 1), "test job2");
     	
     	final Job testJob = new Job(jobNameFoo, parkWestside, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
@@ -223,23 +210,17 @@ public class JobTest {
     public void isJobWithinValidDateRange_JobEndDateOneGreaterThanMax_False() {
         Job testJob = new Job("Test Job", parkEastside, new JobID(1),
 		        LocalDateTime.now()
-				        .plusDays(Job.getMaximumValidDayRangeFromToday()),
+				        .plusDays(Job.getMaximumValidDayRangeFromToday() + 1),
 		        LocalDateTime.now()
-                        .plusDays(Job.getMaximumValidDayRangeFromToday() + 1),
+                        .plusDays(Job.getMaximumValidDayRangeFromToday() + 2),
                 "test job");
-        assertTrue(testJob.isJobWithinValidDateRange());
+        assertFalse(testJob.isJobWithinValidDateRange());
     }
 
 
     @After
     public void tearDown() {
     }
-
-	@Test
-	public void testIsNewJobValid() {
-
-		//fail("Not yet implemented");
-	}
 
 
     //end of Job Test class

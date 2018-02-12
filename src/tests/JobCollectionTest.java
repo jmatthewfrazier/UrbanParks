@@ -33,8 +33,8 @@ public class JobCollectionTest {
      * maximum in the system.
      */
     @Test
-    public void isAtMaxCapacity_ManyFewerThanMaxJobsExist_True() {
-        assertTrue(jobCollection.isAtMaxCapacity());
+    public void isAtMaxCapacity_ManyFewerThanMaxJobsExist_False() {
+        assertFalse(jobCollection.isAtMaxCapacity());
     }
 
     /**
@@ -44,7 +44,7 @@ public class JobCollectionTest {
      * maximum in the system.
      */
     @Test
-    public void isAtMaxCapacity_OneFewerJobsThanMaxExists_True() {
+    public void isAtMaxCapacity_OneFewerJobsThanMaxExists_False() {
         for (int i = 0; i < JobCollection.getMaxCapacity() - 1; i++) {
             try {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
@@ -57,7 +57,7 @@ public class JobCollectionTest {
             }
 
         }
-        assertTrue(jobCollection.isAtMaxCapacity());
+        assertFalse(jobCollection.isAtMaxCapacity());
     }
 
     /**
@@ -67,7 +67,7 @@ public class JobCollectionTest {
      * Jobs in the system.
      */
     @Test
-    public void isAtMaxCapacity_MaxJobsExist_False() {
+    public void isAtMaxCapacity_MaxJobsExist_True() {
         for (int i = 0; i < JobCollection.getMaxCapacity(); i++) {
             try {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
@@ -79,7 +79,7 @@ public class JobCollectionTest {
                 e.printStackTrace();
             }
         }
-        assertFalse(jobCollection.isAtMaxCapacity());
+        assertTrue(jobCollection.isAtMaxCapacity());
     }
 
     @After

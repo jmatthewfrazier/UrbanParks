@@ -192,13 +192,8 @@ public class UrbanParksSystemUserInterface {
 						(new ParkID(2)), new JobID(19), LocalDateTime.now()
 						.plusDays(42), LocalDateTime.now().plusDays(43),
 						"Build new trail markers."));
-			} catch (MaxPendingJobsException e) {
-				e.printStackTrace();
-			} catch (InvalidJobLengthException e) {
-				e.printStackTrace();
-			} catch (InvalidJobEndDateException e) {
-				e.printStackTrace();
-			} catch (JobCollectionDuplicateKeyException e) {
+			} catch (MaxPendingJobsException | JobCollectionDuplicateKeyException |
+					InvalidJobEndDateException | InvalidJobLengthException e) {
 				e.printStackTrace();
 			}
 		}
