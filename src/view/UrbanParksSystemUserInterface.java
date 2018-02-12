@@ -382,7 +382,10 @@ public class UrbanParksSystemUserInterface {
 							"up for a job that is on the same date as this " +
 							"job.");
 				} finally {
+					System.out.printf("Congradulations, you have sign up for " + 
+							"the job %s \n\n", job.getName());
 					volunteerMenu();
+					
 				}
 			} else if (option.equalsIgnoreCase("n")) {
 				displayOpenJobs();
@@ -534,6 +537,7 @@ public class UrbanParksSystemUserInterface {
 		do {
 			System.out.print("Please enter the Park ID: "); 
 			int parkID = console.nextInt();
+			console.nextLine();
 			if (parks.containsParkID(new ParkID(parkID))) {
 				park = parks.getPark(new ParkID(parkID));
 				flag = true;
