@@ -376,10 +376,7 @@ public class UrbanParksSystemUserInterface {
 					System.out.println("We're sorry, you are already signed " +
 							"up for a job that is on the same date as this " +
 							"job.");
-				} finally {
-					System.out.printf("Congradulations, you have sign up for " + 
-							"the job %s \n\n", job.getName());
-					volunteerMenu();
+				}
 					
 				}
 			} else if (option.equalsIgnoreCase("n")) {
@@ -633,7 +630,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println("JOB DETAILS:"); 
 		System.out.println();
 		System.out.println("Job Name:\t" + jobName); 	
-		System.out.println("Job ID:\t" + jobID.getJobID());
+		System.out.println("Job ID:\t\t" + jobID.getJobID());
 		formatDate = start.format(formatter);
 		System.out.println("Start Date:\t" + formatDate); 
 		formatDate = finish.format(formatter);
