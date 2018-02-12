@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ParkCollection implements Serializable {
 
-	public Map<ParkID, Park> parkMap;
+	private Map<ParkID, Park> parkMap;
 
 	public ParkCollection() {
 	    parkMap = new HashMap<>();
@@ -26,6 +26,10 @@ public class ParkCollection implements Serializable {
 
 	public boolean isEmpty() {
 		return parkMap.isEmpty();
+	}
+
+	public boolean containsParkID(ParkID ID) {
+		return parkMap.containsKey(ID);
 	}
 
     public final Park getPark(ParkID parkID) {

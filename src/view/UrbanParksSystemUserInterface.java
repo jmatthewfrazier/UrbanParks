@@ -7,8 +7,10 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 public class UrbanParksSystemUserInterface {
 	
@@ -113,7 +115,17 @@ public class UrbanParksSystemUserInterface {
 			try {
 				jobs.addJob(new Job("Clean Up", parks.getPark(new ParkID(1)),
 						new JobID(1), LocalDateTime.now().plusDays(5),
-						LocalDateTime.now().plusDays(6), "Clean up the park"));
+						LocalDateTime.now().plusDays(6), "Clean up the park" +
+						"."));
+				jobs.addJob(new Job("Petting Zoo Clean Up", parks.getPark
+						(new ParkID(1)), new JobID(2), LocalDateTime.now()
+						.plusDays(7), LocalDateTime.now().plusDays(8),
+						"Clean up the petting zoo."));
+				jobs.addJob(new Job("Highway Clean Up", parks.getPark(new
+						ParkID(1)), new JobID(3), LocalDateTime.now()
+						.plusDays(10), LocalDateTime.now().plusDays(11),
+						"Clean up the highway along the park."));
+
 			} catch (MaxPendingJobsException e) {
 				e.printStackTrace();
 			} catch (InvalidJobLengthException e) {
@@ -460,7 +472,7 @@ public class UrbanParksSystemUserInterface {
 		do {
 			System.out.print("Please enter the Park ID: "); 
 			int parkID = console.nextInt();
-			if (parks.parkMap.containsKey(parkID)) {
+			if (parks.containsParkID(new ParkID(parkID))) {
 				park = parks.getPark(new ParkID(parkID));
 			} else {
 				System.out.println("Sorry, that's not a valid Park ID. " + 
