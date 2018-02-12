@@ -229,9 +229,8 @@ public class UrbanParksSystemUserInterface {
 				if (users.containsUserID(id)) {
 					currentUser = users.getUser(id);
 				} else {
-					System.out.print("That user ID was not found. " +
+					System.out.println("That user ID was not found. " +
 							"Please try again.");
-					console.nextLine();
 				}
 			}
 		} while(currentUser == null);
@@ -473,11 +472,12 @@ public class UrbanParksSystemUserInterface {
 	 * create and add a new job.
 	 */
 	private void createJob() {
-		String title, description;
+		String title, description = "";
 		Park park = null;
 		JobID id = null;
 		LocalDateTime startDate, endDate;
 		boolean flag = false;
+		Job newJob;
 		
 		// TO DO - CREATE ID (USER OR AUTO-GENERATED?)
 		
@@ -517,39 +517,42 @@ public class UrbanParksSystemUserInterface {
 			startDate = getDate("start");
 			endDate = getDate("finish");
 
-//			Job newJob = new Job(title, park, id, startDate, endDate,
-//					description);
+			newJob = new Job(title, park, id, startDate, endDate,
+					description);
 
 			flag = true;
-//			if (jobs.isNewJobLengthValid()) {
-//				System.out.println("The job specified is too long. Please " +
-//					"enter a smaller date range.");
-//				flag = false;
-//			}
-//			if (jobs.isJobWithinValidDateRange()) {
-//				System.out.println("The job end date is too far away " +
-//					"from the current date. Please enter a closer date.");
-//				flag = false;
-//			}
+			
+			if (newJob.isJobLengthValid()) {
+				System.out.println("The job specified is too long. Please " +
+					"enter a smaller date range.");
+				flag = false;
+			}
+			if (!newJob.isJobWithinValidDateRange()) {
+				System.out.println("The job end date is too far away " +
+					"from the current date. Please enter a closer date.");
+				flag = false;
+			}
 		} while(!flag);
 		flag = false;
-		System.out.println();
 		
 		do {
 			System.out.print("Please enter the Park ID: "); 
 			int parkID = console.nextInt();
 			if (parks.containsParkID(new ParkID(parkID))) {
 				park = parks.getPark(new ParkID(parkID));
+				flag = true;
 			} else {
 				System.out.println("Sorry, that's not a valid Park ID. " + 
 						"Please Try again.");
 			}
 		} while(!flag);
 		flag = false;
+		console.nextLine();
 
 		System.out.println();
 		System.out.println("Please enter a description for the job: ");
 		description = console.nextLine();
+		newJob.setDescription(description);
 		System.out.println();
 		
 		displayJobInfo(title, id, startDate, endDate, park, description);
@@ -561,8 +564,6 @@ public class UrbanParksSystemUserInterface {
 			System.out.println("Enter Y for yes or N for no: ");
 			option = console.next();
 			if (option.equalsIgnoreCase("y")) {
-				Job newJob = new Job(title, park, id, startDate, endDate,
-						description);
 				try {
 					jobs.addJob(newJob);
 					flag = true;
@@ -596,6 +597,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println("You successfully added a new job!");
 		System.out.println("Press Enter to proceed.");
 		if (console.hasNextLine()) {
+			console.nextLine();
 			parkManagerMenu();
 		}
 	}
@@ -619,7 +621,7 @@ public class UrbanParksSystemUserInterface {
 					"time for the job (in the form YYYY-MM-DD HH:MM): "); 
 			in = console.nextLine();
 			try {
-				date = LocalDateTime.parse(in, formatter);
+				date = LocalDateTime.parse(in, formatter);	
 				valid = true;
 			}catch (DateTimeParseException e) {
 				System.out.println("\nYou entered an invalid date.");
@@ -651,6 +653,7 @@ public class UrbanParksSystemUserInterface {
 	 * Logs the current user out so a different user can log in.
 	 */
 	private void logout() {
+		console.nextLine();
 		exportCollections();
 		currentUser = null;
 		signIn();
