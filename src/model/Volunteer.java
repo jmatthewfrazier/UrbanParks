@@ -33,8 +33,8 @@ public final class Volunteer extends User {
     public void signUpForJob(Job newJob) throws VolunteerDailyJobLimitException,
 		    LessThanMinDaysAwayException {
 
-   	    if (newJob.getBeginDateTime().compareTo(LocalDateTime.now()) <
-		        getMinDaysAwaySignUp()) {
+   	    if (newJob.getBeginDateTime().isBefore(LocalDateTime
+		        .now().plusDays(getMinDaysAwaySignUp()))) {
    	    	throw new LessThanMinDaysAwayException();
         }
 

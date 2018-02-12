@@ -138,7 +138,7 @@ public class UrbanParksSystemUserInterface {
 						"Clean up the highway along the park."));
 				jobs.addJob(new Job("Fix the Picnic Benches", parks.getPark(new
 						ParkID(2)), new JobID(6), LocalDateTime.now()
-						.plusDays(15), LocalDateTime.now().plusDays(17),
+						.plusDays(31), LocalDateTime.now().plusDays(32),
 						"Fix the picnic benches."));
 				jobs.addJob(new Job("Build a Bridge", parks.getPark(new
 						ParkID(2)), new JobID(7), LocalDateTime.now()
