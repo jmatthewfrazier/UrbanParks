@@ -67,7 +67,7 @@ public class UrbanParksSystemUserInterface {
 	    } catch (FileNotFoundException e) {
 		    System.out.println("File not found.");
 	    } catch (IOException e) {
-		    e.printStackTrace();
+		   // e.printStackTrace();
 	    } catch (ClassNotFoundException e) {
 			System.out.println(("File is invalid."));
 		    e.printStackTrace();
@@ -98,6 +98,10 @@ public class UrbanParksSystemUserInterface {
      */
 	public void runInterface() {
 		importCollections();
+		if (users.isEmpty()) {
+			users.addUser(new Volunteer("Robert", "Smith",
+					new UserID("robertsmith")));
+		}
 		System.out.println("Welcome to Urban Parks.");
 		System.out.println("\nPress Enter to proceed.");
 		if (console.hasNextLine()) {
@@ -120,18 +124,18 @@ public class UrbanParksSystemUserInterface {
 		do {
 			System.out.print("Please enter your user ID: ");
 			if (console.hasNextLine()) {
-				UserID id = new UserID(console.nextLine());
+				String s = console.nextLine();
+				UserID id = new UserID(s);
 				if (users.containsUserID(id)) {
 					currentUser = users.getUser(id);
 				} else {
-					System.out.print("That user ID was not found. " + 
+					System.out.print("That user ID was not found. " +
 							"Please try again.");
 					console.nextLine();
 				}
 			}
-		}while(currentUser == null);	
-		console.nextLine();
-		
+		} while(currentUser == null);
+
 		welcomeMessage();
 	}
 	
@@ -146,12 +150,10 @@ public class UrbanParksSystemUserInterface {
 		System.out.println("You have been logged in as a " + 
 				currentUser.getUserRole() +	".\n");
 		
-		if (console.hasNextLine()) {
-			if (currentUser.getUserRole() == UserRole.PARK_MANAGER) {
-				parkManagerMenu();
-			} else if (currentUser.getUserRole() == UserRole.VOLUNTEER) {
-				volunteerMenu();
-			}
+		if (currentUser.getUserRole() == UserRole.PARK_MANAGER) {
+			parkManagerMenu();
+		} else if (currentUser.getUserRole() == UserRole.VOLUNTEER) {
+			volunteerMenu();
 		}
 	}
 	
@@ -164,7 +166,7 @@ public class UrbanParksSystemUserInterface {
 		
 		System.out.println(BREAK);
 		System.out.println("Volunteer Menu for " + 
-				currentUser.getID()); 
+				currentUser.getFullName());
 		System.out.println();
 		System.out.println("1. Sign up for a job");
 		System.out.println("2. See jobs you are signed up for");
@@ -204,7 +206,7 @@ public class UrbanParksSystemUserInterface {
 		
 		System.out.println(BREAK);
 		System.out.println("Jobs available for " + 
-				currentUser.getID() + "to sign up for:"); 
+				currentUser.getFullName() + "to sign up for:");
 		System.out.println();
 		
 		System.out.printf("|%-9s|%-50s|%-20s|%-10s|%-10s|\n",
@@ -214,7 +216,7 @@ public class UrbanParksSystemUserInterface {
 		}
 		System.out.println();
 		
-		for (Job job : jobs.getChronologicalList()) {
+		for (Job job : jobs.getList()) {
 			if (!((Volunteer) currentUser).getJobList().contains(job)) {
 				System.out.printf("|%-9s|", count);
 				System.out.printf("%-50s|", job.getName());

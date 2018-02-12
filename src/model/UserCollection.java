@@ -41,4 +41,7 @@ public final class UserCollection implements Serializable {
         }
     }
 
+	public boolean isEmpty() {
+		return userMap.isEmpty();
+	}
 }

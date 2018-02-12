@@ -32,6 +32,10 @@ public abstract class User implements Serializable {
         return userRole;
     }
 
+    public final String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     public final UserID getID() {
         return userID;
     }
