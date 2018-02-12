@@ -377,8 +377,6 @@ public class UrbanParksSystemUserInterface {
 							"up for a job that is on the same date as this " +
 							"job.");
 				}
-					
-				}
 			} else if (option.equalsIgnoreCase("n")) {
 				displayOpenJobs();
 			} else {
