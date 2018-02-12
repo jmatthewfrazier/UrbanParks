@@ -98,9 +98,31 @@ public class UrbanParksSystemUserInterface {
      */
 	public void runInterface() {
 		importCollections();
+
 		if (users.isEmpty()) {
 			users.addUser(new Volunteer("Robert", "Smith",
 					new UserID("robertsmith")));
+			users.addUser(new ParkManager("Steve", "Lafore", new
+					UserID("stevelafore")));
+		}
+		if (parks.isEmpty()) {
+			parks.addPark(new Park());
+		}
+
+		if (jobs.isEmpty()) {
+			try {
+				jobs.addJob(new Job("Clean Up", parks.getPark(new ParkID(1)),
+						new JobID(1), LocalDateTime.now().plusDays(5),
+						LocalDateTime.now().plusDays(6), "Clean up the park"));
+			} catch (MaxPendingJobsException e) {
+				e.printStackTrace();
+			} catch (InvalidJobLengthException e) {
+				e.printStackTrace();
+			} catch (InvalidJobEndDateException e) {
+				e.printStackTrace();
+			} catch (JobCollectionDuplicateKeyException e) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("Welcome to Urban Parks.");
 		System.out.println("\nPress Enter to proceed.");
@@ -205,8 +227,7 @@ public class UrbanParksSystemUserInterface {
 		int count = 1;
 		
 		System.out.println(BREAK);
-		System.out.println("Jobs available for " + 
-				currentUser.getFullName() + "to sign up for:");
+		System.out.println("Jobs available for you to sign up for:");
 		System.out.println();
 		
 		System.out.printf("|%-9s|%-50s|%-20s|%-10s|%-10s|\n",
@@ -301,8 +322,7 @@ public class UrbanParksSystemUserInterface {
 	 */
 	private void displayYourJobs() {
 		System.out.println(BREAK);
-		System.out.println("Jobs " + currentUser.getID() + 
-				" is signed up for: ");
+		System.out.println("Jobs you are signed up for: ");
 		System.out.println();
 		
 		System.out.printf("|%-50s|%-20s|%-10s|%-10s|\n", "JOB NAME", "PARK", 
@@ -337,7 +357,7 @@ public class UrbanParksSystemUserInterface {
 		
 		System.out.println(BREAK);
 		System.out.println("Park Manager Menu for " + 
-				currentUser.getID()); 
+				currentUser.getFullName());
 		System.out.println();
 		System.out.println("1. Submit a new job");
 		System.out.println("2. Log out");
@@ -381,7 +401,7 @@ public class UrbanParksSystemUserInterface {
 		// TO DO - CREATE ID (USER OR AUTO-GENERATED?)
 		
 		System.out.println(BREAK);
-		System.out.println("Park Manager: " + currentUser.getID()); 
+		System.out.println("Park Manager: " + currentUser.getFullName());
 		System.out.println();
 		System.out.println("PLEASE ENTER THE NEW JOB INFORMATION"); 
 		System.out.println();
@@ -396,7 +416,7 @@ public class UrbanParksSystemUserInterface {
 				int number = console.nextInt();
 				if (String.valueOf(number).length() <= 5) {
 					id = new JobID(number);
-					if (jobs.jobMap.containsKey(id)) {
+					if (jobs.containsJobID(id)) {
 						System.out.println("That job already exists. Please " + 
 								"try a different ID.");
 					} else {

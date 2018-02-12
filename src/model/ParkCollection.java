@@ -24,6 +24,10 @@ public class ParkCollection implements Serializable {
 		}
 	}
 
+	public boolean isEmpty() {
+		return parkMap.isEmpty();
+	}
+
     public final Park getPark(ParkID parkID) {
 	    return parkMap.get(parkID);
     }

@@ -12,7 +12,7 @@ public final class JobCollection implements Serializable {
 
     private static int MAX_CAPACITY = 20;
 
-    public Map<JobID, Job> jobMap;
+    private Map<JobID, Job> jobMap;
 
     public JobCollection() {
         jobMap = new HashMap<>();
@@ -47,6 +47,10 @@ public final class JobCollection implements Serializable {
 
     }
 
+    public int size() {
+        return jobMap.size();
+    }
+
     public static int getMaxCapacity() {
         return MAX_CAPACITY;
     }
@@ -64,9 +68,16 @@ public final class JobCollection implements Serializable {
     }
 
     public boolean isAtMaxCapacity() {
-        return (jobMap.size() < MAX_CAPACITY);
+        return (jobMap.size() >= MAX_CAPACITY);
     }
 
+    public boolean isEmpty() {
+        return jobMap.isEmpty();
+    }
+
+    public boolean containsJobID(JobID id) {
+        return jobMap.containsKey(id);
+    }
 
     public static Comparator<Job> getChronologicalJobComparator() {
         class ChronologicalComparator implements  Comparator<Job> {

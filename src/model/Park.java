@@ -23,7 +23,7 @@ public final class Park implements Serializable {
     private List<Job> jobs;
 
     public Park() {
-        this("Default name", 1000, "Apple St.",
+        this("Stanley Park", 1000, "Apple St.",
                 "Seattle", "WA", 98105);
     }
 
@@ -36,6 +36,7 @@ public final class Park implements Serializable {
         this.state = state;
         this.zipCode = zipCode;
         this.jobs = new ArrayList<>();
+        ID = new ParkID(1);
     }
 
     public ParkID getID() {
