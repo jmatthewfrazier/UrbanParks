@@ -538,7 +538,7 @@ public class UrbanParksSystemUserInterface {
 		
 		do {
 			System.out.print("Please enter a " + description + " date and " +
-					"time for the job (in the form MM-DD-YYYY HH:MM): "); 
+					"time for the job (in the form YYYY-MM-DD HH:MM): "); 
 			in = console.nextLine();
 			try {
 				date = LocalDateTime.parse(in, formatter);
