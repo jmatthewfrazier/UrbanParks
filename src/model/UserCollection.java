@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Represents a collection of Users.
  */
-public final class UserCollection implements Serializable{
+public final class UserCollection implements Serializable {
 
     private Map<UserID, User> userMap;
 
@@ -19,12 +19,14 @@ public final class UserCollection implements Serializable{
         return userMap.get(userID);
     }
 
-    public final boolean containsUserID(UserID userID) {
+    public final boolean containsUserID(UserID newUserID) {
         boolean result = false;
-        for (UserID useID : userMap.keySet()) {
-
+        for (UserID userID : userMap.keySet()) {
+            if (userID.equals(newUserID)) {
+                result = true;
+            }
         }
-        return true;
+        return result;
     }
 
     /**

@@ -5,7 +5,6 @@ import exceptions.VolunteerDailyJobLimitException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public final class Job implements Serializable {
@@ -87,17 +86,6 @@ public final class Job implements Serializable {
     }
 	
 	/**
-	 * Check if the job the Volunteer is applying is extend across with
-	 * the jobs that he already signed up.
-	 * 
-	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
-	 * @return boolean value indicates whether or not the Volunteer can get the job.
-	 */
-	public boolean isJobOverlapping(Job theCandidateJob){
-		return this.endDateTime.isBefore(theCandidateJob.beginDateTime);
-	}
-	
-	/**
 	 * Check if the job the Volunteer is applying starts at the end date
 	 * of the jobs that he already signed up.
 	 * 
@@ -150,17 +138,5 @@ public final class Job implements Serializable {
     public void getDescription(final String description) {
     	this.description = description;
     }
-
-	public static Comparator<Job> getChronologicalJobComparator() {
-		class ChronologicalComparator implements  Comparator<Job> {
-			@Override
-			public int compare(Job o1, Job o2) {
-				String s1 = o1.getName();
-				String s2 = o2.getName();
-				return s1.compareTo(s2);
-			}
-		}
-		return new ChronologicalComparator();
-	}
 }
 

@@ -50,12 +50,13 @@ public final class Volunteer extends User {
 			}
 		}
 
+		newJob.addVolunteer(this);
 		jobList.add(newJob);
     }
 
     public List<Job> getChronologicalJobList() {
-   	    ArrayList<Job> chronologicalList = new ArrayList<>(jobList);
-		        chronologicalList.sort(Job.getChronologicalJobComparator());
+   	    List<Job> chronologicalList = new ArrayList<>(jobList);
+   	    chronologicalList.sort(JobCollection.getChronologicalJobComparator());
    	    return chronologicalList;
     }
 }

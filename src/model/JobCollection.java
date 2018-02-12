@@ -6,14 +6,17 @@ import exceptions.JobCollectionDuplicateKeyException;
 import exceptions.MaxPendingJobsException;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class JobCollection implements Serializable {
 
     private static int MAX_CAPACITY = 20;
 
     public Map<JobID, Job> jobMap;
+
+    public JobCollection() {
+        jobMap = new HashMap<>();
+    }
 
     /**
      * Adds a Job to the collection.
@@ -38,7 +41,7 @@ public final class JobCollection implements Serializable {
         } else if (jobMap.containsKey(jobToAdd.getID())) {
             throw new JobCollectionDuplicateKeyException("A Job matching that" +
                     "key value is already present in the Job collection.");
-        } else { //all checks passed, add the job to the JobMap
+        } else {
             jobMap.put(jobToAdd.getID(), jobToAdd);
         }
 
@@ -49,10 +52,26 @@ public final class JobCollection implements Serializable {
     }
 
     public List<Job> getChronologicalList() {
-        return null;
+        Job[] jobArray = (Job[]) jobMap.values().toArray();
+        List<Job> result = new ArrayList<>(Arrays.asList(jobArray));
+        result.sort(getChronologicalJobComparator());
+        return result;
     }
 
     public boolean isAtMaxCapacity() {
         return (jobMap.size() < MAX_CAPACITY);
+    }
+
+
+    public static Comparator<Job> getChronologicalJobComparator() {
+        class ChronologicalComparator implements  Comparator<Job> {
+            @Override
+            public int compare(Job o1, Job o2) {
+                String s1 = o1.getName();
+                String s2 = o2.getName();
+                return s1.compareTo(s2);
+            }
+        }
+        return new ChronologicalComparator();
     }
 }

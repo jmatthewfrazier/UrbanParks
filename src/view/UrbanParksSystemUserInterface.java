@@ -12,12 +12,11 @@ import java.util.*;
 
 public class UrbanParksSystemUserInterface {
 	
-	private Scanner console = new Scanner(System.in);
+	private Scanner console;
 	
-	private DateTimeFormatter formatter = 
-			DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private DateTimeFormatter formatter;
 	
-	private User currentUser = null;
+	private User currentUser;
 
 	private JobCollection jobs;
 
@@ -25,8 +24,8 @@ public class UrbanParksSystemUserInterface {
 
     private ParkCollection parks;
 	
-	private final String BREAK = "=============================URBAN PARKS" + 
-		"=============================\n";
+	private static final String BREAK = "=============================URBAN " +
+			"PARKS=============================\n";
 
     //what about taking in Date fields that are not a String?
     private HashMap<String, Object> newJobInfoMap = 
@@ -40,6 +39,8 @@ public class UrbanParksSystemUserInterface {
     }
 
     UrbanParksSystemUserInterface() {
+	    console = new Scanner(System.in);
+	    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
@@ -49,18 +50,35 @@ public class UrbanParksSystemUserInterface {
      * Retrieves the stored data and creates program accessible collections.
      */
     private void importCollections() {
-        try {
-            FileInputStream fileIn = new FileInputStream("data.bin");
-            ObjectInputStream ois = new ObjectInputStream(fileIn);
+	    FileInputStream fileIn;
+		File f = new File("./data.bin");
 
-            List<Object> woi = (ArrayList<Object>) ois.readObject();
+		if (!f.isFile()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-            jobs = (JobCollection) woi.get(0);
-            users = (UserCollection) woi.get(1);
-            parks = (ParkCollection) woi.get(2);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+	    try {
+		    fileIn = new FileInputStream(f);
+		    ObjectInputStream ois = new ObjectInputStream(fileIn);
+
+		    List<Object> woi = (ArrayList<Object>) ois.readObject();
+
+		    jobs = (JobCollection) woi.get(0);
+		    users = (UserCollection) woi.get(1);
+		    parks = (ParkCollection) woi.get(2);
+
+	    } catch (FileNotFoundException e) {
+		    System.out.println("File not found.");
+	    } catch (IOException e) {
+		    e.printStackTrace();
+	    } catch (ClassNotFoundException e) {
+			System.out.println(("File is invalid."));
+		    e.printStackTrace();
+	    }
     }
 
     /**
@@ -68,7 +86,7 @@ public class UrbanParksSystemUserInterface {
      */
     private void exportCollections() {
         try {
-            FileOutputStream out = new FileOutputStream("data.bin");
+            FileOutputStream out = new FileOutputStream("./data.bin");
             ObjectOutputStream oos = new ObjectOutputStream(out);
 
             List<Object> collections = new ArrayList<>(); // look at this later
@@ -76,6 +94,7 @@ public class UrbanParksSystemUserInterface {
             collections.add(users);
             collections.add(parks);
             oos.writeObject(collections);
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
