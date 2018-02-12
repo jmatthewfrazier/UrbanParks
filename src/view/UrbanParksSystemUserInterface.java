@@ -533,13 +533,12 @@ public class UrbanParksSystemUserInterface {
 		boolean valid = false;
 		LocalDateTime date = null;
 		String in;
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("MM-dd-uuuu", Locale.US)
-				.withResolverStyle(ResolverStyle.STRICT);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+				"yyyy-MM-dd HH:mm");
 		
 		do {
-			System.out.print("Please enter a " + description + " date for " + 
-					"the job (in the form MM-DD-YYYY): "); 
+			System.out.print("Please enter a " + description + " date and " +
+					"time for the job (in the form MM-DD-YYYY HH:MM): "); 
 			in = console.nextLine();
 			try {
 				date = LocalDateTime.parse(in, formatter);
