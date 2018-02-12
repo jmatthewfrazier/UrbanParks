@@ -514,7 +514,7 @@ public class UrbanParksSystemUserInterface {
 
 			flag = true;
 			
-			if (newJob.isJobLengthValid()) {
+			if (!newJob.isJobLengthValid()) {
 				System.out.println("The job specified is too long. Please " +
 					"enter a smaller date range.");
 				flag = false;
@@ -530,9 +530,9 @@ public class UrbanParksSystemUserInterface {
 		do {
 			System.out.print("Please enter the Park ID: "); 
 			int parkID = console.nextInt();
-			console.nextLine();
 			if (parks.containsParkID(new ParkID(parkID))) {
 				park = parks.getPark(new ParkID(parkID));
+				newJob.setPark(park);
 				flag = true;
 			} else {
 				System.out.println("Sorry, that's not a valid Park ID. " + 
