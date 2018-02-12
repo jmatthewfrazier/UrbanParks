@@ -130,7 +130,7 @@ public class UrbanParksSystemUserInterface {
 						"Clean up the highway along the park."));
 				jobs.addJob(new Job("Gardening", parks.getPark(new
 						ParkID(1)), new JobID(4), LocalDateTime.now()
-						.plusDays(4), LocalDateTime.now().plusDays(6),
+						.plusDays(1), LocalDateTime.now().plusDays(2),
 						"Help plant sunflowers."));
 				jobs.addJob(new Job("Highway Clean Up", parks.getPark(new
 						ParkID(1)), new JobID(5), LocalDateTime.now()
@@ -371,17 +371,18 @@ public class UrbanParksSystemUserInterface {
 			if (option.equalsIgnoreCase("y")) {
 				try {
 					((Volunteer) currentUser).signUpForJob(job);
-				} catch (LessThanMinDaysAwayException e) {
-					// TODO
-					e.printStackTrace();
-				} catch (VolunteerDailyJobLimitException e) {
-					// TODO
-					e.printStackTrace();
-				} finally {
-					System.out.printf("Congradulations, you have sign up for " + 
+					System.out.printf("Congratulations, you have sign up for " +
 							"the job %s \n\n", job.getName());
+				} catch (LessThanMinDaysAwayException e) {
+					System.out.println("We're sorry, you cannot sign up for a" +
+									" job less than two days away. Please try" +
+									" again.");
+				} catch (VolunteerDailyJobLimitException e) {
+					System.out.println("We're sorry, you are already signed " +
+							"up for a job that is on the same date as this " +
+							"job.");
+				} finally {
 					volunteerMenu();
-					
 				}
 			} else if (option.equalsIgnoreCase("n")) {
 				displayOpenJobs();
@@ -535,6 +536,7 @@ public class UrbanParksSystemUserInterface {
 			int parkID = console.nextInt();
 			if (parks.containsParkID(new ParkID(parkID))) {
 				park = parks.getPark(new ParkID(parkID));
+				flag = true;
 			} else {
 				System.out.println("Sorry, that's not a valid Park ID. " + 
 						"Please Try again.");
@@ -566,7 +568,7 @@ public class UrbanParksSystemUserInterface {
 							"jobs in the system. Please try again later.");
 					flag = false;
 				} catch(InvalidJobLengthException e) {
-					System.out.println("The job specified is too long." + 
+					System.out.println("The job specified is too long. " +
 							"Please enter a smaller date range.");
 					flag = false;
 				} catch(InvalidJobEndDateException e) {
@@ -594,10 +596,10 @@ public class UrbanParksSystemUserInterface {
 			parkManagerMenu();
 		}
 	}
-	
+
 	/**
-	 * Receives the 
-	 * 
+	 * Gets a specified date from the user.
+	 *
 	 * @param description is the date qualifier to add into the prompt string
 	 * (typically: "start" or "finish").
 	 * @return the date the user entered.

@@ -217,11 +217,9 @@ public class JobTest {
         assertFalse(testJob.isJobWithinValidDateRange());
     }
 
-
     @After
     public void tearDown() {
     }
-
 
     //end of Job Test class
 }

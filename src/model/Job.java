@@ -141,7 +141,7 @@ public final class Job implements Serializable {
         this.endDateTime = time;
     }
     
-    public void getDescription(final String description) {
+    public void setDescription(final String description) {
     	this.description = description;
     }
 }
