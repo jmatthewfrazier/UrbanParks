@@ -24,11 +24,11 @@ public final class Park implements Serializable {
 
     public Park() {
         this("Stanley Park", 1000, "Apple St.",
-                "Seattle", "WA", 98105);
+                "Seattle", "WA", 98105, new ParkID(1));
     }
 
     public Park(String name, int houseNumber, String street, String city,
-                String state, int zipCode) {
+                String state, int zipCode, ParkID parkID) {
         this.name = name;
         this.houseNumber = houseNumber;
         this.street = street;
@@ -36,7 +36,7 @@ public final class Park implements Serializable {
         this.state = state;
         this.zipCode = zipCode;
         this.jobs = new ArrayList<>();
-        ID = new ParkID(1);
+        ID = parkID;
     }
 
     public ParkID getID() {

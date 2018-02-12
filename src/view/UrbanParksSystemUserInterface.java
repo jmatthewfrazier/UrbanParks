@@ -109,6 +109,9 @@ public class UrbanParksSystemUserInterface {
 		}
 		if (parks.isEmpty()) {
 			parks.addPark(new Park());
+			parks.addPark(new Park("Greenwich Lake Park", 1238, "Fernwood " +
+					"Pacific Drive", "Federal Way", "WA", 98001, new
+					ParkID(2)));
 		}
 
 		if (jobs.isEmpty()) {
@@ -125,7 +128,30 @@ public class UrbanParksSystemUserInterface {
 						ParkID(1)), new JobID(3), LocalDateTime.now()
 						.plusDays(10), LocalDateTime.now().plusDays(11),
 						"Clean up the highway along the park."));
-
+				jobs.addJob(new Job("Gardening", parks.getPark(new
+						ParkID(1)), new JobID(4), LocalDateTime.now()
+						.plusDays(4), LocalDateTime.now().plusDays(6),
+						"Help plant sunflowers."));
+				jobs.addJob(new Job("Highway Clean Up", parks.getPark(new
+						ParkID(1)), new JobID(5), LocalDateTime.now()
+						.plusDays(30), LocalDateTime.now().plusDays(31),
+						"Clean up the highway along the park."));
+				jobs.addJob(new Job("Fix the Picnic Benches", parks.getPark(new
+						ParkID(2)), new JobID(6), LocalDateTime.now()
+						.plusDays(15), LocalDateTime.now().plusDays(17),
+						"Fix the picnic benches."));
+				jobs.addJob(new Job("Build a Bridge", parks.getPark(new
+						ParkID(2)), new JobID(7), LocalDateTime.now()
+						.plusDays(30), LocalDateTime.now().plusDays(32),
+						"Build a small bridge the crosses the pond."));
+				jobs.addJob(new Job("Weeding", parks.getPark(new
+						ParkID(1)), new JobID(8), LocalDateTime.now()
+						.plusDays(25), LocalDateTime.now().plusDays(26),
+						"Weed the lawn to get rid of thistle."));
+				jobs.addJob(new Job("Rake the Leaves", parks.getPark(new
+						ParkID(1)), new JobID(9), LocalDateTime.now()
+						.plusDays(40), LocalDateTime.now().plusDays(41),
+						"Rake the leaves by the trees."));
 			} catch (MaxPendingJobsException e) {
 				e.printStackTrace();
 			} catch (InvalidJobLengthException e) {
