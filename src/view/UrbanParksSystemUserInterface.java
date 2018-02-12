@@ -282,7 +282,7 @@ public class UrbanParksSystemUserInterface {
 	 */
 	private void displayJobInfo(Job job) {
 		System.out.println(BREAK);
-		System.out.println("User: " + currentUser.getID());
+		System.out.println("User: " + currentUser.getFullName());
 		System.out.println();
 		
 		displayJobInfo(job.getName(), job.getID(), job.getBeginDateTime(), 
@@ -561,7 +561,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println("JOB DETAILS:"); 
 		System.out.println();
 		System.out.println("Job Name:\t" + jobName); 	
-		System.out.println("Job ID:\t" + jobID);
+		System.out.println("Job ID:\t" + jobID.getJobID());
 		formatDate = start.format(formatter);
 		System.out.println("Start Date:\t" + formatDate); 
 		formatDate = finish.format(formatter);
