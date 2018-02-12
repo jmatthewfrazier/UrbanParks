@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,10 +27,6 @@ public class UrbanParksSystemUserInterface {
 	
 	private static final String BREAK = "=============================URBAN " +
 			"PARKS=============================\n";
-
-    //what about taking in Date fields that are not a String?
-    private HashMap<String, Object> newJobInfoMap = 
-    		new HashMap<String, Object>();
 
     UrbanParksSystemUserInterface() {
 	    console = new Scanner(System.in);
@@ -278,13 +273,13 @@ public class UrbanParksSystemUserInterface {
 			} else {
 				System.out.println("\nYou entered an incorrect value.");
 			}
-		}while(choice < 1 || choice > 3);
+		} while(choice < 1 || choice > 3);
 
 		if (choice == 1) {
 			displayOpenJobs();
 		} else if (choice == 2) {
 			displayYourJobs();
-		} else if (choice == 3) {
+		} else  {
 			logout();
 		}
 	}
@@ -296,7 +291,7 @@ public class UrbanParksSystemUserInterface {
 	 */
 	private void displayOpenJobs() {
 		boolean jobSelected = false;
-		ArrayList<Job> availableJobs = new ArrayList<Job>();
+		ArrayList<Job> availableJobs = new ArrayList<>();
 		int count = 1;
 		
 		System.out.println(BREAK);
@@ -344,7 +339,7 @@ public class UrbanParksSystemUserInterface {
 				System.out.println("You entered an invalid character. Please" + 
 						" enter a number only.");
 			}
-		}while(jobSelected == false);
+		} while (!jobSelected);
 	}
 	
 	/**
@@ -462,7 +457,7 @@ public class UrbanParksSystemUserInterface {
 		
 		if (choice == 1) {
 			createJob();
-		} else if (choice == 2) {
+		} else {
 			logout();
 		}
 	}
@@ -530,7 +525,7 @@ public class UrbanParksSystemUserInterface {
 //					"from the current date. Please enter a closer date.");
 //				flag = false;
 //			}
-		} while(!flag);
+		} while (!flag);
 		flag = false;
 		System.out.println();
 		
