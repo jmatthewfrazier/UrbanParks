@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
@@ -35,25 +36,116 @@ public class JobTest {
 
     private String jobNameBar = "A Job Named Bar";
 
-    LocalDateTime beginDateTime;
+    private LocalDateTime beginDateTime;
+    
+    private LocalDate beginDate;
+    
+    private LocalDateTime endDateTime;
+    
+    private LocalDate endDate;
 
-    LocalDateTime beginDateTimeMaxLengthMinusOneDay;
+    private LocalDateTime beginDateTimeMaxLengthMinusOneDay;
 
-    LocalDateTime beginDateTimePlusMaxDays;
+    private LocalDateTime beginDateTimePlusMaxDays;
 
-	Park parkWestside;
+	private Park parkWestside;
 
-	Park parkEastside;
+	private Park parkEastside;
 
     @Before
     public void setUp() {
 
         beginDateTime = LocalDateTime.now();
+        beginDate = beginDateTime.toLocalDate();
+        endDateTime = beginDateTime.plusDays(maxJobDays);
+        endDate = endDateTime.toLocalDate();
+        
         //System.out.println(beginDateTime.toString());
 
 		parkWestside = new Park();
 		parkEastside = new Park();
 
+    }
+    
+    
+    @Test
+    public void isStartAtEndDate_StartAtEndDate_True(){
+    	final Job job = new Job(jobNameFoo, parkWestside, new JobID(1),
+    			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
+    	
+    	final Job testJob = new Job(jobNameBar, parkEastside, new JobID(2),
+    			beginDateTime.plusDays(maxJobDays), 
+    			beginDateTime.plusDays(2*maxJobDays), "test job2");
+    	
+    	assertTrue("Volunteer cannot sign up for this job!!",
+    			job.isStartAtEndDate(testJob));
+    }
+    
+    @Test
+    public void isStartAtEndDate_NotStartAtEndDate_False(){
+    	final Job job = new Job(jobNameFoo, parkWestside, new JobID(1),
+    			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
+    	
+    	final Job testJob = new Job(jobNameBar, parkEastside, new JobID(2),
+    			beginDateTime.plusDays(maxJobDays-1), 
+    			beginDateTime.plusDays(2*maxJobDays-1), "test job2");
+    	
+    	assertFalse("Volunteer can sign up for this job!!",
+    			job.isStartAtEndDate(testJob));
+    }
+    
+    @Test
+    public void isEndAtStartDate_EndAtStartDate_True(){
+    	final Job job = new Job(jobNameBar, parkEastside, new JobID(2),
+    			beginDateTime.plusDays(maxJobDays), 
+    			beginDateTime.plusDays(2*maxJobDays), "test job2");
+    	
+    	final Job testJob = new Job(jobNameFoo, parkWestside, new JobID(1),
+    			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
+    	
+    	assertFalse("Volunteer cannot sign up for this job!!",
+    			job.isEndAtStartDate(testJob));
+    }
+    
+    @Test
+    public void isEndAtStartDate_NotEndAtStartDate_False(){
+    	final Job job = new Job(jobNameBar, parkEastside, new JobID(2),
+    			beginDateTime.plusDays(maxJobDays-1), 
+    			beginDateTime.plusDays(2*maxJobDays-1), "test job2");
+    	
+    	final Job testJob = new Job(jobNameFoo, parkWestside, new JobID(1),
+    			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
+    	
+    	assertFalse("Volunteer can sign up for this job!!",
+    			job.isEndAtStartDate(testJob));
+    }
+    
+    @Test
+    public void isOverlapping_Overlapping_True(){
+    	final Job job = new Job(jobNameFoo, parkWestside, new JobID(1),
+    			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
+    	
+    	final Job testJob = new Job(jobNameBar, parkEastside, new JobID(2),
+    			beginDateTime.plusDays(maxJobDays).minusHours(maxJobDays), 
+    			beginDateTime.plusDays(2*maxJobDays).minusHours(maxJobDays),
+    			"test job2");
+    	
+    	assertTrue("Volunteer cannot sign up for this job!!",
+    			job.isOverlapping(testJob));
+    }
+    
+    @Test
+    public void isOverlapping_NotOverlapping_False(){
+    	final Job job = new Job(jobNameFoo, parkWestside, new JobID(1),
+    			beginDateTime, beginDateTime.plusDays(maxJobDays), "test job");
+    	
+    	final Job testJob = new Job(jobNameBar, parkEastside, new JobID(2),
+    			beginDateTime.plusDays(maxJobDays).plusHours(maxJobDays), 
+    			beginDateTime.plusDays(2*maxJobDays).plusHours(maxJobDays),
+    			"test job2");
+    	
+    	assertFalse("Volunteer can sign up for this job!!",
+    			job.isOverlapping(testJob));
     }
 
 	@Test

@@ -93,7 +93,8 @@ public final class Job implements Serializable {
 	 * @return boolean value indicates whether or not the Volunteer can get the job.
 	 */
 	public boolean isStartAtEndDate(Job theCandidateJob){
-		return this.endDateTime.equals(theCandidateJob.beginDateTime);
+		return this.endDateTime.toLocalDate().equals(
+				theCandidateJob.beginDateTime.toLocalDate());
 	}
 	
 	/**
@@ -104,7 +105,12 @@ public final class Job implements Serializable {
 	 * @return boolean value indicates whether or not the Volunteer can get the job.
 	 */
 	public boolean isEndAtStartDate(Job theCandidateJob) {
-		return this.beginDateTime.equals(theCandidateJob.endDateTime);
+		return this.beginDateTime.toLocalDate().equals(
+				theCandidateJob.endDateTime.toLocalDate());
+	}
+	
+	public boolean isOverlapping(Job theCandidateJob) {
+		return this.endDateTime.isAfter(theCandidateJob.beginDateTime);
 	}
 
     public LocalDateTime getBeginDateTime() {

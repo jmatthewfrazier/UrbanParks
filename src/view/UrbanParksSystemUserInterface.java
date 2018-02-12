@@ -251,19 +251,19 @@ public class UrbanParksSystemUserInterface {
 			}
 		}
 		
-		System.out.println();
+		System.out.println("\n\n\n\n");
 		System.out.println("Please enter the number from a job you want " + 
 		"to see more details for or " + count + " to go back: ");
 		
 		do {
 			if (console.hasNextInt()) { 
 				int jobNumber = console.nextInt();
-				if (jobNumber >= 1 || jobNumber < count) {
-					jobSelected = true;
-					displayJobInfo(availableJobs.get(jobNumber - 1));
-				} else if (jobNumber == count) {
+				if (jobNumber == count) {
 					jobSelected = true;
 					volunteerMenu();
+				} else if (jobNumber >= 1 || jobNumber < count) {
+					jobSelected = true;
+					displayJobInfo(availableJobs.get(jobNumber - 1));
 				} else {
 					System.out.println("You entered an invalid number.");
 				}
@@ -305,8 +305,9 @@ public class UrbanParksSystemUserInterface {
 					// TODO
 					e.printStackTrace();
 				} finally {
-					
-					// TO DO - CONFIRMATION MESSAGE AND/OR PRESS ENTER TO RETURN
+					System.out.printf("Congradulations, you have sign up for " + 
+							"the job %s \n\n", job.getName());
+					volunteerMenu();
 					
 				}
 			} else if (option.equalsIgnoreCase("n")) {
@@ -343,6 +344,7 @@ public class UrbanParksSystemUserInterface {
 		}
 		
 		System.out.println("Press Enter to go back to the Volunteer Menu.");
+		System.out.println("\n\n\n\n");
 		if (console.hasNextLine()) {
 			volunteerMenu();
 		}
@@ -379,6 +381,7 @@ public class UrbanParksSystemUserInterface {
 				System.out.println("\nYou entered an incorrect value.");
 			}
 		}while(choice < 1 || choice > 2);
+		console.nextLine();
 		
 		if (choice == 1) {
 			createJob();
@@ -428,6 +431,7 @@ public class UrbanParksSystemUserInterface {
 						"for the job ID.");
 			}
 		}while(!flag);
+		console.nextLine();
 		flag = false;
 		System.out.println();
 		

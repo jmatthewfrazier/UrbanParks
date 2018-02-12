@@ -47,6 +47,10 @@ public final class Volunteer extends User {
 				throw new VolunteerDailyJobLimitException("Candidate job " +
 						"ends on a date of a job that the volunteer is " +
 						"currently signed up for.");
+			} else if (job.isOverlapping(newJob)) {
+				throw new VolunteerDailyJobLimitException("Candidate job " +
+						"is extend across with one of the jobs you have " +
+						"signed up already.");
 			}
 		}
 
