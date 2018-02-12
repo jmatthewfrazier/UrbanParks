@@ -55,13 +55,6 @@ public final class JobCollection implements Serializable {
         return MAX_CAPACITY;
     }
 
-//    public List<Job> getChronologicalList() {
-//        Object[] jobArray = jobMap.values().toArray();
-//        List<Job> result = new ArrayList<>(Arrays.<>asList((Job[])
-//                jobArray));
-//        result.sort(getChronologicalJobComparator());
-//        return result;
-//    }
 
     public List<Job> getList() {
         return new ArrayList<>(jobMap.values());
