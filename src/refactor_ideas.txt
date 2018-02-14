@@ -1,0 +1,14 @@
+pull apart the UI into smaller components
+
+acceptance test not implemented in deliverable 2, per Professor feedback #5
+
+turn some ID classes into just integer fields
+
+more consistent comment styles
+
+"       "       variable names
+
+eliminating descriptors like "valid"
+
+limit method sizes if needed
+
