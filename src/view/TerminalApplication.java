@@ -1,6 +1,7 @@
 package view;
 
-public class TerminalApplication {
+public class
+TerminalApplication {
 
     public static void main(String[] args) {
         //create the actual collection to store jobs in
