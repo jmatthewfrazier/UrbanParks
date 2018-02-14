@@ -1,8 +1,9 @@
 package exceptions;
 
-/**
- * Created on 2/9/2018
- */
-public class LessThanMinDaysAway {
+public class LessThanMinDaysAwayException extends Exception {
+
+	public LessThanMinDaysAwayException() {
+
+	}
 
 }

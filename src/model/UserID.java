@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public final class UserID implements Serializable /* Comparable<UserID> */ {
+public final class UserID implements Serializable,  Comparable<UserID> {
 
     private String userID;
 

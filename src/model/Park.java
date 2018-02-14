@@ -1,6 +1,8 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Park implements Serializable {
 
@@ -18,22 +20,30 @@ public final class Park implements Serializable {
 
     private ParkID ID;
 
+    private List<Job> jobs;
+
     public Park() {
-        this("Default name", 1000, "Apple St.",
-                "Seattle", "WA", 98105);
+        this("Stanley Park", 1000, "Apple St.",
+                "Seattle", "WA", 98105, new ParkID(1));
     }
 
     public Park(String name, int houseNumber, String street, String city,
-                String state, int zipCode) {
+                String state, int zipCode, ParkID parkID) {
         this.name = name;
         this.houseNumber = houseNumber;
         this.street = street;
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
+        this.jobs = new ArrayList<>();
+        ID = parkID;
     }
 
     public ParkID getID() {
         return ID;
+    }
+
+    public String getName() {
+        return name;
     }
 }
