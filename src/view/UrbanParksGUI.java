@@ -1,19 +1,17 @@
 package view;
 
 import exceptions.UserNotFoundException;
-import listeners.CloseApplicationWindowListener;
-import listeners.UserLogInToSystemListener;
+import recycle_bin.CloseApplicationWindowListener;
 import model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.*;
 
 import static model.UserRole.PARK_MANAGER;
 import static model.UserRole.VOLUNTEER;
@@ -93,6 +91,7 @@ public class UrbanParksGUI {
         //I think it is a good idea to just pop a new one on each time
         final JPanel loginPanel = createLoginPanel(loginMsg);
         frame.setContentPane(loginPanel);
+        frame.pack();
 
     }
 
@@ -152,6 +151,23 @@ public class UrbanParksGUI {
         return sb.toString();
     }
 
+    private void storeCollectionsIntoFile() {
+        //when the system is preparing to shutdown
+        try {
+            FileOutputStream out = new FileOutputStream("./data.bin");
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+
+            java.util.List<Object> collections = new ArrayList<>(); // look at this later
+            collections.add(jobs);
+            collections.add(users);
+            collections.add(parks);
+            oos.writeObject(collections);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * When this class is first initialized, this will be passed the login panel
      * once the system is running however, it should be able to swap out panels
@@ -163,6 +179,46 @@ public class UrbanParksGUI {
         frame.add(panelToDisplay);
         //userLoginInputField.grabFocus();
         //getRootPane().setDefaultButton(myCountValuesButton);
+    }
+
+    private class CloseApplicationWindowListener implements WindowListener {
+
+        //in the event they close the window without logging out first
+        //should also write/save all collections at logout
+        @Override
+        public void windowClosing(WindowEvent windowEvent) {
+            storeCollectionsIntoFile();
+        }
+
+        @Override
+        public void windowIconified(WindowEvent windowEvent) {
+
+        }
+
+        @Override
+        public void windowOpened(WindowEvent windowEvent) {
+
+        }
+
+        @Override
+        public void windowDeactivated(WindowEvent windowEvent) {
+
+        }
+
+        @Override
+        public void windowActivated(WindowEvent windowEvent) {
+
+        }
+
+        @Override
+        public void windowDeiconified(WindowEvent windowEvent) {
+
+        }
+
+        @Override
+        public void windowClosed(WindowEvent windowEvent) {
+
+        }
     }
 
 //    private class EnterUserNameListener implements ActionListener {

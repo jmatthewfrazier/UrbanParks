@@ -9,6 +9,8 @@ import model.ParkCollection;
 import model.User;
 import model.UserCollection;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -81,24 +83,6 @@ public class UrbanParksSystemRoot {
         }
     }
 
-
-    private void storeCollectionsIntoFile() {
-        //when the system is preparing to shutdown
-        try {
-            FileOutputStream out = new FileOutputStream("./data.bin");
-            ObjectOutputStream oos = new ObjectOutputStream(out);
-
-            List<Object> collections = new ArrayList<>(); // look at this later
-            collections.add(jobs);
-            collections.add(users);
-            collections.add(parks);
-            oos.writeObject(collections);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void runSystem() {
         //populate all the collections
         loadCollectionsFromFile();
@@ -109,8 +93,9 @@ public class UrbanParksSystemRoot {
         //system just began so start with the login panel
         //don't think this class needs to be aware of who the user is
         //this class just needs to populate things and get the gui started
-        systemGUI.displayLoginPanel();
+        systemGUI.displayLoginPanel("Welcome to Urban Parks");
         }
+
 
     //end UbranParksSystemRootClass
 }
