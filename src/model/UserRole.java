@@ -1,5 +1,5 @@
 package model;
 
 public enum UserRole {
-	PARK_MANAGER, VOLUNTEER
+	PARK_MANAGER, VOLUNTEER, STAFF_MEMBER
 }

@@ -35,7 +35,7 @@ public final class Volunteer extends User {
 
    	    if (newJob.getBeginDateTime().isBefore(LocalDateTime
 		        .now().plusDays(getMinDaysAwaySignUp()))) {
-   	    	throw new LessThanMinDaysAwayException();
+   	    	throw new LessThanMinDaysAwayException("Job begins too soon");
         }
 
 		for (Job job : jobList) {
