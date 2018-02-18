@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.UserNotFoundException;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +41,17 @@ public final class UserCollection implements Serializable {
         if (!userMap.containsKey(user.getID())) {
             userMap.put(user.getID(), user);
         }
+    }
+
+    public final User getUserFromUserID(final UserID userID)
+            throws UserNotFoundException{
+        User genericUser;
+        if (!userMap.containsKey(userID)) {
+            throw new UserNotFoundException("No user associated with that UserID");
+        } else {
+            genericUser = userMap.get(userID);
+        }
+        return genericUser;
     }
 
 	public boolean isEmpty() {
