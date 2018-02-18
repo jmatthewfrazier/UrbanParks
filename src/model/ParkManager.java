@@ -15,4 +15,14 @@ public final class ParkManager extends User implements Serializable {
         parkList = new ArrayList<>();
     }
 
+    //view a list of future jobs, with options to update, create, delete jobs
+        //list of all future jobs?
+        //or just jobs created by this park manager id?
+    //select a job from the list of future jobs
+    //tell app to remove that job from the list
+    //app confirms if you want to remove that job from list, removal will be permanent
+    //remove that job from the list
+    //confirm to user that job was just removed from list
+    //view the list of future jobs with that job removed
+
 }
