@@ -1,6 +1,7 @@
 package view;
 
 import exceptions.UserInputException;
+import listeners.logoutUserListener;
 import model.Job;
 import model.JobCollection;
 import model.ParkManager;
@@ -116,6 +117,11 @@ public class ParkManagerGUIPanel extends JPanel {
         //should be disabled unless a job number is entered into text field
         deleteJobBtn = new JButton("Delete This Job");
         deleteJobBtn.setEnabled(false);
+
+        //should allow the user to log out at any time
+        logoutBtn = new JButton("Log Out");
+        logoutBtn.setEnabled(true);
+
         addButtonListeners();
         newPanel.add(userInputField);
         newPanel.add(createNewBtn);
@@ -130,6 +136,7 @@ public class ParkManagerGUIPanel extends JPanel {
         returnAllBtn.addActionListener(e -> getAllJobs());
         //updateJobBtn.addActionListener(e -> updateChosenJob());
         deleteJobBtn.addActionListener(e -> deleteChosenJob());
+        logoutBtn.addActionListener(e -> new logoutUserListener(this.getParent());
     }
 
     public void addFutureJob() {
