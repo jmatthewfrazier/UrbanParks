@@ -82,7 +82,7 @@ public class ParkManagerGUIPanel extends JPanel {
     //verify this is a park manager? throw exception if not?
     //^^^ no, that check should be made in adding the PM panel, not here
     private void setupPanel(){
-        
+
         popupFactory = PopupFactory.getSharedInstance();
 
         //add text area for displaying text to user
