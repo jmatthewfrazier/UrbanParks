@@ -39,6 +39,11 @@ public class ParkManagerGUIPanel extends JPanel {
 
     //will need a popup window for confirming actions, etc
 
+    public ParkManagerGUIPanel() {
+        ParkManagerGUIPanel(new MockJobCollection(), new MockParkManager());
+    }
+
+
     public ParkManagerGUIPanel(final JobCollection paramJobWallet,
                                final ParkManager paramUser) {
         super();
@@ -48,6 +53,19 @@ public class ParkManagerGUIPanel extends JPanel {
 
         setupPanel();
         setupJobsList(jobWallet);
+    }
+
+    public void display(){
+        final JFrame frame = new JFrame("Park Manager Frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(this);
+
+        frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        userInputField.grabFocus();
+//getRootPane().setDefaultButton(myCountValuesButton);
     }
 
     private void setupJobsList(final JobCollection jobsToList) {

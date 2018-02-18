@@ -12,3 +12,49 @@ eliminating descriptors like "valid"
 
 limit method sizes if needed
 
+************************************
+component outline:
+
+basePanel => has a JFrame in its display() method, which holds the content pane to use
+(has login action also?)
+    >login listener
+       - populate all data collections
+    |
+    |
+{group of components
+    that map to a
+    user type} => get attached after successful login
+=> user does some shit
+    > volunteer
+        > register for job listener
+        > unregister for job listener
+        >
+    > park manager
+        > add new job listener
+        > remove job listener
+        >
+    > staff member
+        > change some field listener
+=> user logs out
+    > log out listener
+    => everything gets saved
+    => user is logged out
+    |
+    |
+detach user-role-panel, attach basePanel (login panel)
+
+
+Chad's User Story:
+
+As a Park Manager I want to unsubmit a job
+A job can be unsubmitted only if the job starts at least a minimum number of days in the future.
+
+acceptance tests from Volunteer class:
+Volunteer unvolunteers for a job that starts on the current day
+Volunteer unvolunteers for a multi-day job that starts prior to the current day
+Volunteer unvolunteers for a job that starts more than the minumum number of days in the future
+Volunteer unvolunteers for a job that starts exactly the minumum number of days in the future
+
+
+
+7) As a Park Manager I want to view the future jobs that I have submitted.

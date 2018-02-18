@@ -1,3 +1,4 @@
+import view.ParkManagerGUIPanel;
 import view.UrbanParksGUI;
 
 /**
@@ -12,6 +13,7 @@ public class UrbanParksMain {
 
 
     public static void main(String[] args) {
-        new UrbanParksGUI().display();
+        //new UrbanParksGUI().display();
+        new ParkManagerGUIPanel().display();
     }
 }
