@@ -82,7 +82,7 @@ public class ParkManagerGUIPanel extends JPanel {
     //verify this is a park manager? throw exception if not?
     //^^^ no, that check should be made in adding the PM panel, not here
     private void setupPanel(){
-        setupButtonGroup();
+        
         popupFactory = PopupFactory.getSharedInstance();
 
         //add text area for displaying text to user
@@ -106,28 +106,20 @@ public class ParkManagerGUIPanel extends JPanel {
         //should be disabled if a job number is selected,
         //otherwise it should default as initially available
         createNewBtn = new JButton("Add New Job");
-
+        createNewBtn.setEnabled(true);
         //should never be diabled? but just give an error message if needed?
         returnAllBtn = new JButton("View All Future Jobs");
-
+        returnAllBtn.setEnabled(true);
         //should be disabled unless a job number is entered into text field
         deleteJobBtn = new JButton("Delete This Job");
-
+        deleteJobBtn.setEnabled(false);
+        addButtonListeners();
         newPanel.add(userInputField);
         newPanel.add(createNewBtn);
         newPanel.add(returnAllBtn);
         newPanel.add(deleteJobBtn);
 
         return newPanel;
-    }
-
-    private void setupButtonGroup(){
-        createNewBtn.setEnabled(true);
-        returnAllBtn.setEnabled(true);
-        //updateJobBtn.setEnabled(false);
-        deleteJobBtn.setEnabled(false);
-        addButtonListeners();
-
     }
 
     private void addButtonListeners() {
