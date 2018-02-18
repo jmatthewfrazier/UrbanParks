@@ -4,6 +4,8 @@ import exceptions.UserInputException;
 import model.Job;
 import model.JobCollection;
 import model.ParkManager;
+import tests.MockJobCollection;
+import tests.MockParkManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +42,13 @@ public class ParkManagerGUIPanel extends JPanel {
     //will need a popup window for confirming actions, etc
 
     public ParkManagerGUIPanel() {
-        ParkManagerGUIPanel(new MockJobCollection(), new MockParkManager());
+
+        user = new MockParkManager().getMockPM();
+        jobWallet = new MockJobCollection().getJobWallet();
+        //ParkManagerGUIPanel(jobWallet, user);
+
+        setupPanel();
+        setupJobsList(jobWallet);
     }
 
 
