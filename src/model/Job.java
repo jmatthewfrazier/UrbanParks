@@ -9,8 +9,8 @@ import java.util.List;
 
 public final class Job implements Serializable {
 
-    private static final int MAX_NUM_DAYS_FROM_TODAY = 75;
-    private static final int MAX_JOB_LENGTH_IN_DAYS = 3;
+    public static final int MAX_NUM_DAYS_FROM_TODAY = 75;
+    public static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
 	private List<Volunteer> volunteerList;
     private String name;
@@ -19,10 +19,12 @@ public final class Job implements Serializable {
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
+    private UserID jobCreatorID;
 
     public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
-               final LocalDateTime endDate, final String description) {
+               final LocalDateTime endDate, final String description,
+               final UserID creatorID) {
     	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
@@ -30,6 +32,7 @@ public final class Job implements Serializable {
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
+        this.jobCreatorID = creatorID;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
@@ -52,6 +55,17 @@ public final class Job implements Serializable {
         this.volunteerList.add(volunteer);
     }
 
+    /**
+     * A method to determine if this Job spans an acceptable range of days.
+     * The maximum range of days is determined by client business rules.
+     * LocalDateTime will add n days to the current date with the current date
+     * being counted as 0 not 1.  For example, 12/31/1999 plus 3 days will result in
+     * 1/3/2000.  Valid in this context means the length of time this Job covers is
+     * not in violation of proscribed business rules.
+     *
+     * @return true if day count of this Job does not violate any business rules
+     * pertaining to the number of days the job spans.
+     */
     public boolean isJobLengthValid() {
 	    LocalDateTime maxValidJobEndDate =
 			    beginDateTime.plusDays(MAX_JOB_LENGTH_IN_DAYS);
@@ -59,9 +73,12 @@ public final class Job implements Serializable {
     }
 
     /**
-     * Specifies if this Job is within a valid date range.
+     * A method to determine if this Job's scheduled event time is within the
+     * allowable range of future dates.  The range of future dates is currently
+     * set by client business rules.
      *
-     * @return true if the Job is within the valid date range, false otherwise
+     * @return true if date of this Job is within the acceptable date range.
+     * The date range is determined by client business rules.
      */
     public boolean isJobWithinValidDateRange() {
         return endDateTime.minusDays(MAX_NUM_DAYS_FROM_TODAY).compareTo
@@ -105,7 +122,8 @@ public final class Job implements Serializable {
 	}
 	
 	public boolean isOverlapping(Job theCandidateJob) {
-		return this.endDateTime.isAfter(theCandidateJob.beginDateTime);
+
+	    return this.endDateTime.isAfter(theCandidateJob.beginDateTime);
 	}
 
     public LocalDateTime getBeginDateTime() {
@@ -139,5 +157,19 @@ public final class Job implements Serializable {
     public void setDescription(final String description) {
     	this.description = description;
     }
+
+    public UserID getJobCreatorID() {
+	    return jobCreatorID;
+    }
+
+    public List<UserID> getVolunteerUserIDList() {
+	    ArrayList<UserID> volunteerUserIDList = new ArrayList<>();
+	    for (Volunteer v : volunteerList) {
+	        volunteerUserIDList.add(v.getID());
+        }
+	    return volunteerUserIDList;
+    }
+
+    //end Job class
 }
 
