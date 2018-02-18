@@ -1,4 +1,4 @@
-package view;
+package recycle_bin;
 
 import javax.swing.*;
 
