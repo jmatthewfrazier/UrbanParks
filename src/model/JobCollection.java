@@ -1,20 +1,21 @@
 package model;
 
-import exceptions.InvalidJobEndDateException;
-import exceptions.InvalidJobLengthException;
-import exceptions.JobCollectionDuplicateKeyException;
-import exceptions.MaxPendingJobsException;
+import exceptions.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public final class JobCollection implements Serializable {
 
-    private static int MAX_CAPACITY = 20;
+    public final static int MAX_CAPACITY = 20;
+
+    public final static int MIN_DAYS_REMOVAL_BUFFER = 2;
 
     private Map<JobID, Job> jobMap;
 
     public JobCollection() {
+
         jobMap = new HashMap<>();
     }
 
@@ -83,4 +84,46 @@ public final class JobCollection implements Serializable {
         }
         return new ChronologicalComparator();
     }
+
+    public List<Job> listAllJobsByParkManager(final ParkManager pm) {
+        return new ArrayList<>(jobMap.values());
+    }
+
+    public void removeJobFromCollection(final JobID jobID, final UserID userID)
+            throws LessThanMinDaysAwayException, UserNotFoundException,
+            JobIDNotFoundInCollectionException, UrbanParksSystemOperationException {
+        Job jobToRemove;
+
+        if (!jobMap.containsKey(jobID)) { // check the job is in the collection
+            throw new JobIDNotFoundInCollectionException("JobID not found in collection");
+        } else {
+            jobToRemove = jobMap.get(jobID);
+        }
+
+        UserID jobCreatorID = jobToRemove.getJobCreatorID();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        if (jobCreatorID.compareTo(userID) != 0) { // check the userid is allowed to remove this job
+            //this user was not the creator of this job, can't remove it
+            throw new UserNotFoundException("This UserID does not match the creator of this job");
+        }
+        // job has to be a min number of days in the future to be cancelled
+        if (currentDateTime.toLocalDate().isBefore(
+                jobToRemove.getBeginDateTime().toLocalDate().plusDays(MIN_DAYS_REMOVAL_BUFFER))) {
+            //Job is too near in the future, not enough buffer time, can't be removed
+            throw new LessThanMinDaysAwayException("This job begins soon, it cannot be removed");
+        }
+        //all conditions passed, job is removed from collection
+        int mapSizeBegin = jobMap.values().size();
+        jobMap.remove(jobID);
+        int mapSizeEnd = jobMap.values().size();
+        if (mapSizeEnd != (mapSizeBegin + 1)) {
+            throw new UrbanParksSystemOperationException("Job was not removed from collection?");
+        }
+        // all volunteers signed up for this job should have it removed from their lists as well
+        for (UserID uid : jobToRemove.getVolunteerUserIDList()) {
+
+        }
+    }
+
+
 }
