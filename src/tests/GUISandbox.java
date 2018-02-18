@@ -1,5 +1,6 @@
 package tests;
 
+import view.ParkManagerGUIPanel;
 import view.UrbanParksGUI;
 
 /**
@@ -9,8 +10,7 @@ public class GUISandbox {
 
     public static void main(String[] args) {
 
-        UrbanParksGUI upgui = new UrbanParksGUI();
-        upgui.run();
+        new ParkManagerGUIPanel().display();
 
     }
 }
