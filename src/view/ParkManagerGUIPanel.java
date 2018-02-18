@@ -27,6 +27,9 @@ public class ParkManagerGUIPanel extends JPanel {
 
     private JButton returnAllBtn;
 
+    //TODO need log out functionality
+    private JButton logoutBtn;
+
     private JobCollection jobWallet;
 
     private JButton deleteJobBtn;
@@ -231,6 +234,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
     }
 
+    //TODO-this will be shared logic and repeated if not put in the parent component?
     private void resetUIState() {
         textOutputDisplayArea.append(getHomeScreenMsg());
         //get focus back to input field
