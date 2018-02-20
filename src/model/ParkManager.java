@@ -10,6 +10,10 @@ public final class ParkManager extends User implements Serializable {
     //TODO-actually this probably belongs in aPark, not here
     private List<Park> parkList;
 
+    public ParkManager() {
+        this("Test", "Park Manager", new UserID("testPM"));
+    }
+
     public ParkManager(String firstName, String lastName, UserID userID) {
        super(firstName, lastName, UserRole.PARK_MANAGER, userID);
         parkList = new ArrayList<>();

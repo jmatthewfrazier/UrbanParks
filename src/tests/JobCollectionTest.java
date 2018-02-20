@@ -31,8 +31,28 @@ public class JobCollectionTest {
     }
 
     @Test
+    public void isValidCapacity_CapacitySetToZero_False() {
+        assertFalse(jobCollection.isValidCapacity(0));
+    }
+
+    @Test
+    public void isValidCapacity_CapacityIsNegativeInteger_False() {
+        assertFalse(jobCollection.isValidCapacity(-1));
+    }
+
+    @Test
+    public void isValidCapacity_CapacityIsNonInteger_False() {
+        assertFalse(jobCollection.isValidCapacity(1.5));
+    }
+
+    @Test
+    public void isValidCapacity_CapacityIsPositiveInteger_True() {
+        assertTrue(jobCollection.isValidCapacity(1));
+    }
+
+    @Test
     public void isAtMaxCapacity_OneFewerJobsThanMaxExists_False() {
-        for (int i = 0; i < JobCollection.getMaxCapacity() - 1; i++) {
+        for (int i = 0; i < jobCollection.getMaxCapacity() - 1; i++) {
             try {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
@@ -49,7 +69,7 @@ public class JobCollectionTest {
 
     @Test
     public void isAtMaxCapacity_MaxJobsExist_True() {
-        for (int i = 0; i < JobCollection.getMaxCapacity(); i++) {
+        for (int i = 0; i < jobCollection.getMaxCapacity(); i++) {
             try {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),

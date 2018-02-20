@@ -1,7 +1,6 @@
 package view;
 
 import exceptions.UserInputException;
-import listeners.logoutUserListener;
 import model.Job;
 import model.JobCollection;
 import model.ParkManager;
@@ -10,8 +9,9 @@ import tests.MockParkManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+
+//import listeners.logoutUserListener;
 
 /**
  * Created by dave on 2/13/18.
@@ -136,7 +136,8 @@ public class ParkManagerGUIPanel extends JPanel {
         returnAllBtn.addActionListener(e -> getAllJobs());
         //updateJobBtn.addActionListener(e -> updateChosenJob());
         deleteJobBtn.addActionListener(e -> deleteChosenJob());
-        logoutBtn.addActionListener(e -> new logoutUserListener(this.getParent());
+//        logoutBtn.addActionListener(e ->
+//                new logoutUserListener(this.getParent()));
     }
 
     public void addFutureJob() {

@@ -34,8 +34,7 @@ public class MockJobCollection {
                     parks.getPark(new ParkID(2)), new JobID(14),
                     LocalDateTime.now().plusDays(20),
                     LocalDateTime.now().plusDays(21),
-                    "Replacing boards on the dock at the lake.",
-                    uidOne));
+                    "Replacing boards on the dock at the lake."));
         } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException |
                 InvalidJobEndDateException | InvalidJobLengthException e) {
             e.printStackTrace();
