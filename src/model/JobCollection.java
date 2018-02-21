@@ -88,6 +88,25 @@ public final class JobCollection implements Serializable {
     public List<Job> listAllJobsByParkManager(final ParkManager pm) {
         return new ArrayList<>(jobMap.values());
     }
+    
+    /**
+     * Creates and returns a list of all jobs in a specified date range.
+     * 
+     * @param start is the start of the date range.
+     * @param end is the end of the date range.
+     * @return a list of all jobs that fall within the date range.
+     */
+    public List<Job> getJobsInDateRange(final LocalDateTime start, 
+    		final LocalDateTime end) {
+    	ArrayList<Job> jobs = new ArrayList<Job>();
+    	
+    	for (Job job : this.getList()) {
+    		if (job.isJobStartAfterEqualDate(start) && 
+    				job.isJobEndBeforeEqualDate(end)) jobs.add(job);
+    	}
+    	
+    	return jobs;
+    }
 
     public void removeJobFromCollection(final JobID jobID, final UserID userID)
             throws LessThanMinDaysAwayException, UserNotFoundException,

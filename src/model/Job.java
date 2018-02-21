@@ -84,6 +84,30 @@ public final class Job implements Serializable {
         return endDateTime.minusDays(MAX_NUM_DAYS_FROM_TODAY).compareTo
                 (LocalDateTime.now()) <= 0;
     }
+    
+    /**
+     * Determines if the start date of this job is after or equal to the date
+     * specified.
+     * 
+     * @param date is the date to compare the job start date to.
+     * @return true if the job start date is after or equal to the date 
+     * specified.
+     */
+    public boolean isJobStartAfterEqualDate(LocalDateTime date) {
+    	return beginDateTime.isAfter(date) || beginDateTime.isEqual(date);
+    }
+    
+    /**
+     * Determines if the end date of this job is before or equal to the date
+     * specified.
+     * 
+     * @param date is the date to compare the job start date to.
+     * @return true if the job end date is before or equal to the date 
+     * specified.
+     */
+    public boolean isJobEndBeforeEqualDate(LocalDateTime date) {
+    	return endDateTime.isBefore(date) || endDateTime.isEqual(date);
+    }
 
     public String getName() {
         return name;
