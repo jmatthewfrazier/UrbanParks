@@ -4,10 +4,7 @@ import exceptions.InvalidJobEndDateException;
 import exceptions.InvalidJobLengthException;
 import exceptions.JobCollectionDuplicateKeyException;
 import exceptions.MaxPendingJobsException;
-import model.Job;
-import model.JobCollection;
-import model.JobID;
-import model.Park;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,9 +17,11 @@ public class JobCollectionTest {
 
     private JobCollection jobCollection;
 
+
     @Before
     public void setUp() {
         jobCollection = new JobCollection();
+
     }
 
     @Test
@@ -37,10 +36,10 @@ public class JobCollectionTest {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
                         LocalDateTime.now().plusDays(i * 2 + 2),
-                        "test job"));
+                        "test job", new UserID("FredAnderson")));
             } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
                     | InvalidJobEndDateException | InvalidJobLengthException e) {
-                e.printStackTrace();
+                e.getMessage();
             }
 
         }
@@ -54,7 +53,7 @@ public class JobCollectionTest {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
                         LocalDateTime.now().plusDays(i * 2 + 2),
-                        "test job"));
+                        "test job", new UserID("BadTim")));
             } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
                     | InvalidJobEndDateException | InvalidJobLengthException e) {
                 e.printStackTrace();
@@ -62,4 +61,26 @@ public class JobCollectionTest {
         }
         assertTrue(jobCollection.isAtMaxCapacity());
     }
+
+    @Test
+    public void removeJobFromCollection_MinNumberOfDaysInFutureCurrentDay_Fail() {
+
+    }
+
+    @Test
+    public void removeJobFromCollection_MinNumberOfDaysInFutureMultiDayStartedPreviousDay_Fail() {
+
+    }
+
+    @Test
+    public void removeJobFromCollection_MoreThanMinNumberOfDaysInFuture_Pass() {
+
+    }
+
+    @Test
+    public void removeJobFromCollection_ExactlyMinNumberOfDaysInFuture_Pass() {
+
+    }
+
+
 }

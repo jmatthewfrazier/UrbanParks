@@ -168,6 +168,12 @@ public class UrbanParksGUI {
         }
     }
 
+    public String createGenericLoginMsg() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Welcome to Urban Parks, please log in to the system");
+        return sb.toString();
+    }
+
     /**
      * When this class is first initialized, this will be passed the login panel
      * once the system is running however, it should be able to swap out panels
