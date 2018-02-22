@@ -11,6 +11,7 @@ public final class Job implements Serializable {
 
     public static final int MAX_NUM_DAYS_FROM_TODAY = 75;
     public static final int MAX_JOB_LENGTH_IN_DAYS = 3;
+    public final static int MIN_DAYS_REMOVAL_BUFFER = 3;
 
 	private List<Volunteer> volunteerList;
     private String name;
@@ -50,6 +51,11 @@ public final class Job implements Serializable {
 	    }
 
         this.volunteerList.add(volunteer);
+    }
+    
+    public void removeVolunteer(final Volunteer volunteer) {
+    	this.volunteerList.remove(volunteer);
+    	
     }
 
     /**
@@ -104,6 +110,31 @@ public final class Job implements Serializable {
      */
     public boolean isJobEndBeforeEqualDate(LocalDateTime date) {
     	return endDateTime.isBefore(date) || endDateTime.isEqual(date);
+    }
+    
+    /**
+     * The input would be the job the volunteer wants to cancel. Return value would
+     * be true if the begin date time of the job is before the current date, or at
+     * current date. False otherwise.
+     *  
+     * @param theJob the Job volunteer wants to cancel.
+     * @return true if the begin date time is before or at the current date, false otherwise.
+     */
+    public boolean isJobBeforeCurrentDate(Job theJob){
+    	boolean isBefore = false;
+    	
+    	LocalDateTime currentDateTime = LocalDateTime.now();
+    	
+    	if (theJob.getBeginDateTime().toLocalDate().minusDays(
+				MIN_DAYS_REMOVAL_BUFFER).isBefore(currentDateTime.toLocalDate())){
+    		isBefore = true;
+    	}
+    	if (theJob.getBeginDateTime().toLocalDate().minusDays(
+				MIN_DAYS_REMOVAL_BUFFER).isEqual(currentDateTime.toLocalDate())){
+    		isBefore = false;
+    	}
+    	
+    	return isBefore;
     }
 
     public String getName() {

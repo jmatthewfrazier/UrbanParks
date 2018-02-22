@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.LessThanMinDaysAwayException;
+import exceptions.UnvolunteerPriorTimeException;
 import exceptions.VolunteerDailyJobLimitException;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ public final class Volunteer extends User {
 	 * A default minimum number of calendar days after the current date that a
 	 * job begins and a volunteer may sign up for.
 	 */
-	public static final int MINIMUM_SIGN_UP_DAYS_OUT = 2;
+	public static final int MINIMUM_SIGN_UP_DAYS_OUT = 3;
 
 	private List<Job> jobList;
 
@@ -56,6 +57,21 @@ public final class Volunteer extends User {
 
 		newJob.addVolunteer(this);
 		jobList.add(newJob);
+    }
+    
+    public void unSignupAJob(Job theJob)
+    			throws UnvolunteerPriorTimeException {
+    	
+    	if (theJob.isJobBeforeCurrentDate(theJob)){
+    		throw new UnvolunteerPriorTimeException("The Job you want to unvolunteer is "
+    				+ "too close to the current date. You may not be able to cancel it now!");
+    	}
+    	else{
+    		jobList.remove(theJob);
+    		theJob.removeVolunteer(this);
+    	}
+    				
+    			
     }
 
     public List<Job> getChronologicalJobList() {
