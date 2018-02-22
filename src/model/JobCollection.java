@@ -116,7 +116,8 @@ public final class JobCollection implements Serializable {
      */
     public void removeJobFromCollection(final JobID jobID, final UserID userID)
             throws LessThanMinDaysAwayException, UserNotFoundException,
-            JobIDNotFoundInCollectionException, UrbanParksSystemOperationException {
+            JobIDNotFoundInCollectionException {
+
         Job jobToRemove;
         if (!jobMap.containsKey(jobID)) { // check the job is in the collection
             throw new JobIDNotFoundInCollectionException("JobID not found in collection");
@@ -138,13 +139,15 @@ public final class JobCollection implements Serializable {
         //all conditions passed, job is removed from collection
         int mapSizeBegin = jobMap.values().size();
         jobMap.remove(jobID);
-        int mapSizeEnd = jobMap.values().size();
-        if (mapSizeEnd != (mapSizeBegin + 1)) { //post condition wasn't met for some reason
-            throw new UrbanParksSystemOperationException("Job was not removed from collection?");
-        }
-        // all volunteers signed up for this job should have it removed from their lists as well
+
+        //remove any volunteers who may have signed up for this job also
         removeVolunteersFromDeletedJob(jobToRemove);
     }
+
+//    public static void removeJobFromCollectionStatic(final Job jobToRemove) {
+//        JobID jobToRemoveID = jobToRemove.getID();
+//
+//    }
 
     public void removeVolunteersFromDeletedJob(final Job removedJob) {
 
