@@ -19,8 +19,14 @@ public final class ParkManager extends User implements Serializable {
 	//    public ParkManager(String firstName, String lastName, UserID userID) {
 	private List<Job> jobsSubmittedByMe;
 
+	// this is for development
 	public ParkManager() {
         this("Test", "Park Manager", new UserID("testPM"));
+    }
+
+    // this is for development
+    public ParkManager(String firstName, String lastName, UserID userID) {
+	    this(firstName, lastName, userID, new JobCollection());
     }
 
     public ParkManager(String firstName, String lastName, UserID userID, JobCollection jobCollection) {
