@@ -19,12 +19,10 @@ public final class Job implements Serializable {
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
-    private UserID jobCreatorID;
 
     public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
-               final LocalDateTime endDate, final String description,
-               final UserID creatorID) {
+               final LocalDateTime endDate, final String description) {
     	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
@@ -32,7 +30,6 @@ public final class Job implements Serializable {
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
-        this.jobCreatorID = creatorID;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
@@ -180,10 +177,6 @@ public final class Job implements Serializable {
     
     public void setDescription(final String description) {
     	this.description = description;
-    }
-
-    public UserID getJobCreatorID() {
-	    return jobCreatorID;
     }
 
     public List<UserID> getVolunteerUserIDList() {

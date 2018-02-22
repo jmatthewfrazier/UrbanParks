@@ -1,10 +1,12 @@
 package exceptions;
 
-/**
- * Created by dave on 2/7/18.
- */
+
 public class InvalidJobEndDateException extends Exception {
-    private String msgString = "";
+    private String msgString;
+
+    public InvalidJobEndDateException() {
+        this("");
+    }
 
     public InvalidJobEndDateException(final String paramMsgString) {
 

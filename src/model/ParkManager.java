@@ -14,9 +14,14 @@ public final class ParkManager extends User implements Serializable {
     //TODO-actually this probably belongs in aPark, not here
     private List<Park> parkList;
 
-    private List<Job> jobsSubmittedByMe;
+	JobCollection jobCollection;
 
-    JobCollection jobCollection;
+	//    public ParkManager(String firstName, String lastName, UserID userID) {
+	private List<Job> jobsSubmittedByMe;
+
+	public ParkManager() {
+        this("Test", "Park Manager", new UserID("testPM"));
+    }
 
     public ParkManager(String firstName, String lastName, UserID userID, JobCollection jobCollection) {
        super(firstName, lastName, UserRole.PARK_MANAGER, userID);
@@ -31,7 +36,7 @@ public final class ParkManager extends User implements Serializable {
     //view a list of future jobs, with options to update, create, delete jobs
         //list of all future jobs?
         //or just jobs created by this park manager id?
-    
+
     //select a job from the list of future jobs
     //tell app to remove that job from the list
     public void removeFutureJobFromCollection(final Job jobToRemove) {

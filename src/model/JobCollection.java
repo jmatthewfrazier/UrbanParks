@@ -8,7 +8,7 @@ import java.util.*;
 
 public final class JobCollection implements Serializable {
 
-    public final static int MAX_CAPACITY = 20;
+    private int MAX_CAPACITY = 20;
 
     public final static int MIN_DAYS_REMOVAL_BUFFER = 2;
 
@@ -48,11 +48,32 @@ public final class JobCollection implements Serializable {
 
     }
 
+    public void setMaxCapacity(User user, int capacity)
+            throws InvalidJobCollectionCapacityException {
+        if (user.getUserRole() == UserRole.STAFF_MEMBER) {
+            if (isValidCapacity(capacity)) {
+                MAX_CAPACITY = capacity;
+            } else {
+                throw new InvalidJobCollectionCapacityException("Capacity " +
+                        "must be an Integer that is equal to or greater than " +
+                        "0.");
+            }
+        }
+    }
+
+    /**
+     * Pre: capacity must be an Integer that is greater than or equal to 0.
+     */
+    public final boolean isValidCapacity(Number capacity) {
+        return capacity.getClass().equals(Integer.class)
+                && capacity.intValue() > 0;
+    }
+
     public int size() {
         return jobMap.size();
     }
 
-    public static int getMaxCapacity() {
+    public int getMaxCapacity() {
         return MAX_CAPACITY;
     }
 
@@ -89,23 +110,23 @@ public final class JobCollection implements Serializable {
 
         return new ArrayList<>(jobMap.values());
     }
-    
+
     /**
      * Creates and returns a list of all jobs in a specified date range.
-     * 
+     *
      * @param start is the start of the date range.
      * @param end is the end of the date range.
      * @return a list of all jobs that fall within the date range.
      */
-    public List<Job> getJobsInDateRange(final LocalDateTime start, 
+    public List<Job> getJobsInDateRange(final LocalDateTime start,
     		final LocalDateTime end) {
     	ArrayList<Job> jobs = new ArrayList<Job>();
-    	
+
     	for (Job job : this.getList()) {
-    		if (job.isJobStartAfterEqualDate(start) && 
+    		if (job.isJobStartAfterEqualDate(start) &&
     				job.isJobEndBeforeEqualDate(end)) jobs.add(job);
     	}
-    	
+
     	return jobs;
     }
 
@@ -136,19 +157,20 @@ public final class JobCollection implements Serializable {
     public void removeJobFromCollection(final JobID jobID, final UserID userID)
             throws LessThanMinDaysAwayException, UserNotFoundException,
             JobIDNotFoundInCollectionException {
-
         Job jobToRemove;
         if (!jobMap.containsKey(jobID)) { // check the job is in the collection
             throw new JobIDNotFoundInCollectionException("JobID not found in collection");
         } else {
             jobToRemove = jobMap.get(jobID);
         }
-        UserID jobCreatorID = jobToRemove.getJobCreatorID();
+//        UserID jobCreatorID = jobToRemove.getJobCreatorID();
+
+//        UserID jobCreatorID = jobToRemove.getJobCreatorID();
         LocalDateTime currentDateTime = LocalDateTime.now();
-        if (jobCreatorID.compareTo(userID) != 0) { // check the userid is allowed to remove this job
-            //this user was not the creator of this job, can't remove it
-            throw new UserNotFoundException("This UserID does not match the creator of this job");
-        }
+//        if (jobCreatorID.compareTo(userID) != 0) { // check the userid is allowed to remove this job
+//            //this user was not the creator of this job, can't remove it
+//            throw new UserNotFoundException("This UserID does not match the creator of this job");
+//        }
         // job has to be a min number of days in the future to be cancelled
         if (currentDateTime.toLocalDate().isBefore(
                 jobToRemove.getBeginDateTime().toLocalDate().plusDays(MIN_DAYS_REMOVAL_BUFFER))) {
