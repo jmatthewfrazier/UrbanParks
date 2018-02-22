@@ -1,13 +1,7 @@
 package tests;
 
-import exceptions.InvalidJobEndDateException;
-import exceptions.InvalidJobLengthException;
-import exceptions.JobCollectionDuplicateKeyException;
-import exceptions.MaxPendingJobsException;
-import model.Job;
-import model.JobCollection;
-import model.JobID;
-import model.Park;
+import exceptions.*;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,9 +14,12 @@ public class JobCollectionTest {
 
     private JobCollection jobCollection;
 
+    private LocalDateTime todayDate;
+
     @Before
     public void setUp() {
         jobCollection = new JobCollection();
+        todayDate = LocalDateTime.now();
     }
 
     @Test
@@ -37,10 +34,10 @@ public class JobCollectionTest {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
                         LocalDateTime.now().plusDays(i * 2 + 2),
-                        "test job"));
+                        "test job", new UserID("FredAnderson")));
             } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
                     | InvalidJobEndDateException | InvalidJobLengthException e) {
-                e.printStackTrace();
+                e.getMessage();
             }
 
         }
@@ -54,7 +51,7 @@ public class JobCollectionTest {
                 jobCollection.addJob(new Job("Job " + i, new Park(),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
                         LocalDateTime.now().plusDays(i * 2 + 2),
-                        "test job"));
+                        "test job", new UserID("BadTim")));
             } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
                     | InvalidJobEndDateException | InvalidJobLengthException e) {
                 e.printStackTrace();
@@ -62,4 +59,62 @@ public class JobCollectionTest {
         }
         assertTrue(jobCollection.isAtMaxCapacity());
     }
+
+    @Test
+    public void removeJobFromCollection_MinNumberOfDaysInFutureCurrentDay_Fail() {
+        jobCollection.addJob(new Job("Job " + 1, new Park(),
+                new JobID(23), LocalDateTime.now(),
+                LocalDateTime.now().plusDays(1 * 2 + 1),
+                "test job", new UserID("BadTim")));;
+        try {
+            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+        } catch (LessThanMinDaysAwayException | UserNotFoundException |
+                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void removeJobFromCollection_MinNumberOfDaysInFutureMultiDayStartedPreviousDay_Fail() {
+        jobCollection.addJob(new Job("Job " + 1, new Park(),
+                new JobID(23), LocalDateTime.now(),
+                LocalDateTime.now().plusDays(1 * 2 + 1),
+                "test job", new UserID("BadTim")));;
+        try {
+            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+        } catch (LessThanMinDaysAwayException | UserNotFoundException |
+                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void removeJobFromCollection_MoreThanMinNumberOfDaysInFuture_Pass() {
+        jobCollection.addJob(new Job("Job " + 1, new Park(),
+                new JobID(23), LocalDateTime.now(),
+                LocalDateTime.now().plusDays(1 * 2 + 1),
+                "test job", new UserID("BadTim")));;
+        try {
+            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+        } catch (LessThanMinDaysAwayException | UserNotFoundException |
+                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void removeJobFromCollection_ExactlyMinNumberOfDaysInFuture_Pass() {
+        jobCollection.addJob(new Job("Job " + 1, new Park(),
+                new JobID(23), LocalDateTime.now(),
+                LocalDateTime.now().plusDays(1 * 2 + 1),
+                "test job", new UserID("BadTim")));;
+        try {
+            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+        } catch (LessThanMinDaysAwayException | UserNotFoundException |
+                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

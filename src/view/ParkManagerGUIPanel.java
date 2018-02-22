@@ -136,7 +136,7 @@ public class ParkManagerGUIPanel extends JPanel {
         returnAllBtn.addActionListener(e -> getAllJobs());
         //updateJobBtn.addActionListener(e -> updateChosenJob());
         deleteJobBtn.addActionListener(e -> deleteChosenJob());
-        logoutBtn.addActionListener(e -> new logoutUserListener(this.getParent());
+        //logoutBtn.addActionListener(e -> new logoutUserListener(this.getParent());
     }
 
     public void addFutureJob() {
