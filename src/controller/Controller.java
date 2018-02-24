@@ -67,5 +67,24 @@ public class Controller {
         }
     }
 
+    /**
+     * Writes all modified data to the stored collections.
+     */
+    private void exportCollections() {
+        try {
+            FileOutputStream out = new FileOutputStream("./data.bin");
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+
+            List<Object> collections = new ArrayList<>(); // look at this later
+            collections.add(jobs);
+            collections.add(users);
+            collections.add(parks);
+            oos.writeObject(collections);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     //end of Controller class
 }
