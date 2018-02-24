@@ -1,7 +1,9 @@
 package controller;
 
+import exceptions.InvalidJobCollectionCapacityException;
 import model.JobCollection;
 import model.ParkCollection;
+import model.User;
 import model.UserCollection;
 import view.UrbanParksGUI;
 
@@ -26,12 +28,39 @@ public class Controller {
 
     private UrbanParksGUI systemGUI;
 
+	private User currentUser;
 
-    public Controller() {
+    public Controller(JobCollection jobCollection,
+                      UserCollection userCollection,
+                      ParkCollection parkCollection) {
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
+        currentUser = User.getNullUser();
+    }
 
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public JobCollection getJobs() {
+        return jobs;
+    }
+
+    public ParkCollection getParks() {
+        return parks;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setJobCollectionCapacity(int capacity) {
+        try {
+            jobs.setMaxCapacity(currentUser, capacity);
+        } catch (InvalidJobCollectionCapacityException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadCollectionsFromFile() {
