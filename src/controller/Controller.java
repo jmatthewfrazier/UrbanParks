@@ -1,25 +1,22 @@
-package view;
-
-/**
- * Created by dave on 2/18/18.
- */
+package controller;
 
 import model.JobCollection;
 import model.ParkCollection;
 import model.UserCollection;
-
+import view.UrbanParksGUI;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class should serve as the root of then entire application.
- * can invoke the UP GUI class which serves as a frame
- * then pop in the appropriate panel
+ * The wiring hub of the system.  An instance of this class will
+ * be passed into User class instances to give users access to needed
+ * collections without violating the LOD.
  *
+ * @Created by Chad on 2/24/18.
  */
-public class UrbanParksSystemRoot {
+public class Controller {
 
     private JobCollection jobs;
 
@@ -30,12 +27,10 @@ public class UrbanParksSystemRoot {
     private UrbanParksGUI systemGUI;
 
 
-    public UrbanParksSystemRoot() {
-
+    public Controller() {
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
-
 
     }
 
@@ -72,19 +67,5 @@ public class UrbanParksSystemRoot {
         }
     }
 
-    public void runSystem() {
-        //populate all the collections
-        loadCollectionsFromFile();
-
-        //pass in all the populated collections to the GUI
-        systemGUI = new UrbanParksGUI(jobs, users, parks);
-
-        //system just began so start with the login panel
-        //don't think this class needs to be aware of who the user is
-        //this class just needs to populate things and get the gui started
-        systemGUI.displayLoginPanel("Welcome to Urban Parks");
-        }
-
-
-    //end UbranParksSystemRootClass
+    //end of Controller class
 }

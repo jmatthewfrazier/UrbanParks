@@ -1,5 +1,6 @@
 package view;
 
+import controller.Controller;
 import exceptions.UserNotFoundException;
 import model.*;
 
@@ -18,7 +19,13 @@ import static model.UserRole.VOLUNTEER;
 //import recycle_bin.CloseApplicationWindowListener;
 
 /**
- * Created by dave on 2/13/18.
+ * This class contains the base frame for the GUI.
+ * this is where panels get popped off depending on the
+ * application state
+ *
+ * more comments here later
+ *
+ * @Created by Chad on 2/13/18.
  */
 public class UrbanParksGUI {
 
@@ -42,7 +49,18 @@ public class UrbanParksGUI {
 
     private JButton loginButton;
 
+    private Controller controller;
 
+
+    public UrbanParksGUI(Controller paramController) {
+        this.controller = paramController;
+        frame = new JFrame(frameTitle);
+        setupGUI();
+
+    }
+
+    //TODO - new constructor which uses Contorller is above here
+    //TODO - old constructors which do not use the Controller are below here
     public UrbanParksGUI() {
         frame = new JFrame(frameTitle);
         setupGUI();
