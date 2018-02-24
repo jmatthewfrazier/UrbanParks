@@ -2,7 +2,6 @@ package view;
 
 import controller.Controller;
 import exceptions.UserNotFoundException;
-import recycle_bin.CloseApplicationWindowListener;
 import model.*;
 
 import javax.swing.*;
@@ -12,10 +11,12 @@ import java.awt.event.WindowListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.ArrayList;
 
 import static model.UserRole.PARK_MANAGER;
 import static model.UserRole.VOLUNTEER;
+
+//import recycle_bin.CloseApplicationWindowListener;
 
 /**
  * This class contains the base frame for the GUI.
