@@ -3,12 +3,12 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by dave on 2/18/18.
- */
+
 public class StaffMember extends User implements Serializable {
 
     ArrayList<Park> parkList;
+
+//    private JobCollection administratedJobCollection;
 
     public StaffMember() {
         this("Test", "Staff Member", new UserID("testSM"));

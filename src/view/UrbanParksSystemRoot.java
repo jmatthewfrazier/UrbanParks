@@ -9,8 +9,6 @@ import model.ParkCollection;
 import model.User;
 import model.UserCollection;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,6 +37,7 @@ public class UrbanParksSystemRoot {
 
     private UrbanParksGUI systemGUI;
 
+    private User currentUser;
 
     public UrbanParksSystemRoot() {
         console = new Scanner(System.in);

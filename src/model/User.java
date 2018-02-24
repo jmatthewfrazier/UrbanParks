@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Represents an Urban Parks user.
  */
-public abstract class User implements Serializable {
+public class User implements Serializable {
 
 //    static final long serial
 
@@ -20,6 +20,11 @@ public abstract class User implements Serializable {
         this.lastName = lastName;
         this.userRole = userRole;
         this.userID = userID;
+    }
+
+    public static final User getNullUser() {
+        return new User("", "", UserRole.NULL_USER,
+                new UserID("null_user"));
     }
 
     public final String getFirstName() {
