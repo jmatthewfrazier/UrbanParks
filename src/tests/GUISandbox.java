@@ -1,7 +1,6 @@
 package tests;
 
 import view.ParkManagerGUIPanel;
-import view.UrbanParksGUI;
 
 /**
  * Created by dave on 2/13/18.

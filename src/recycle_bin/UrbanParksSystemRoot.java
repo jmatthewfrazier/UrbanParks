@@ -1,4 +1,4 @@
-package view;
+package recycle_bin;
 
 /**
  * Created by dave on 2/18/18.
@@ -7,6 +7,7 @@ package view;
 import model.JobCollection;
 import model.ParkCollection;
 import model.UserCollection;
+import view.UrbanParksGUIRoot;
 
 
 import java.io.*;
@@ -27,7 +28,7 @@ public class UrbanParksSystemRoot {
 
     private ParkCollection parks;
 
-    private UrbanParksGUI systemGUI;
+    private UrbanParksGUIRoot systemGUI;
 
 
     public UrbanParksSystemRoot() {
@@ -77,7 +78,7 @@ public class UrbanParksSystemRoot {
         loadCollectionsFromFile();
 
         //pass in all the populated collections to the GUI
-        systemGUI = new UrbanParksGUI(jobs, users, parks);
+        systemGUI = new UrbanParksGUIRoot(jobs, users, parks);
 
         //system just began so start with the login panel
         //don't think this class needs to be aware of who the user is

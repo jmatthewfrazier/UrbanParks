@@ -1,5 +1,6 @@
+package recycle_bin;
+
 import view.ParkManagerGUIPanel;
-import view.UrbanParksGUI;
 
 /**
  * Created by dave on 2/13/18.
@@ -13,7 +14,7 @@ public class UrbanParksMain {
 
 
     public static void main(String[] args) {
-        //new UrbanParksGUI().display();
+        //new UrbanParksGUIRoot().display();
         new ParkManagerGUIPanel().display();
     }
 }

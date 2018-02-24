@@ -1,5 +1,6 @@
 package view;
 
+import controller.Controller;
 import exceptions.UserNotFoundException;
 import recycle_bin.CloseApplicationWindowListener;
 import model.*;
@@ -17,9 +18,15 @@ import static model.UserRole.PARK_MANAGER;
 import static model.UserRole.VOLUNTEER;
 
 /**
- * Created by dave on 2/13/18.
+ * This class contains the base frame for the GUI.
+ * this is where panels get popped off depending on the
+ * application state
+ *
+ * more comments here later
+ *
+ * @Created by Chad on 2/13/18.
  */
-public class UrbanParksGUI {
+public class UrbanParksGUIRoot {
 
     private static final int TEXT_WIDTH = 30;
 
@@ -41,15 +48,26 @@ public class UrbanParksGUI {
 
     private JButton loginButton;
 
+    private Controller controller;
 
-    public UrbanParksGUI() {
+
+    public UrbanParksGUIRoot(Controller paramController) {
+        this.controller = paramController;
+        frame = new JFrame(frameTitle);
+        setupGUI();
+
+    }
+
+    //TODO - new constructor which uses Contorller is above here
+    //TODO - old constructors which do not use the Controller are below here
+    public UrbanParksGUIRoot() {
         frame = new JFrame(frameTitle);
         setupGUI();
     }
 
-    public UrbanParksGUI(final JobCollection paramJobs,
-                         final UserCollection paramUsers,
-                         final ParkCollection paramParks) {
+    public UrbanParksGUIRoot(final JobCollection paramJobs,
+                             final UserCollection paramUsers,
+                             final ParkCollection paramParks) {
 
         this.jobs = paramJobs;
         this.parks = paramParks;
@@ -255,5 +273,5 @@ public class UrbanParksGUI {
 //        userLoginInputField.grabFocus();
 //    }
 
-    //end class UrbanParksGUI
+    //end class UrbanParksGUIRoot
 }
