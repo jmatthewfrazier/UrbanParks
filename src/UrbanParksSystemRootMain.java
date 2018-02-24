@@ -1,5 +1,5 @@
 import controller.Controller;
-import view.UrbanParksGUIRoot;
+import view.UrbanParksGUI;
 
 /**
  * Created by dave on 2/18/18.
@@ -16,6 +16,6 @@ public class UrbanParksSystemRootMain {
 
     public static void main(String[] args) {
 
-        new UrbanParksGUIRoot(new Controller()).runSystem();
+        new UrbanParksGUI(new Controller()).runSystem();
     }
 }

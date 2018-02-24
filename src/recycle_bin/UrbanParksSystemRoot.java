@@ -7,7 +7,7 @@ package recycle_bin;
 import model.JobCollection;
 import model.ParkCollection;
 import model.UserCollection;
-import view.UrbanParksGUIRoot;
+import view.UrbanParksGUI;
 
 
 import java.io.*;
@@ -28,7 +28,7 @@ public class UrbanParksSystemRoot {
 
     private ParkCollection parks;
 
-    private UrbanParksGUIRoot systemGUI;
+    private UrbanParksGUI systemGUI;
 
 
     public UrbanParksSystemRoot() {
@@ -78,7 +78,7 @@ public class UrbanParksSystemRoot {
         loadCollectionsFromFile();
 
         //pass in all the populated collections to the GUI
-        systemGUI = new UrbanParksGUIRoot(jobs, users, parks);
+        systemGUI = new UrbanParksGUI(jobs, users, parks);
 
         //system just began so start with the login panel
         //don't think this class needs to be aware of who the user is

@@ -14,7 +14,7 @@ public class UrbanParksMain {
 
 
     public static void main(String[] args) {
-        //new UrbanParksGUIRoot().display();
+        //new UrbanParksGUI().display();
         new ParkManagerGUIPanel().display();
     }
 }

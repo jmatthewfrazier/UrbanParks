@@ -27,7 +27,7 @@ import static model.UserRole.VOLUNTEER;
  *
  * @Created by Chad on 2/13/18.
  */
-public class UrbanParksGUIRoot {
+public class UrbanParksGUI {
 
     private static final int TEXT_WIDTH = 30;
 
@@ -52,7 +52,7 @@ public class UrbanParksGUIRoot {
     private Controller controller;
 
 
-    public UrbanParksGUIRoot(Controller paramController) {
+    public UrbanParksGUI(Controller paramController) {
         this.controller = paramController;
         frame = new JFrame(frameTitle);
         setupGUI();
@@ -61,14 +61,14 @@ public class UrbanParksGUIRoot {
 
     //TODO - new constructor which uses Contorller is above here
     //TODO - old constructors which do not use the Controller are below here
-    public UrbanParksGUIRoot() {
+    public UrbanParksGUI() {
         frame = new JFrame(frameTitle);
         setupGUI();
     }
 
-    public UrbanParksGUIRoot(final JobCollection paramJobs,
-                             final UserCollection paramUsers,
-                             final ParkCollection paramParks) {
+    public UrbanParksGUI(final JobCollection paramJobs,
+                         final UserCollection paramUsers,
+                         final ParkCollection paramParks) {
 
         this.jobs = paramJobs;
         this.parks = paramParks;
@@ -274,5 +274,5 @@ public class UrbanParksGUIRoot {
 //        userLoginInputField.grabFocus();
 //    }
 
-    //end class UrbanParksGUIRoot
+    //end class UrbanParksGUI
 }

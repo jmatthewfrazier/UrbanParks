@@ -1,6 +1,6 @@
 package listeners;
 
-import view.UrbanParksGUIRoot;
+import view.UrbanParksGUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +10,9 @@ import java.awt.event.ActionListener;
  */
 public class logoutUserListener implements ActionListener {
 
-    private UrbanParksGUIRoot systemGUI;
+    private UrbanParksGUI systemGUI;
 
-    public logoutUserListener(UrbanParksGUIRoot systemGUI) {
+    public logoutUserListener(UrbanParksGUI systemGUI) {
         this.systemGUI = systemGUI;
     }
 

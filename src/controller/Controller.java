@@ -3,7 +3,7 @@ package controller;
 import model.JobCollection;
 import model.ParkCollection;
 import model.UserCollection;
-import view.UrbanParksGUIRoot;
+import view.UrbanParksGUI;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class Controller {
 
     private ParkCollection parks;
 
-    private UrbanParksGUIRoot systemGUI;
+    private UrbanParksGUI systemGUI;
 
 
     public Controller() {
