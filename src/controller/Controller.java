@@ -1,8 +1,6 @@
 package controller;
 
-import model.JobCollection;
-import model.ParkCollection;
-import model.UserCollection;
+import model.*;
 import view.UrbanParksGUI;
 
 import java.io.*;
@@ -24,14 +22,25 @@ public class Controller {
 
     private ParkCollection parks;
 
-    private UrbanParksGUI systemGUI;
+    //private UrbanParksGUI systemGUI;
 
+    private User currentUser;
 
     public Controller() {
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
+        setupController();
 
+
+    }
+
+    private void setupController() {
+        loadCollectionsFromFile();
+    }
+
+    public void unsubmitParkJob(final Job jobToRemove) {
+        //jobs.removeJobFromCollection(jobToRemove);
     }
 
     private void loadCollectionsFromFile() {
