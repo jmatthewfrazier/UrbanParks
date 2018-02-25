@@ -30,6 +30,7 @@ public class UrbanParksSystemRoot {
 
     private UrbanParksGUI systemGUI;
 
+    private User currentUser;
 
     public UrbanParksSystemRoot() {
 
