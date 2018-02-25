@@ -106,11 +106,18 @@ public final class JobCollection implements Serializable {
         return new ChronologicalComparator();
     }
 
-    public List<Job> listAllJobsByParkManager(final ParkManager pm) {
-
-        return new ArrayList<>(jobMap.values());
+    public ArrayList<Job> getJobArrayListFilterByUserID(final UserID paramUserID) {
+        ArrayList<Job> jobsFilteredByUserID = new ArrayList<>();
+            for (Job j : this.getJobMap().values()) {
+                if (j.getJobCreatorUserID().equals(paramUserID)) {
+                    jobsFilteredByUserID.add(j);
+                }
+        } return jobsFilteredByUserID;
     }
 
+    private Map<JobID, Job> getJobMap() {
+        return jobMap;
+    }
     /**
      * Creates and returns a list of all jobs in a specified date range.
      *
@@ -141,9 +148,8 @@ public final class JobCollection implements Serializable {
      * @post-condition This method will either have thrown an excepetion due
      * to encountering illegal behavior or it will have removed one Job and
      * be 1 Job smaller in size.  Exception behavior is detailed below
-     * @param jobID object with unique identifier of this Job object
-     * @param userID object with unique identifier of person attempting to
-     *               delete this job
+     * @param jobToRemove //
+     * @param jobRemoverUserID //
      * @throws LessThanMinDaysAwayException The job to be deleted was too
      * near in the future, deleting it was not allowed
      * @throws UserNotFoundException The user attempting to delete this Job
@@ -154,23 +160,22 @@ public final class JobCollection implements Serializable {
      * reason, the post condition of the collection being one smaller in size
      * was not met.  The collection is not of size n-1.
      */
-    public void removeJobFromCollection(final JobID jobID, final UserID userID)
+    public void removeJobFromCollection(final Job jobToRemove,
+                                        final UserID jobRemoverUserID)
             throws LessThanMinDaysAwayException, UserNotFoundException,
             JobIDNotFoundInCollectionException {
-        Job jobToRemove;
-        if (!jobMap.containsKey(jobID)) { // check the job is in the collection
-            throw new JobIDNotFoundInCollectionException("JobID not found in collection");
-        } else {
-            jobToRemove = jobMap.get(jobID);
-        }
-//        UserID jobCreatorID = jobToRemove.getJobCreatorID();
 
-//        UserID jobCreatorID = jobToRemove.getJobCreatorID();
+        JobID jobToRemoveID = jobToRemove.getID();
+
+        if (!jobMap.containsKey(jobToRemoveID)) { // check the job is in the collection
+            throw new JobIDNotFoundInCollectionException("JobID not found in collection");
+        //check if the user is the one who submitted the job
+        } else if (!jobToRemove.getJobCreatorUserID().equals(jobRemoverUserID)){
+            throw new UserNotFoundException("\nThis user did not originally " +
+                    "submit this job.\nUser not authorized to unsubmit this " +
+                    "job.\nJob not removed.\n");
+        }
         LocalDateTime currentDateTime = LocalDateTime.now();
-//        if (jobCreatorID.compareTo(userID) != 0) { // check the userid is allowed to remove this job
-//            //this user was not the creator of this job, can't remove it
-//            throw new UserNotFoundException("This UserID does not match the creator of this job");
-//        }
         // job has to be a min number of days in the future to be cancelled
         if (currentDateTime.toLocalDate().isBefore(
                 jobToRemove.getBeginDateTime().toLocalDate().plusDays(MIN_DAYS_REMOVAL_BUFFER))) {
@@ -178,8 +183,7 @@ public final class JobCollection implements Serializable {
             throw new LessThanMinDaysAwayException("This job begins soon, it cannot be removed");
         }
         //all conditions passed, job is removed from collection
-        int mapSizeBegin = jobMap.values().size();
-        jobMap.remove(jobID);
+        jobMap.remove(jobToRemoveID);
 
         //remove any volunteers who may have signed up for this job also
         removeVolunteersFromDeletedJob(jobToRemove);

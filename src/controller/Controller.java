@@ -1,10 +1,7 @@
 package controller;
 
-import exceptions.InvalidJobCollectionCapacityException;
-import model.JobCollection;
-import model.ParkCollection;
-import model.User;
-import model.UserCollection;
+import exceptions.*;
+import model.*;
 import view.UrbanParksGUI;
 
 import java.io.*;
@@ -30,29 +27,77 @@ public class Controller {
 
 	private User currentUser;
 
-    public Controller(JobCollection jobCollection,
-                      UserCollection userCollection,
-                      ParkCollection parkCollection) {
+    public Controller() {
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
         currentUser = User.getNullUser();
+
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+
+
+    private void setupController() {
+       loadCollectionsFromFile();
     }
 
-    public JobCollection getJobs() {
-        return jobs;
+    public void unsubmitParkJob(final Job jobToRemove)
+            throws UrbanParksSystemOperationException{
+        ArrayList<UserID> volunteerListOfRemovedJob =
+                jobToRemove.getVolunteerUserIDList();
+        try {
+            jobs.removeJobFromCollection(jobToRemove,
+                    this.getCurrentUser().getID());
+        } catch (JobIDNotFoundInCollectionException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (UserNotFoundException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (LessThanMinDaysAwayException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        }
+        //made it to here, no exceptions thrown, notify
+        removeVolunteersFromUnsubmittedJob(volunteerListOfRemovedJob,
+                                            jobToRemove);
+
     }
 
-    public ParkCollection getParks() {
-        return parks;
+    public void removeVolunteersFromUnsubmittedJob(final List<UserID> userIDList,
+                                                   final Job unsubmittedJob ) {
+        for (UserID uid : userIDList) {
+            //TODO - casting here is sketchy, what if user id isn't a volunteer?
+            Volunteer unsubmittedJobVolunteer = (Volunteer) users.getUser(uid);
+            unsubmittedJobVolunteer.removeJobFromMyRegisteredJobs(unsubmittedJob);
+
+        }
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public ArrayList<Job> getFutureJobsSubmittedByParkManager
+            (final UserID paramUserID) throws UserRoleCategoryException,
+            UserNotFoundException {
+        ArrayList<Job> jobList;
+        if (currentUser.getUserRole() != UserRole.PARK_MANAGER) {
+            throw new UserRoleCategoryException("User is not a Park Manager");
+        } else if (!users.containsUserID(paramUserID)) {
+            throw new UserNotFoundException("User ID was not found in the system");
+        } else {
+            jobList = jobs.getJobArrayListFilterByUserID(paramUserID);
+        }
+        return jobList;
+    }
+
+    public void addNewJobByParkManager(final Job jobToAdd)
+            throws UrbanParksSystemOperationException {
+        try {
+            jobs.addJob(jobToAdd);
+        } catch (MaxPendingJobsException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (InvalidJobLengthException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (InvalidJobEndDateException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (JobCollectionDuplicateKeyException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        }
     }
 
     public void setJobCollectionCapacity(int capacity) {
@@ -113,6 +158,22 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public JobCollection getJobs() {
+        return jobs;
+    }
+
+    public ParkCollection getParks() {
+        return parks;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     //end of Controller class
