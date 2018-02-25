@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @Created by Chad on 2/24/18.
  */
-public class Controller {
+public class Controller implements Serializable {
 
     private JobCollection jobs;
 
