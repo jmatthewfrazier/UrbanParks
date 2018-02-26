@@ -1,5 +1,6 @@
 package view;
 
+import controller.Controller;
 import exceptions.UserNotFoundException;
 import model.*;
 
@@ -18,19 +19,19 @@ import static model.UserRole.VOLUNTEER;
 //import recycle_bin.CloseApplicationWindowListener;
 
 /**
- * Created by dave on 2/13/18.
+ * This class contains the base frame for the GUI.
+ * this is where panels get popped off depending on the
+ * application state
+ *
+ * more comments here later
+ *
+ * @Created by Chad on 2/13/18.
  */
 public class UrbanParksGUI {
 
     private static final int TEXT_WIDTH = 30;
 
     private User currentUser;
-
-    private JobCollection jobs;
-
-    private UserCollection users;
-
-    private ParkCollection parks;
 
     private String frameTitle = "Urban Parks Volunteer Management System";
 
@@ -42,23 +43,19 @@ public class UrbanParksGUI {
 
     private JButton loginButton;
 
+    private Controller controller;
 
-    public UrbanParksGUI() {
+
+    public UrbanParksGUI(Controller paramController) {
+        this.controller = paramController;
         frame = new JFrame(frameTitle);
         setupGUI();
+
     }
 
-    public UrbanParksGUI(final JobCollection paramJobs,
-                         final UserCollection paramUsers,
-                         final ParkCollection paramParks) {
-
-        this.jobs = paramJobs;
-        this.parks = paramParks;
-        this.users = paramUsers;
-
-        frame = new JFrame("!THIS IS THE FRAME TEXT!!!");
-        setupGUI();
-    }
+    //TODO - new constructor which uses Contorller is above here
+    //TODO - old constructors which do not use the Controller are below here
+//
 
     private void setupGUI() {
         setupFrame();
@@ -188,6 +185,18 @@ public class UrbanParksGUI {
         //getRootPane().setDefaultButton(myCountValuesButton);
     }
 
+    /**
+     * this method should display the frame and use the controller to decide which panel
+     * to display, beginning with the login panel.
+     */
+    public void runSystem() {
+
+    }
+
+    /**
+     * when the entire application window is entirely closed out, this is the listener that should
+     * be triggered.
+     */
     private class CloseApplicationWindowListener implements WindowListener {
 
         //in the event they close the window without logging out first
@@ -256,5 +265,22 @@ public class UrbanParksGUI {
 //        userLoginInputField.grabFocus();
 //    }
 
+
+//    public UrbanParksGUI() {
+//        frame = new JFrame(frameTitle);
+//        setupGUI();
+//    }
+//
+//    public UrbanParksGUI(final JobCollection paramJobs,
+//                         final UserCollection paramUsers,
+//                         final ParkCollection paramParks) {
+//
+//        this.jobs = paramJobs;
+//        this.parks = paramParks;
+//        this.users = paramUsers;
+//
+//        frame = new JFrame("!THIS IS THE FRAME TEXT!!!");
+//        setupGUI();
+//    }
     //end class UrbanParksGUI
 }
