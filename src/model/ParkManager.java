@@ -16,7 +16,6 @@ public final class ParkManager extends User implements Serializable {
 
 	private Job newJobToSubmit;
 
-
     public ParkManager(final String firstName, final String lastName,
                        final Controller paramSystemController) {
         super(firstName, lastName, UserRole.PARK_MANAGER,
@@ -41,7 +40,7 @@ public final class ParkManager extends User implements Serializable {
 
 
     //only future jobs submitted by this park manager
-    public List<Job> getFutureJobsSubmittedByMe() {
+    public ArrayList<Job> getFutureJobsSubmittedByMe() {
         ArrayList<Job> futureJobsSubmittedByMe = new ArrayList<>();
         LocalDateTime currentDate = LocalDateTime.now();
         for (Job j : jobsSubmittedByMe) {

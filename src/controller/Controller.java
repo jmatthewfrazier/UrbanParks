@@ -33,6 +33,7 @@ public class Controller implements Serializable {
         parks = new ParkCollection();
         currentUser = User.getNullUser();
 
+        setupController();
     }
 
 
@@ -40,6 +41,8 @@ public class Controller implements Serializable {
     private void setupController() {
        loadCollectionsFromFile();
     }
+
+    //////////////add and remove things ///////////////////////////////////////
 
     public void unsubmitParkJob(final Job jobToRemove)
             throws UrbanParksSystemOperationException{
@@ -71,6 +74,8 @@ public class Controller implements Serializable {
         }
     }
 
+    /////////////////getters and setters //////////////////////////////////////
+
     public ArrayList<Job> getFutureJobsSubmittedByParkManager
             (final UserID paramUserID) throws UserRoleCategoryException,
             UserNotFoundException {
@@ -85,7 +90,7 @@ public class Controller implements Serializable {
         return jobList;
     }
 
-    public List<Job> getAllFutureJobs() {
+    public ArrayList<Job> getAllFutureJobs() {
         //TODO - do we implement some business rule check here also?
         return jobs.getAllFutureJobsFromToday();
     }
@@ -113,7 +118,41 @@ public class Controller implements Serializable {
         }
     }
 
+    public int getJobCollectionCapacity() {
+        return jobs.getMaxCapacity();
+    }
+
+    public User getUserByUserID (final UserID userIDToSearchFor)
+            throws UserNotFoundException {
+        if (users.containsUserID(userIDToSearchFor)) {
+            return users.getUser(userIDToSearchFor);
+        } else {
+            throw new UserNotFoundException("That User ID was not found.");
+        }
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public JobCollection getJobs() {
+        return jobs;
+    }
+
+    public ParkCollection getParks() {
+        return parks;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+
+
+
+
     //////////////import and export to the collections/////////////////////////
+
     private void loadCollectionsFromFile() {
         //when the system is frist firing up
         FileInputStream fileIn;
@@ -150,7 +189,7 @@ public class Controller implements Serializable {
     /**
      * Writes all modified data to the stored collections.
      */
-    private void exportCollections() {
+    public void storeCollectionsIntoFile() {
         try {
             FileOutputStream out = new FileOutputStream("./data.bin");
             ObjectOutputStream oos = new ObjectOutputStream(out);
@@ -166,23 +205,8 @@ public class Controller implements Serializable {
         }
     }
 
+    /////////////////////////recycling ////////////////////////////////////////
 
-    /////////////////getters and setters //////////////////////////////////////
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public JobCollection getJobs() {
-        return jobs;
-    }
-
-    public ParkCollection getParks() {
-        return parks;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
 
     //end of Controller class
 }

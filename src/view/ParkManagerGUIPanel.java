@@ -5,6 +5,7 @@ import exceptions.UrbanParksSystemOperationException;
 import exceptions.UserInputException;
 import exceptions.UserNotFoundException;
 import exceptions.UserRoleCategoryException;
+import listeners.logoutUserListener;
 import model.*;
 import tests.MockJobCollection;
 import tests.MockParkManager;
@@ -120,7 +121,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
     private void addButtonListeners() {
         createNewJobBtn.addActionListener(e -> displayAddFutureJobPanel());
-        returnAllJobsBtn.addActionListener(e -> displayAllFutureJobs);
+        returnAllJobsBtn.addActionListener(e -> displayAllFutureJobs());
         returnMyJobsBtn.addActionListener(e -> {try {
             displayMyFutureJobs();
             } catch (UrbanParksSystemOperationException upsoe) {
@@ -129,11 +130,13 @@ public class ParkManagerGUIPanel extends JPanel {
         });
         viewJobDetailsBtn.addActionListener(e -> displayJobDetails());
         deleteThisJobBtn.addActionListener(e -> deleteChosenJob());
-        logoutBtn.addActionListener(e -> logoutUser());
+        logoutBtn.addActionListener(e ->
+                firePropertyChange("logoutBtn", false, true));
 
     }
 
     public void displayAddFutureJobPanel() {
+
         //create new job object and add it to the list
         JPanel newJobInputFormPanel = createNewJobInputFormPanel();
         this.remove(textOutputDisplayArea);
@@ -141,9 +144,11 @@ public class ParkManagerGUIPanel extends JPanel {
         //add submit buttons or whatever else is needed
         //leave buttons stll needed
         //only display available job dates?
-
         this.add(newJobInputFormPanel, BorderLayout.NORTH);
     }
+
+    private void logoutUser() {
+        }
 
     public void displayMyFutureJobs() throws UrbanParksSystemOperationException{
         //need to grab this out to keep for loop line < ~80 chars wide
@@ -171,17 +176,11 @@ public class ParkManagerGUIPanel extends JPanel {
 
     public void displayAllFutureJobs() {
         textOutputDisplayArea.append("\n\n\nALL FUTURE PARK JOBS: \n");
-        try {
-            ArrayList<Job> myFutureJobs =
-                    systemController
-            for (Job j : myFutureJobs) {
-                int jobNumber = myFutureJobs.indexOf(j);
-                displayJobOverview(j, jobNumber);
-            }
-        } catch (UserRoleCategoryException e) {
-            throw new UrbanParksSystemOperationException(e.getMsgString());
-        } catch (UserNotFoundException e) {
-            throw new UrbanParksSystemOperationException(e.getMsgString());
+        ArrayList<Job> myFutureJobs =
+                systemController.getAllFutureJobs();
+        for (Job j : myFutureJobs) {
+            int jobNumber = myFutureJobs.indexOf(j);
+            displayJobOverview(j, jobNumber);
         }
         textOutputDisplayArea.append(selectJobForDetailsMsg());
         userInputField.grabFocus();
@@ -287,13 +286,48 @@ public class ParkManagerGUIPanel extends JPanel {
         textOutputDisplayArea.append(sb.toString());
     }
 
+    private void displayJobDetails(final Job jobForDetails,
+                                   final int jobNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n\nJOB DETAILS:\n");
+        sb.append(jobNumber + "\n");
+        sb.append(jobForDetails.getName() + "\n");
+        sb.append(jobForDetails.getPark() + "\n");
+        sb.append(jobForDetails.getBeginDateTime() + "\n");
+        sb.append(jobForDetails.getEndDateTime() + "\n");
+        sb.append(jobForDetails.getDescription() + "\n");
+        sb.append(getHorizontalPartitionLine());
+        textOutputDisplayArea.append(sb.toString());
+
+    }
+
+    //TODO - this is going to the home screen
     //TODO-this will be shared logic and repeated if not put in the parent component?
     private void resetUIState() {
+        textOutputDisplayArea.removeAll();
+        updateUIState();
         textOutputDisplayArea.append(getHomeScreenMsg());
         //get focus back to input field
         userInputField.grabFocus();
         //return to initial button state for delete button
-        deleteJobBtn.setEnabled(false);
+        deleteThisJobBtn.setEnabled(false);
+    }
+
+    //each time the GUI "refreshes" after a user completes any action
+    // or hits the Home button
+    private void updateUIState() {
+        //don't even show the button if it isn't available?
+        if (systemController.getJobs().size() >=
+                systemController.getJobCollectionCapacity()) {
+            createNewJobBtn.setEnabled(false);
+
+        } else {
+
+            createNewJobBtn.setEnabled(true);
+
+        }//can also add a new listener so user still sees the button
+        //any other checks that need to be made about what to
+        // display go here
     }
 
     private String getHorizontalPartitionLine() {

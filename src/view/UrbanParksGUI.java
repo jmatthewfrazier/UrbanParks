@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -27,7 +29,7 @@ import static model.UserRole.VOLUNTEER;
  *
  * @Created by Chad on 2/13/18.
  */
-public class UrbanParksGUI {
+public class UrbanParksGUI implements PropertyChangeListener {
 
     private static final int TEXT_WIDTH = 30;
 
@@ -43,11 +45,11 @@ public class UrbanParksGUI {
 
     private JButton loginButton;
 
-    private Controller controller;
+    private Controller systemController;
 
 
     public UrbanParksGUI(Controller paramController) {
-        this.controller = paramController;
+        this.systemController = paramController;
         frame = new JFrame(frameTitle);
         setupGUI();
 
@@ -83,7 +85,7 @@ public class UrbanParksGUI {
      * class instead of its own.  also need to keep user info in this class and not
      * be handing it all around.
      */
-    public void displayLoginPanel(final String loginMsg) { //login msg can change
+    private void displayLoginPanel(final String loginMsg) { //login msg can change
         // if a new login or if previous login failed.
         //since each login should not retain info from previous sessions,
         //I think it is a good idea to just pop a new one on each time
@@ -121,26 +123,46 @@ public class UrbanParksGUI {
         UserID userInput = new UserID(usernameInput);
         //validate the user's input info through the jobs collection
         try {
-            if (users.containsUserID(userInput)) {
-                currentUser = users.getUserFromUserID(userInput);
-            }
-        } catch (UserNotFoundException unfe) {
-            //user input not valid
+                currentUser = systemController.
+                        getUserByUserID(new UserID(usernameInput));
+            } catch (UserNotFoundException unfe) {
             //return to loginPanel
             displayLoginPanel(getUserIDNotFoundMsg());
-        } //TODO-below here is it correct to create new instances? do we need to ?
+        }
         //get new panel for appropriate user role, pass along user info as needed
         if (currentUser.getUserRole().equals(VOLUNTEER)) {
-            frame.setContentPane(new VolunteerGUIPanel(jobs, new Volunteer(currentUser.getFirstName(),
-                    currentUser.getLastName(), currentUser.getID())));
+            //frame.setContentPane(new VolunteerGUIPanel(systemController);
         } else if (currentUser.getUserRole().equals(PARK_MANAGER)) {
-            //TODO is this correct? to create a new PM instance here?
-            frame.setContentPane(new ParkManagerGUIPanel(jobs, (new ParkManager(currentUser.getFirstName(),
-                    currentUser.getLastName(), currentUser.getID()))));
+            frame.setContentPane(new ParkManagerGUIPanel(systemController));
         } else {
-            frame.setContentPane(new StaffMemberGUIPanel(jobs, new StaffMember(currentUser.getFirstName(),
-                    currentUser.getLastName(), currentUser.getID())));
+            //frame.setContentPane(new StaffMemberGUIPanel(systemController);
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        String propertyName = e.getPropertyName();
+        if ("logoutBtn".equals(propertyName)) {
+            //log out the current user
+            logoutUser();
+        }
+    }
+
+    public void logoutUser() {
+        systemController.storeCollectionsIntoFile();
+        displayLoginPanel(createGenericLoginMsg());
+    }
+
+
+
+    public String createGenericLoginMsg() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Welcome to Urban Parks, please log in to the system");
+        return sb.toString();
+    }
+
+    public String getLoginMsg() {
+        return "log in here:";
     }
 
     private String getUserIDNotFoundMsg() {
@@ -149,29 +171,7 @@ public class UrbanParksGUI {
         return sb.toString();
     }
 
-    private void storeCollectionsIntoFile() {
-        //when the system is preparing to shutdown
-        try {
-            FileOutputStream out = new FileOutputStream("./data.bin");
-            ObjectOutputStream oos = new ObjectOutputStream(out);
-
-            java.util.List<Object> collections = new ArrayList<>(); // look at this later
-            collections.add(jobs);
-            collections.add(users);
-            collections.add(parks);
-            oos.writeObject(collections);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String createGenericLoginMsg() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Welcome to Urban Parks, please log in to the system");
-        return sb.toString();
-    }
-
+    /////////////////////////////recycling ////////////////////////////////////
     /**
      * When this class is first initialized, this will be passed the login panel
      * once the system is running however, it should be able to swap out panels
@@ -203,7 +203,7 @@ public class UrbanParksGUI {
         //should also write/save all collections at logout
         @Override
         public void windowClosing(WindowEvent windowEvent) {
-            storeCollectionsIntoFile();
+            systemController.storeCollectionsIntoFile();
         }
 
         @Override

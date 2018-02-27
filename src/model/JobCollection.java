@@ -99,7 +99,7 @@ public final class JobCollection implements Serializable {
      * @param end is the end of the date range.
      * @return a list of all jobs that fall within the date range.
      */
-    public List<Job> getJobsInDateRange(final LocalDateTime start,
+    public ArrayList<Job> getJobsInDateRange(final LocalDateTime start,
     		final LocalDateTime end) {
     	ArrayList<Job> jobs = new ArrayList<Job>();
 
@@ -111,7 +111,7 @@ public final class JobCollection implements Serializable {
     	return jobs;
     }
 
-    public List<Job> getAllFutureJobsFromToday() {
+    public ArrayList<Job> getAllFutureJobsFromToday() {
         return getJobsInDateRange(LocalDateTime.now(),
                 LocalDateTime.now().plusDays(Job.MAX_NUM_DAYS_FROM_TODAY));
     }
