@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class ParkManagerGUIPanel extends JPanel {
 
+    private ArrayList<Job> jobsDisplayList;
+
     private JTextArea textOutputDisplayArea;
 
     private JTextField userInputField;
@@ -128,7 +130,21 @@ public class ParkManagerGUIPanel extends JPanel {
                 textOutputDisplayArea.append(upsoe.getMsgString());
             }
         });
-        viewJobDetailsBtn.addActionListener(e -> displayJobDetails());
+        viewJobDetailsBtn.addActionListener(e -> {
+
+                    try {
+                        int userChoiceInt =
+                                getIntegerFromUserInputField(userInputField.getText());
+                        Job userChoiceJob =
+                                jobsDisplayList.get(userChoiceInt);
+                        displayJobDetails(userChoiceJob, userChoiceInt);
+                    } catch (UserInputException uie) {
+                        //TODO - revisit this message
+                        textOutputDisplayArea.append("That input was not valid");
+                    }
+
+                });
+
         deleteThisJobBtn.addActionListener(e -> deleteChosenJob());
         logoutBtn.addActionListener(e ->
                 firePropertyChange("logoutBtn", false, true));
@@ -136,15 +152,15 @@ public class ParkManagerGUIPanel extends JPanel {
     }
 
     public void displayAddFutureJobPanel() {
-
+        //TODO - get new job info into a new job
         //create new job object and add it to the list
-        JPanel newJobInputFormPanel = createNewJobInputFormPanel();
+    //    JPanel newJobInputFormPanel = createNewJobInputFormPanel();
         this.remove(textOutputDisplayArea);
         //remove unneeded buttons
         //add submit buttons or whatever else is needed
         //leave buttons stll needed
         //only display available job dates?
-        this.add(newJobInputFormPanel, BorderLayout.NORTH);
+    //    this.add(newJobInputFormPanel, BorderLayout.NORTH);
     }
 
     private void logoutUser() {
@@ -157,10 +173,10 @@ public class ParkManagerGUIPanel extends JPanel {
         textOutputDisplayArea.append("\n\n\nFUTURE PARK JOBS " +
                 "                                   I HAVE SUBMITTED:\n");
         try {
-            ArrayList<Job> myFutureJobs =
+            jobsDisplayList =
                     systemController.getFutureJobsSubmittedByParkManager(userID);
-            for (Job j : myFutureJobs) {
-                int jobNumber = myFutureJobs.indexOf(j);
+            for (Job j : jobsDisplayList) {
+                int jobNumber = jobsDisplayList.indexOf(j);
                 displayJobOverview(j, jobNumber);
             }
         } catch (UserRoleCategoryException e) {
@@ -176,10 +192,10 @@ public class ParkManagerGUIPanel extends JPanel {
 
     public void displayAllFutureJobs() {
         textOutputDisplayArea.append("\n\n\nALL FUTURE PARK JOBS: \n");
-        ArrayList<Job> myFutureJobs =
+        jobsDisplayList =
                 systemController.getAllFutureJobs();
-        for (Job j : myFutureJobs) {
-            int jobNumber = myFutureJobs.indexOf(j);
+        for (Job j : jobsDisplayList) {
+            int jobNumber = jobsDisplayList.indexOf(j);
             displayJobOverview(j, jobNumber);
         }
         textOutputDisplayArea.append(selectJobForDetailsMsg());
@@ -203,7 +219,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
         //now input is accepted, grab the selected job and it's details
         //assuming the user input integer is the same as the index in the list
-        Job jobToRemove = jobList.get(userInput);
+        Job jobToRemove = jobsDisplayList.get(userInput);
         //display popup to confirm user REALLY wants to delete this job permanently
         JPopupMenu confirmDeleteJobMenu = new JPopupMenu("CONFIRM ACTION: " +
                 "DELETE JOB");
@@ -217,7 +233,7 @@ public class ParkManagerGUIPanel extends JPanel {
         //deleteJobPopup.hide();
         //tell collection to remove the job at that index
         //jobWallet
-        jobList.remove(userInput);
+        jobsDisplayList.remove(userInput);
         //display message confirming job has been deleted
         textOutputDisplayArea.append(createJobDeletedMsg(jobToRemove));
         //return to "home screen"
@@ -227,7 +243,7 @@ public class ParkManagerGUIPanel extends JPanel {
     }
 
     private int getIntegerFromUserInputField(final String userInputStr)
-                                            throws UserInputException{
+                                            throws UserInputException {
         int inputInt = -1;
         int jobsListedCount = systemController.getJobs().size();
         try {
@@ -361,6 +377,7 @@ public class ParkManagerGUIPanel extends JPanel {
         sb.append("\nenter a job number then press the Job Details button " +
                 "to view that job's details\n");
         sb.append("press the Home button to return to the Home Screen");
+        return sb.toString();
     }
 
     private String createJobDeletedMsg(final Job jobToRemove) {
