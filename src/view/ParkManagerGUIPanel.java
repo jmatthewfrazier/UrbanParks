@@ -1,16 +1,17 @@
 package view;
 
 import controller.Controller;
+import exceptions.UrbanParksSystemOperationException;
 import exceptions.UserInputException;
-import model.Job;
-import model.JobCollection;
-import model.ParkManager;
-import model.User;
+import exceptions.UserNotFoundException;
+import exceptions.UserRoleCategoryException;
+import model.*;
 import tests.MockJobCollection;
 import tests.MockParkManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 //import listeners.logoutUserListener;
@@ -95,7 +96,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
         //should be disabled unless a job number is entered into text field
         viewJobDetailsBtn = new JButton("View Job Details");
-        viewJobDetailBtn.setEnabled(true);
+        viewJobDetailsBtn.setEnabled(true);
 
         //should be disabled unless a job number is entered into text field
         deleteThisJobBtn = new JButton("Delete This Job");
@@ -107,25 +108,85 @@ public class ParkManagerGUIPanel extends JPanel {
 
         addButtonListeners();
         newPanel.add(userInputField);
-        newPanel.add(createNewBtn);
-        newPanel.add(returnAllBtn);
-        newPanel.add(deleteJobBtn);
+        newPanel.add(createNewJobBtn);
+        newPanel.add(returnAllJobsBtn);
+        newPanel.add(returnMyJobsBtn);
+        newPanel.add(viewJobDetailsBtn);
+        newPanel.add(deleteThisJobBtn);
+        newPanel.add(logoutBtn);
 
         return newPanel;
     }
 
     private void addButtonListeners() {
-        createNewBtn.addActionListener(e -> addFutureJob());
-        returnAllBtn.addActionListener(e -> getAllJobs());
-        //updateJobBtn.addActionListener(e -> updateChosenJob());
-        deleteJobBtn.addActionListener(e -> deleteChosenJob());
-//        logoutBtn.addActionListener(e ->
-//                new logoutUserListener(this.getParent()));
+        createNewJobBtn.addActionListener(e -> displayAddFutureJobPanel());
+        returnAllJobsBtn.addActionListener(e -> displayAllFutureJobs);
+        returnMyJobsBtn.addActionListener(e -> {try {
+            displayMyFutureJobs();
+            } catch (UrbanParksSystemOperationException upsoe) {
+                textOutputDisplayArea.append(upsoe.getMsgString());
+            }
+        });
+        viewJobDetailsBtn.addActionListener(e -> displayJobDetails());
+        deleteThisJobBtn.addActionListener(e -> deleteChosenJob());
+        logoutBtn.addActionListener(e -> logoutUser());
+
     }
 
-    public void addFutureJob() {
+    public void displayAddFutureJobPanel() {
         //create new job object and add it to the list
+        JPanel newJobInputFormPanel = createNewJobInputFormPanel();
+        this.remove(textOutputDisplayArea);
+        //remove unneeded buttons
+        //add submit buttons or whatever else is needed
+        //leave buttons stll needed
+        //only display available job dates?
 
+        this.add(newJobInputFormPanel, BorderLayout.NORTH);
+    }
+
+    public void displayMyFutureJobs() throws UrbanParksSystemOperationException{
+        //need to grab this out to keep for loop line < ~80 chars wide
+        UserID userID = parkManager.getID();
+        textOutputDisplayArea.requestFocus();
+        textOutputDisplayArea.append("\n\n\nFUTURE PARK JOBS " +
+                "                                   I HAVE SUBMITTED:\n");
+        try {
+            ArrayList<Job> myFutureJobs =
+                    systemController.getFutureJobsSubmittedByParkManager(userID);
+            for (Job j : myFutureJobs) {
+                int jobNumber = myFutureJobs.indexOf(j);
+                displayJobOverview(j, jobNumber);
+            }
+        } catch (UserRoleCategoryException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (UserNotFoundException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        }
+        textOutputDisplayArea.append(selectJobForDetailsMsg());
+        userInputField.grabFocus();
+        viewJobDetailsBtn.setEnabled(true);
+        //still need to handle the event of entering the number and clicking the button
+    }
+
+    public void displayAllFutureJobs() {
+        textOutputDisplayArea.append("\n\n\nALL FUTURE PARK JOBS: \n");
+        try {
+            ArrayList<Job> myFutureJobs =
+                    systemController
+            for (Job j : myFutureJobs) {
+                int jobNumber = myFutureJobs.indexOf(j);
+                displayJobOverview(j, jobNumber);
+            }
+        } catch (UserRoleCategoryException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (UserNotFoundException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        }
+        textOutputDisplayArea.append(selectJobForDetailsMsg());
+        userInputField.grabFocus();
+        viewJobDetailsBtn.setEnabled(true);
+        //still need to handle the event of entering the number and clicking the button
     }
 
     //to remove a job, we could either go by park manager id in a job
@@ -162,6 +223,7 @@ public class ParkManagerGUIPanel extends JPanel {
         textOutputDisplayArea.append(createJobDeletedMsg(jobToRemove));
         //return to "home screen"
         textOutputDisplayArea.append(getHomeScreenMsg());
+
 
     }
 
@@ -208,6 +270,23 @@ public class ParkManagerGUIPanel extends JPanel {
 
     }
 
+    //////////////////output area display methods /////////////////////////////
+
+    private void displayJobOverview(final Job jobToDisplay,
+                                    final int jobNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(jobNumber + ")\tNAME: ");
+        sb.append(jobToDisplay.getName());
+        sb.append("\n \tLOCATION: ");
+        sb.append(jobToDisplay.getPark());
+        sb.append("\n \tBEGIN DATE: ");
+        sb.append(jobToDisplay.getBeginDateTime().toLocalDate());
+        sb.append("\n \tEND DATE: ");
+        sb.append(jobToDisplay.getEndDateTime().toLocalDate());
+        sb.append(getHorizontalPartitionLine());
+        textOutputDisplayArea.append(sb.toString());
+    }
+
     //TODO-this will be shared logic and repeated if not put in the parent component?
     private void resetUIState() {
         textOutputDisplayArea.append(getHomeScreenMsg());
@@ -216,6 +295,19 @@ public class ParkManagerGUIPanel extends JPanel {
         //return to initial button state for delete button
         deleteJobBtn.setEnabled(false);
     }
+
+    private String getHorizontalPartitionLine() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        int lineWidth = 80;
+        while (lineWidth != 0) {
+            sb.append("_");
+            lineWidth -= 1;
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
     ////getters and setters ///////////////////////////////////////////////////
 
     public List<Job> getFutureJobsISubmittedAsList() {
@@ -230,6 +322,13 @@ public class ParkManagerGUIPanel extends JPanel {
 
     /////Message factory methods///////////////////////////////////////////////
 
+    private String selectJobForDetailsMsg() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nenter a job number then press the Job Details button " +
+                "to view that job's details\n");
+        sb.append("press the Home button to return to the Home Screen");
+    }
+
     private String createJobDeletedMsg(final Job jobToRemove) {
         StringBuilder sb = new StringBuilder();
         sb.append("this job was deleted\n");
@@ -239,7 +338,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
     private String getHomeScreenMsg(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Welcome back to the home screen");
+        sb.append("\n>> Welcome back to the home screen\n <<");
         return sb.toString();
     }
 

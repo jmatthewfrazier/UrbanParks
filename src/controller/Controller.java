@@ -108,6 +108,7 @@ public class Controller implements Serializable {
         }
     }
 
+    //////////////import and export to the collections/////////////////////////
     private void loadCollectionsFromFile() {
         //when the system is frist firing up
         FileInputStream fileIn;
@@ -160,6 +161,8 @@ public class Controller implements Serializable {
         }
     }
 
+
+    /////////////////getters and setters //////////////////////////////////////
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
