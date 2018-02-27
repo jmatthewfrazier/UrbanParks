@@ -85,6 +85,11 @@ public class Controller implements Serializable {
         return jobList;
     }
 
+    public List<Job> getAllFutureJobs() {
+        //TODO - do we implement some business rule check here also?
+        return jobs.getAllFutureJobsFromToday();
+    }
+
     public void addNewJobByParkManager(final Job jobToAdd)
             throws UrbanParksSystemOperationException {
         try {
