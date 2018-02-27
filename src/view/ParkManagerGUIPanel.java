@@ -5,10 +5,10 @@ import exceptions.UrbanParksSystemOperationException;
 import exceptions.UserInputException;
 import exceptions.UserNotFoundException;
 import exceptions.UserRoleCategoryException;
-import listeners.logoutUserListener;
-import model.*;
-import tests.MockJobCollection;
-import tests.MockParkManager;
+import model.Job;
+import model.ParkManager;
+import model.User;
+import model.UserID;
 
 import javax.swing.*;
 import java.awt.*;

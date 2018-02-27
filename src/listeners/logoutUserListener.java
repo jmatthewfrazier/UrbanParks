@@ -17,6 +17,6 @@ public class logoutUserListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent ae) {
-        systemGUI.displayLoginPanel(systemGUI.createGenericLoginMsg());
+//        systemGUI.displayLoginPanel(systemGUI.createGenericLoginMsg());
     }
 }
