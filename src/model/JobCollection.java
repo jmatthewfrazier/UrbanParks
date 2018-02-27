@@ -19,34 +19,7 @@ public final class JobCollection implements Serializable {
         jobMap = new HashMap<>();
     }
 
-    /**
-     * Adds a Job to the collection.
-     *
-     * Pre: Collection must contain less than max jobs and the Job name must
-     * be unique from other Jobs.
-     * @param jobToAdd the Job that will be added
-     */
-    public void addJob(final Job jobToAdd) throws MaxPendingJobsException,
-            InvalidJobLengthException, InvalidJobEndDateException,
-            JobCollectionDuplicateKeyException {
-
-        if (isAtMaxCapacity()) {
-            throw new MaxPendingJobsException("Sorry, the pending job list " +
-                    "is at maximum capacity, please add your job at a later date");
-        } else if (!jobToAdd.isJobLengthValid()) {
-            throw new InvalidJobLengthException("Sorry, the length of this job" +
-                    "is too many days.");
-        } else if (!jobToAdd.isJobWithinValidDateRange()) {
-            throw new InvalidJobEndDateException("Sorry, the end date of that" +
-                    "job is too far in the future");
-        } else if (jobMap.containsKey(jobToAdd.getID())) {
-            throw new JobCollectionDuplicateKeyException("A Job matching that" +
-                    "key value is already present in the Job collection.");
-        } else {
-            jobMap.put(jobToAdd.getID(), jobToAdd);
-        }
-
-    }
+    //////////////info and settings for Job collection class///////////////////
 
     public void setMaxCapacity(User user, int capacity)
             throws InvalidJobCollectionCapacityException {
@@ -77,11 +50,6 @@ public final class JobCollection implements Serializable {
         return MAX_CAPACITY;
     }
 
-
-    public List<Job> getList() {
-        return new ArrayList<>(jobMap.values());
-    }
-
     public boolean isAtMaxCapacity() {
         return (jobMap.size() >= MAX_CAPACITY);
     }
@@ -104,6 +72,12 @@ public final class JobCollection implements Serializable {
             }
         }
         return new ChronologicalComparator();
+    }
+
+    /////////////fetch a collection of jobs //////////////////////////////////////
+
+    public List<Job> getList() {
+        return new ArrayList<>(jobMap.values());
     }
 
     public ArrayList<Job> getJobArrayListFilterByUserID(final UserID paramUserID) {
@@ -136,6 +110,43 @@ public final class JobCollection implements Serializable {
 
     	return jobs;
     }
+
+    public List<Job> getAllFutureJobsFromToday() {
+        return getJobsInDateRange(LocalDateTime.now(),
+                LocalDateTime.now().plusDays(Job.MAX_NUM_DAYS_FROM_TODAY));
+    }
+
+    /////////////add or remove a job /////////////////////////////////////////
+
+    /**
+     * Adds a Job to the collection.
+     *
+     * Pre: Collection must contain less than max jobs and the Job name must
+     * be unique from other Jobs.
+     * @param jobToAdd the Job that will be added
+     */
+    public void addJob(final Job jobToAdd) throws MaxPendingJobsException,
+            InvalidJobLengthException, InvalidJobEndDateException,
+            JobCollectionDuplicateKeyException {
+
+        if (isAtMaxCapacity()) {
+            throw new MaxPendingJobsException("Sorry, the pending job list " +
+                    "is at maximum capacity, please add your job at a later date");
+        } else if (!jobToAdd.isJobLengthValid()) {
+            throw new InvalidJobLengthException("Sorry, the length of this job" +
+                    "is too many days.");
+        } else if (!jobToAdd.isJobWithinValidDateRange()) {
+            throw new InvalidJobEndDateException("Sorry, the end date of that" +
+                    "job is too far in the future");
+        } else if (jobMap.containsKey(jobToAdd.getID())) {
+            throw new JobCollectionDuplicateKeyException("A Job matching that" +
+                    "key value is already present in the Job collection.");
+        } else {
+            jobMap.put(jobToAdd.getID(), jobToAdd);
+        }
+
+    }
+
 
     /**
      * @pre-condition This method expects this JobCollection class holds Job
@@ -189,6 +200,8 @@ public final class JobCollection implements Serializable {
         removeVolunteersFromDeletedJob(jobToRemove);
     }
 
+    /////////////////////////recycling ////////////////////////////////////////
+
 //    public static void removeJobFromCollectionStatic(final Job jobToRemove) {
 //        JobID jobToRemoveID = jobToRemove.getID();
 //
@@ -197,4 +210,7 @@ public final class JobCollection implements Serializable {
     public void removeVolunteersFromDeletedJob(final Job removedJob) {
 
     }
+
+
+    //end Job Collection class
 }
