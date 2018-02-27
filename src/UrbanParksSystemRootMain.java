@@ -16,6 +16,6 @@ public class UrbanParksSystemRootMain {
 
     public static void main(String[] args) {
 
-        new UrbanParksGUI(new Controller()).runSystem();
+        new UrbanParksGUI(new Controller());
     }
 }

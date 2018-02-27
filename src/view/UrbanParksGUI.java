@@ -52,18 +52,10 @@ public class UrbanParksGUI implements PropertyChangeListener {
         this.systemController = paramController;
         frame = new JFrame(frameTitle);
         setupGUI();
-
     }
-
-    //TODO - new constructor which uses Contorller is above here
-    //TODO - old constructors which do not use the Controller are below here
-//
 
     private void setupGUI() {
         setupFrame();
-
-
-        //import in all data structures
     }
 
     private void setupFrame() {
@@ -75,11 +67,9 @@ public class UrbanParksGUI implements PropertyChangeListener {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        //addComponentsFromMap();
-        //frame.setContentPane(this);
-
     }
 
+    ///////////////////////display on the frame ///////////////////////////////
     /**
      * This panel is shared across all users so I think it is ok to be in this
      * class instead of its own.  also need to keep user info in this class and not
@@ -119,6 +109,8 @@ public class UrbanParksGUI implements PropertyChangeListener {
         return newLoginPanel;
     }
 
+    ///////////logout and login ///////////////////////////////////////////////
+
     private void submitLoginInfo(final String usernameInput) {
         UserID userInput = new UserID(usernameInput);
         //validate the user's input info through the jobs collection
@@ -153,7 +145,7 @@ public class UrbanParksGUI implements PropertyChangeListener {
         displayLoginPanel(createGenericLoginMsg());
     }
 
-
+    ////////////////////////message factories /////////////////////////////////
 
     public String createGenericLoginMsg() {
         StringBuilder sb = new StringBuilder();
@@ -169,28 +161,6 @@ public class UrbanParksGUI implements PropertyChangeListener {
         final StringBuilder sb = new StringBuilder();
         sb.append("That User ID was not found");
         return sb.toString();
-    }
-
-    /////////////////////////////recycling ////////////////////////////////////
-    /**
-     * When this class is first initialized, this will be passed the login panel
-     * once the system is running however, it should be able to swap out panels
-     * depending on what the current user's role is
-     *
-     * @param panelToDisplay
-     */
-    public void displayPanel(JPanel panelToDisplay) {
-        frame.add(panelToDisplay);
-        //userLoginInputField.grabFocus();
-        //getRootPane().setDefaultButton(myCountValuesButton);
-    }
-
-    /**
-     * this method should display the frame and use the controller to decide which panel
-     * to display, beginning with the login panel.
-     */
-    public void runSystem() {
-
     }
 
     /**
@@ -235,6 +205,21 @@ public class UrbanParksGUI implements PropertyChangeListener {
         public void windowClosed(WindowEvent windowEvent) {
 
         }
+        //end Window Listener Class
+    }
+
+    /////////////////////////////recycling ////////////////////////////////////
+    /**
+     * When this class is first initialized, this will be passed the login panel
+     * once the system is running however, it should be able to swap out panels
+     * depending on what the current user's role is
+     *
+     * @param panelToDisplay
+     */
+    public void displayPanel(JPanel panelToDisplay) {
+        frame.add(panelToDisplay);
+        //userLoginInputField.grabFocus();
+        //getRootPane().setDefaultButton(myCountValuesButton);
     }
 
 //    private class EnterUserNameListener implements ActionListener {
