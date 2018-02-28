@@ -1,4 +1,4 @@
-package view;
+package recycle_bin;
 
 /**
  * Created by dave on 2/18/18.
@@ -6,16 +6,13 @@ package view;
 
 import model.JobCollection;
 import model.ParkCollection;
-import model.User;
 import model.UserCollection;
+import view.UrbanParksGUI;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+
 import java.io.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * This class should serve as the root of then entire application.
@@ -25,12 +22,6 @@ import java.util.Scanner;
  */
 public class UrbanParksSystemRoot {
 
-    private Scanner console;
-
-    private DateTimeFormatter formatter;
-
-    private User currentUser;
-
     private JobCollection jobs;
 
     private UserCollection users;
@@ -39,10 +30,10 @@ public class UrbanParksSystemRoot {
 
     private UrbanParksGUI systemGUI;
 
+    private User currentUser;
 
     public UrbanParksSystemRoot() {
-        console = new Scanner(System.in);
-        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();

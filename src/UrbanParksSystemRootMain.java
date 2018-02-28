@@ -1,9 +1,11 @@
-import view.UrbanParksSystemRoot;
+import controller.Controller;
+import view.UrbanParksGUI;
 
 /**
  * Created by dave on 2/18/18.
  */
 public class UrbanParksSystemRootMain {
+
 
 
 
@@ -13,6 +15,7 @@ public class UrbanParksSystemRootMain {
 
 
     public static void main(String[] args) {
-        new UrbanParksSystemRoot().runSystem();
+
+        new UrbanParksGUI(new Controller());
     }
 }

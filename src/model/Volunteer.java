@@ -63,4 +63,12 @@ public final class Volunteer extends User {
    	    chronologicalList.sort(JobCollection.getChronologicalJobComparator());
    	    return chronologicalList;
     }
+
+    public void removeJobFromMyRegisteredJobs(final Job jobToRemove) {
+    	if (jobList.contains(jobToRemove)) {
+    		jobList.remove(jobToRemove);
+		}
+	}
+
+    //end Volunteer class
 }

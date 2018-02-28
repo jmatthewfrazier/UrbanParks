@@ -1,91 +1,68 @@
 package view;
 
+import controller.Controller;
+import exceptions.UrbanParksSystemOperationException;
 import exceptions.UserInputException;
+import exceptions.UserNotFoundException;
+import exceptions.UserRoleCategoryException;
 import listeners.logoutUserListener;
-import model.Job;
-import model.JobCollection;
-import model.ParkManager;
+import model.*;
 import tests.MockJobCollection;
 import tests.MockParkManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
+//import listeners.logoutUserListener;
+
 /**
- * Created by dave on 2/13/18.
+ * Created by Chad on 2/13/18.
  */
 public class ParkManagerGUIPanel extends JPanel {
 
-    //private ParkManagerInputPanel inputPanel;
+    private ArrayList<Job> jobsDisplayList;
 
     private JTextArea textOutputDisplayArea;
 
     private JTextField userInputField;
 
-    private JButton createNewBtn;
+    private JButton createNewJobBtn, viewJobDetailsBtn, returnMyJobsBtn,
+            returnAllJobsBtn, deleteThisJobBtn, logoutBtn;
 
-    private JButton returnAllBtn;
-
-    //TODO need log out functionality
-    private JButton logoutBtn;
-
-    private JobCollection jobWallet;
-
-    private JButton deleteJobBtn;
-
-    public List<Job> jobList;
-
-    public ParkManager user;
+    private ParkManager parkManager;
 
     private PopupFactory popupFactory;
 
-    public Popup deleteJobPopup;
+    private Popup deleteJobPopup;
+
+    private Controller systemController;
 
     //will need a popup window for confirming actions, etc
 
-    public ParkManagerGUIPanel() {
+    public ParkManagerGUIPanel(final Controller paramController) {
 
-        user = new MockParkManager().getMockPM();
-        jobWallet = new MockJobCollection().getJobWallet();
-        //ParkManagerGUIPanel(jobWallet, user);
-
-        setupPanel();
-        setupJobsList(jobWallet);
-    }
-
-
-    public ParkManagerGUIPanel(final JobCollection paramJobWallet,
-                               final ParkManager paramUser) {
         super();
 
-        jobWallet = paramJobWallet;
-        user = paramUser;
+        this.systemController = paramController;
+        parkManager = createParkManagerFromUser();
 
-        setupPanel();
-        setupJobsList(jobWallet);
+        setupPanelGUI();
+
     }
 
-    public void display(){
-        final JFrame frame = new JFrame("Park Manager Frame");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(this);
-
-        frame.pack();
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        userInputField.grabFocus();
-//getRootPane().setDefaultButton(myCountValuesButton);
+    private ParkManager createParkManagerFromUser() {
+        User currentUser = systemController.getCurrentUser();
+        ParkManager newParkManager =
+                new ParkManager(currentUser.getFirstName(),
+                        currentUser.getLastName(), systemController);
+        return newParkManager;
     }
 
-    private void setupJobsList(final JobCollection jobsToList) {
-        jobList = jobsToList.listAllJobsByParkManager(user);
-    }
-    //verify this is a park manager? throw exception if not?
-    //^^^ no, that check should be made in adding the PM panel, not here
-    private void setupPanel(){
+    ////////////panel gui setup methods ///////////////////////////////////////
+
+    private void setupPanelGUI(){
 
         popupFactory = PopupFactory.getSharedInstance();
 
@@ -105,18 +82,28 @@ public class ParkManagerGUIPanel extends JPanel {
     private JPanel createNewInputPanel() {
         JPanel newPanel = new JPanel();
         //add text input field for taking user input
-        userInputField = new JTextField("enter job number here");
+        userInputField = new JTextField();
 
         //should be disabled if a job number is selected,
         //otherwise it should default as initially available
-        createNewBtn = new JButton("Add New Job");
-        createNewBtn.setEnabled(true);
+        createNewJobBtn = new JButton("Add New Job");
+        createNewJobBtn.setEnabled(true);
+
         //should never be diabled? but just give an error message if needed?
-        returnAllBtn = new JButton("View All Future Jobs");
-        returnAllBtn.setEnabled(true);
+        returnAllJobsBtn = new JButton("All Future Jobs");
+        returnAllJobsBtn.setEnabled(true);
+
+        //should never be diabled? but just give an error message if needed?
+        returnMyJobsBtn = new JButton("My Future Jobs");
+        returnMyJobsBtn.setEnabled(true);
+
         //should be disabled unless a job number is entered into text field
-        deleteJobBtn = new JButton("Delete This Job");
-        deleteJobBtn.setEnabled(false);
+        viewJobDetailsBtn = new JButton("View Job Details");
+        viewJobDetailsBtn.setEnabled(true);
+
+        //should be disabled unless a job number is entered into text field
+        deleteThisJobBtn = new JButton("Delete This Job");
+        deleteThisJobBtn.setEnabled(false);
 
         //should allow the user to log out at any time
         logoutBtn = new JButton("Log Out");
@@ -124,28 +111,96 @@ public class ParkManagerGUIPanel extends JPanel {
 
         addButtonListeners();
         newPanel.add(userInputField);
-        newPanel.add(createNewBtn);
-        newPanel.add(returnAllBtn);
-        newPanel.add(deleteJobBtn);
+        newPanel.add(createNewJobBtn);
+        newPanel.add(returnAllJobsBtn);
+        newPanel.add(returnMyJobsBtn);
+        newPanel.add(viewJobDetailsBtn);
+        newPanel.add(deleteThisJobBtn);
+        newPanel.add(logoutBtn);
 
         return newPanel;
     }
 
     private void addButtonListeners() {
-        createNewBtn.addActionListener(e -> addFutureJob());
-        returnAllBtn.addActionListener(e -> getAllJobs());
-        //updateJobBtn.addActionListener(e -> updateChosenJob());
-        deleteJobBtn.addActionListener(e -> deleteChosenJob());
-        logoutBtn.addActionListener(e -> new logoutUserListener(this.getParent()));
+        createNewJobBtn.addActionListener(e -> displayAddFutureJobPanel());
+        returnAllJobsBtn.addActionListener(e -> displayAllFutureJobs());
+        returnMyJobsBtn.addActionListener(e -> {try {
+            displayMyFutureJobs();
+            } catch (UrbanParksSystemOperationException upsoe) {
+                textOutputDisplayArea.append(upsoe.getMsgString());
+            }
+        });
+        viewJobDetailsBtn.addActionListener(e -> {
+
+                    try {
+                        int userChoiceInt =
+                                getIntegerFromUserInputField(userInputField.getText());
+                        Job userChoiceJob =
+                                jobsDisplayList.get(userChoiceInt);
+                        displayJobDetails(userChoiceJob, userChoiceInt);
+                    } catch (UserInputException uie) {
+                        //TODO - revisit this message
+                        textOutputDisplayArea.append("That input was not valid");
+                    }
+
+                });
+
+        deleteThisJobBtn.addActionListener(e -> deleteChosenJob());
+        logoutBtn.addActionListener(e ->
+                firePropertyChange("logoutBtn", false, true));
     }
 
-    public void addFutureJob() {
+    public void displayAddFutureJobPanel() {
+        //TODO - get new job info into a new job
         //create new job object and add it to the list
+    //    JPanel newJobInputFormPanel = createNewJobInputFormPanel();
+        this.remove(textOutputDisplayArea);
+        //remove unneeded buttons
+        //add submit buttons or whatever else is needed
+        //leave buttons stll needed
+        //only display available job dates?
+    //    this.add(newJobInputFormPanel, BorderLayout.NORTH);
     }
 
-    public List<Job> getAllJobs() {
-        //listing of all future jobs submitted by this user
-        return getJobList();
+    private void logoutUser() {
+        }
+
+    public void displayMyFutureJobs() throws UrbanParksSystemOperationException{
+        //need to grab this out to keep for loop line < ~80 chars wide
+        UserID userID = parkManager.getID();
+        textOutputDisplayArea.requestFocus();
+        textOutputDisplayArea.append("\n\n\nFUTURE PARK JOBS " +
+                "                                   I HAVE SUBMITTED:\n");
+        try {
+            jobsDisplayList =
+                    systemController.getFutureJobsSubmittedByParkManager(userID);
+            for (Job j : jobsDisplayList) {
+                int jobNumber = jobsDisplayList.indexOf(j);
+                displayJobOverview(j, jobNumber);
+            }
+        } catch (UserRoleCategoryException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        } catch (UserNotFoundException e) {
+            throw new UrbanParksSystemOperationException(e.getMsgString());
+        }
+        textOutputDisplayArea.append(selectJobForDetailsMsg());
+        userInputField.grabFocus();
+        viewJobDetailsBtn.setEnabled(true);
+        //still need to handle the event of entering the number and clicking the button
+    }
+
+    public void displayAllFutureJobs() {
+        textOutputDisplayArea.append("\n\n\nALL FUTURE PARK JOBS: \n");
+        jobsDisplayList =
+                systemController.getAllFutureJobs();
+        for (Job j : jobsDisplayList) {
+            int jobNumber = jobsDisplayList.indexOf(j);
+            displayJobOverview(j, jobNumber);
+        }
+        textOutputDisplayArea.append(selectJobForDetailsMsg());
+        userInputField.grabFocus();
+        viewJobDetailsBtn.setEnabled(true);
+        //still need to handle the event of entering the number and clicking the button
     }
 
     //to remove a job, we could either go by park manager id in a job
@@ -163,7 +218,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
         //now input is accepted, grab the selected job and it's details
         //assuming the user input integer is the same as the index in the list
-        Job jobToRemove = jobList.get(userInput);
+        Job jobToRemove = jobsDisplayList.get(userInput);
         //display popup to confirm user REALLY wants to delete this job permanently
         JPopupMenu confirmDeleteJobMenu = new JPopupMenu("CONFIRM ACTION: " +
                 "DELETE JOB");
@@ -177,18 +232,19 @@ public class ParkManagerGUIPanel extends JPanel {
         //deleteJobPopup.hide();
         //tell collection to remove the job at that index
         //jobWallet
-        jobList.remove(userInput);
+        jobsDisplayList.remove(userInput);
         //display message confirming job has been deleted
         textOutputDisplayArea.append(createJobDeletedMsg(jobToRemove));
         //return to "home screen"
         textOutputDisplayArea.append(getHomeScreenMsg());
 
+
     }
 
     private int getIntegerFromUserInputField(final String userInputStr)
-                                            throws UserInputException{
+                                            throws UserInputException {
         int inputInt = -1;
-        int jobsListedCount = jobList.size();
+        int jobsListedCount = systemController.getJobs().size();
         try {
             inputInt = Integer.parseInt(userInputStr);
         } catch (NumberFormatException nef) {
@@ -201,19 +257,6 @@ public class ParkManagerGUIPanel extends JPanel {
         }
         return inputInt;
 
-    }
-
-    public List<Job> getJobList() {
-        return jobList;
-    }
-    private String getIntroMsg() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nWelcome Park Manager \n");
-        sb.append("Listing of future jobs in the Urban Parks Database \n\n");
-        //something here about either creating a new job or altering a job?
-        sb.append("First, please enter a job number in the text field below\n");
-        sb.append("Then, use the button menu to choose an action for the job you have selected\n\n");
-        return sb.toString();
     }
 
     private JPanel createDeleteJobPopupComponent(final Job jobToDelete) {
@@ -241,13 +284,99 @@ public class ParkManagerGUIPanel extends JPanel {
 
     }
 
+    //////////////////output area display methods /////////////////////////////
+
+    private void displayJobOverview(final Job jobToDisplay,
+                                    final int jobNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(jobNumber + ")\tNAME: ");
+        sb.append(jobToDisplay.getName());
+        sb.append("\n \tLOCATION: ");
+        sb.append(jobToDisplay.getPark());
+        sb.append("\n \tBEGIN DATE: ");
+        sb.append(jobToDisplay.getBeginDateTime().toLocalDate());
+        sb.append("\n \tEND DATE: ");
+        sb.append(jobToDisplay.getEndDateTime().toLocalDate());
+        sb.append(getHorizontalPartitionLine());
+        textOutputDisplayArea.append(sb.toString());
+    }
+
+    private void displayJobDetails(final Job jobForDetails,
+                                   final int jobNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n\nJOB DETAILS:\n");
+        sb.append(jobNumber + "\n");
+        sb.append(jobForDetails.getName() + "\n");
+        sb.append(jobForDetails.getPark() + "\n");
+        sb.append(jobForDetails.getBeginDateTime() + "\n");
+        sb.append(jobForDetails.getEndDateTime() + "\n");
+        sb.append(jobForDetails.getDescription() + "\n");
+        sb.append(getHorizontalPartitionLine());
+        textOutputDisplayArea.append(sb.toString());
+
+    }
+
+    //TODO - this is going to the home screen
     //TODO-this will be shared logic and repeated if not put in the parent component?
     private void resetUIState() {
+        textOutputDisplayArea.removeAll();
+        updateUIState();
         textOutputDisplayArea.append(getHomeScreenMsg());
         //get focus back to input field
         userInputField.grabFocus();
         //return to initial button state for delete button
-        deleteJobBtn.setEnabled(false);
+        deleteThisJobBtn.setEnabled(false);
+    }
+
+    //each time the GUI "refreshes" after a user completes any action
+    // or hits the Home button
+    private void updateUIState() {
+        //don't even show the button if it isn't available?
+        if (systemController.getJobs().size() >=
+                systemController.getJobCollectionCapacity()) {
+            createNewJobBtn.setEnabled(false);
+
+        } else {
+
+            createNewJobBtn.setEnabled(true);
+
+        }//can also add a new listener so user still sees the button
+        //any other checks that need to be made about what to
+        // display go here
+    }
+
+    private String getHorizontalPartitionLine() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        int lineWidth = 80;
+        while (lineWidth != 0) {
+            sb.append("_");
+            lineWidth -= 1;
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    ////getters and setters ///////////////////////////////////////////////////
+
+    public List<Job> getFutureJobsISubmittedAsList() {
+
+        return parkManager.getFutureJobsSubmittedByMe();
+    }
+
+    public List<Job> getAllJobsAsList() {
+
+        return systemController.getJobs().getList();
+    }
+
+    /////Message factory methods///////////////////////////////////////////////
+
+    private String selectJobForDetailsMsg() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nenter a job number then press the Job Details button " +
+                "to view that job's details\n");
+        sb.append("press the Home button to return to the Home Screen");
+        return sb.toString();
     }
 
     private String createJobDeletedMsg(final Job jobToRemove) {
@@ -259,10 +388,21 @@ public class ParkManagerGUIPanel extends JPanel {
 
     private String getHomeScreenMsg(){
         StringBuilder sb = new StringBuilder();
-        sb.append("Welcome back to the home screen");
+        sb.append("\n>> Welcome back to the home screen\n <<");
         return sb.toString();
     }
 
+    private String getIntroMsg() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nWelcome Park Manager \n");
+        sb.append("Listing of future jobs in the Urban Parks Database \n\n");
+        //something here about either creating a new job or altering a job?
+        sb.append("First, please enter a job number in the text field below\n");
+        sb.append("Then, use the button menu to choose an action for the job you have selected\n\n");
+        return sb.toString();
+    }
+
+    //end Park Manager GUI Panel class
 }
 //private JButton updateJobBtn;
 

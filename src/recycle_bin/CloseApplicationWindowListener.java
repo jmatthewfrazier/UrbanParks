@@ -1,12 +1,31 @@
-package listeners;
+package recycle_bin;
+
+import model.JobCollection;
+import model.ParkCollection;
+import model.UserCollection;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dave on 2/18/18.
  */
 public class CloseApplicationWindowListener implements WindowListener {
+
+    private JobCollection jobs;
+
+    private ParkCollection parks;
+
+    private UserCollection users;
+
+    public CloseApplicationWindowListener() {
+
+    }
 
     @Override
     public void windowClosing(WindowEvent windowEvent) {
@@ -42,4 +61,6 @@ public class CloseApplicationWindowListener implements WindowListener {
     public void windowClosed(WindowEvent windowEvent) {
 
     }
+
+
 }
