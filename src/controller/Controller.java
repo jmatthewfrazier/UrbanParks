@@ -15,7 +15,11 @@ import java.util.List;
  *
  * @Created by Chad on 2/24/18.
  */
+<<<<<<< HEAD
 public class Controller {
+=======
+public class Controller implements Serializable {
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
 
     private JobCollection jobs;
 
@@ -33,6 +37,10 @@ public class Controller {
         parks = new ParkCollection();
         currentUser = User.getNullUser();
 
+<<<<<<< HEAD
+=======
+        setupController();
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     }
 
 
@@ -41,6 +49,11 @@ public class Controller {
        loadCollectionsFromFile();
     }
 
+<<<<<<< HEAD
+=======
+    //////////////add and remove things ///////////////////////////////////////
+
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     public void unsubmitParkJob(final Job jobToRemove)
             throws UrbanParksSystemOperationException{
         ArrayList<UserID> volunteerListOfRemovedJob =
@@ -56,6 +69,7 @@ public class Controller {
             throw new UrbanParksSystemOperationException(e.getMsgString());
         }
         //made it to here, no exceptions thrown, notify
+<<<<<<< HEAD
         removeVolunteersFromAbandonedJob(volunteerListOfRemovedJob,
                                             jobToRemove);
 
@@ -82,10 +96,28 @@ public class Controller {
             //TODO - casting here is sketchy, what if user id isn't a volunteer?
             Volunteer abandonedJobVolunteer = (Volunteer) users.getUser(uid);
             abandonedJobVolunteer.removeJobFromMyRegisteredJobs(unsubmittedJob);
+=======
+        removeVolunteersFromUnsubmittedJob(volunteerListOfRemovedJob,
+                                            jobToRemove);
+
+    }
+
+    public void removeVolunteersFromUnsubmittedJob(final List<UserID> userIDList,
+                                                   final Job unsubmittedJob ) {
+        for (UserID uid : userIDList) {
+            //TODO - casting here is sketchy, what if user id isn't a volunteer?
+            Volunteer unsubmittedJobVolunteer = (Volunteer) users.getUser(uid);
+            unsubmittedJobVolunteer.removeJobFromMyRegisteredJobs(unsubmittedJob);
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
 
         }
     }
 
+<<<<<<< HEAD
+=======
+    /////////////////getters and setters //////////////////////////////////////
+
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     public ArrayList<Job> getFutureJobsSubmittedByParkManager
             (final UserID paramUserID) throws UserRoleCategoryException,
             UserNotFoundException {
@@ -99,6 +131,7 @@ public class Controller {
         }
         return jobList;
     }
+<<<<<<< HEAD
     
     public ArrayList<Job> getFutureJobsSignupByVolunteer
     		(final UserID paramUserID) throws UserRoleCategoryException,
@@ -113,6 +146,12 @@ public class Controller {
     	}
     	return jobList;
     	
+=======
+
+    public ArrayList<Job> getAllFutureJobs() {
+        //TODO - do we implement some business rule check here also?
+        return jobs.getAllFutureJobsFromToday();
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     }
 
     public void addNewJobByParkManager(final Job jobToAdd)
@@ -129,6 +168,7 @@ public class Controller {
             throw new UrbanParksSystemOperationException(e.getMsgString());
         }
     }
+<<<<<<< HEAD
     
     public void signupNewJobByVolunteer(final Job jobToAdd)
     		throws UrbanParksSystemOperationException {
@@ -143,6 +183,8 @@ public class Controller {
     	// store the Volunteer in the list. Which I have no idea how to do it 
     	// without breaking the law of Demeter
     }
+=======
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
 
     public void setJobCollectionCapacity(int capacity) {
         try {
@@ -152,6 +194,44 @@ public class Controller {
         }
     }
 
+<<<<<<< HEAD
+=======
+    public int getJobCollectionCapacity() {
+        return jobs.getMaxCapacity();
+    }
+
+    public User getUserByUserID (final UserID userIDToSearchFor)
+            throws UserNotFoundException {
+        if (users.containsUserID(userIDToSearchFor)) {
+            return users.getUser(userIDToSearchFor);
+        } else {
+            throw new UserNotFoundException("That User ID was not found.");
+        }
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public JobCollection getJobs() {
+        return jobs;
+    }
+
+    public ParkCollection getParks() {
+        return parks;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+
+
+
+
+    //////////////import and export to the collections/////////////////////////
+
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     private void loadCollectionsFromFile() {
         //when the system is frist firing up
         FileInputStream fileIn;
@@ -188,7 +268,11 @@ public class Controller {
     /**
      * Writes all modified data to the stored collections.
      */
+<<<<<<< HEAD
     private void exportCollections() {
+=======
+    public void storeCollectionsIntoFile() {
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
         try {
             FileOutputStream out = new FileOutputStream("./data.bin");
             ObjectOutputStream oos = new ObjectOutputStream(out);
@@ -204,6 +288,7 @@ public class Controller {
         }
     }
 
+<<<<<<< HEAD
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
@@ -219,6 +304,10 @@ public class Controller {
     public User getCurrentUser() {
         return currentUser;
     }
+=======
+    /////////////////////////recycling ////////////////////////////////////////
+
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
 
     //end of Controller class
 }

@@ -141,5 +141,20 @@ public final class Volunteer extends User {
     			
     }*/
 
+<<<<<<< HEAD
+=======
+    public List<Job> getChronologicalJobList() {
+   	    List<Job> chronologicalList = new ArrayList<>(jobList);
+   	    chronologicalList.sort(JobCollection.getChronologicalJobComparator());
+   	    return chronologicalList;
+    }
+
+    public void removeJobFromMyRegisteredJobs(final Job jobToRemove) {
+    	if (jobList.contains(jobToRemove)) {
+    		jobList.remove(jobToRemove);
+		}
+	}
+
+>>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     //end Volunteer class
 }
