@@ -84,6 +84,46 @@ public final class Job implements Serializable {
                 (LocalDateTime.now()) <= 0;
     }
     
+	/**
+	 * Checks if theCandidateJob starts at the end date of this job.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isStartAtEndDate(Job theCandidateJob){
+		return this.endDateTime.toLocalDate().equals(
+				theCandidateJob.beginDateTime.toLocalDate());
+	}
+	
+	/**
+	 * Checks if theCandidateJob ends at the start date of this job.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isEndAtStartDate(Job theCandidateJob) {
+		return this.beginDateTime.toLocalDate().equals(
+				theCandidateJob.endDateTime.toLocalDate());
+	}
+	
+	/**
+	 * Checks if theCandidateJob's start and end dates overlaps with this job's 
+	 * start and end dates.
+	 * 
+	 * @param theCandidateJob is the job to compare dates with.
+	 * @return False iff the dates of theCandidateJob do not extend across any 
+	 * of the days of this job.
+	 */
+	public boolean isOverlapping(Job theCandidateJob) {
+
+	    return (this.endDateTime.isAfter(theCandidateJob.beginDateTime) && 
+	    	this.beginDateTime.isBefore(theCandidateJob.beginDateTime)) ||
+	    	(this.beginDateTime.isBefore(theCandidateJob.endDateTime) && 
+	    	this.endDateTime.isAfter(theCandidateJob.endDateTime)) || 
+	    	(this.endDateTime.isBefore(theCandidateJob.endDateTime) && 
+	    	this.beginDateTime.isAfter(theCandidateJob.beginDateTime));
+	}
+    
     /**
      * Determines if the start date of this job is after or equal to the date
      * specified.
@@ -119,35 +159,6 @@ public final class Job implements Serializable {
     public JobID getID() {
         return ID;
     }
-	
-	/**
-	 * Check if the job the Volunteer is applying starts at the end date
-	 * of the jobs that he already signed up.
-	 * 
-	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
-	 * @return boolean value indicates whether or not the Volunteer can get the job.
-	 */
-	public boolean isStartAtEndDate(Job theCandidateJob){
-		return this.endDateTime.toLocalDate().equals(
-				theCandidateJob.beginDateTime.toLocalDate());
-	}
-	
-	/**
-	 * Check if the job the Volunteer is applying ends at the start date
-	 * of the jobs that he already signed up.
-	 * 
-	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
-	 * @return boolean value indicates whether or not the Volunteer can get the job.
-	 */
-	public boolean isEndAtStartDate(Job theCandidateJob) {
-		return this.beginDateTime.toLocalDate().equals(
-				theCandidateJob.endDateTime.toLocalDate());
-	}
-	
-	public boolean isOverlapping(Job theCandidateJob) {
-
-	    return this.endDateTime.isAfter(theCandidateJob.beginDateTime);
-	}
 
     public LocalDateTime getBeginDateTime() {
         return beginDateTime;
