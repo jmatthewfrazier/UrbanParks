@@ -92,12 +92,13 @@ public final class JobCollection implements Serializable {
     private Map<JobID, Job> getJobMap() {
         return jobMap;
     }
+    
     /**
      * Creates and returns a list of all jobs in a specified date range.
      *
-     * @param start is the start of the date range.
+     * @param start is the start of the date range (date must be valid).
      * @param end is the end of the date range.
-     * @return a list of all jobs that fall within the date range.
+     * @return a list of all jobs that fall within the specified date range.
      */
     public ArrayList<Job> getJobsInDateRange(final LocalDateTime start,
     		final LocalDateTime end) {

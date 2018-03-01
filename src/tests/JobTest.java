@@ -195,37 +195,37 @@ public class JobTest {
     
     @Test
     public void isJobStartAfterEqualDate_JobStartBeforeDate_False() {
-    	LocalDateTime testDate = LocalDateTime.now().plusDays(1);
+    	LocalDateTime testDate = testJob.getBeginDateTime().plusDays(1);
         assertFalse(testJob.isJobStartAfterEqualDate(testDate));
     }
     
     @Test
     public void isJobStartAfterEqualDate_JobStartAfterDate_True() {
-    	LocalDateTime testDate = LocalDateTime.now().minusDays(1);
+    	LocalDateTime testDate = testJob.getBeginDateTime().minusDays(1);
         assertTrue(testJob.isJobStartAfterEqualDate(testDate));
     }
     
     @Test
     public void isJobStartAfterEqualDate_JobStartEqualDate_True() {
-    	LocalDateTime testDate = LocalDateTime.now();
+    	LocalDateTime testDate = testJob.getBeginDateTime();
         assertTrue(testJob.isJobStartAfterEqualDate(testDate));
     }
     
     @Test
     public void isJobEndBeforeEqualDate_JobEndAfterDate_False() {
-    	LocalDateTime testDate = LocalDateTime.now().minusDays(1);
+    	LocalDateTime testDate = testJob.getEndDateTime().minusDays(1);
         assertFalse(testJob.isJobEndBeforeEqualDate(testDate));
     }
     
     @Test
     public void isJobEndBeforeEqualDate_JobEndBeforeDate_True() {
-    	LocalDateTime testDate = LocalDateTime.now().plusDays(1);
+    	LocalDateTime testDate = testJob.getEndDateTime().plusDays(1);
         assertTrue(testJob.isJobEndBeforeEqualDate(testDate));
     }
     
     @Test
     public void isJobEndBeforeEqualDate_JobEndEqualDate_True() {
-    	LocalDateTime testDate = LocalDateTime.now();
+    	LocalDateTime testDate =testJob.getEndDateTime();
         assertTrue(testJob.isJobEndBeforeEqualDate(testDate));
     }
     //end of Job Test class

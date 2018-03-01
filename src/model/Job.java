@@ -90,7 +90,7 @@ public final class Job implements Serializable {
      * specified.
      * 
      * @param date is the date to compare the job start date to.
-     * @return true if the job start date is after or equal to the date 
+     * @return true iff the job start date is after or equal to the date 
      * specified.
      */
     public boolean isJobStartAfterEqualDate(LocalDateTime date) {
@@ -102,7 +102,7 @@ public final class Job implements Serializable {
      * specified.
      * 
      * @param date is the date to compare the job start date to.
-     * @return true if the job end date is before or equal to the date 
+     * @return true iff the job end date is before or equal to the date 
      * specified.
      */
     public boolean isJobEndBeforeEqualDate(LocalDateTime date) {
