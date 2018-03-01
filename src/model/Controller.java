@@ -1,7 +1,6 @@
-package controller;
+package model;
 
 import exceptions.*;
-import model.*;
 import view.UrbanParksGUI;
 
 import java.io.*;
@@ -92,11 +91,11 @@ public class Controller implements Serializable {
     /////////////////getters and setters //////////////////////////////////////
 
     public ArrayList<Job> getFutureJobsSubmittedByParkManager
-            (final UserID paramUserID) throws UserRoleCategoryException,
+            (final UserID paramUserID) throws InvalidUserException,
             UserNotFoundException {
         ArrayList<Job> jobList;
         if (currentUser.getUserRole() != UserRole.PARK_MANAGER) {
-            throw new UserRoleCategoryException("User is not a Park Manager");
+            throw new InvalidUserException("User is not a Park Manager");
         } else if (!users.containsUserID(paramUserID)) {
             throw new UserNotFoundException("User ID was not found in the system");
         } else {

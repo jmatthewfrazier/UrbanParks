@@ -2,17 +2,12 @@ package model;
 
 import java.io.Serializable;
 
-/**
- * Represents an Urban Parks user.
- */
 public class User implements Serializable {
 
-//    static final long serial
-
-    private String firstName;
-    private String lastName;
-    private UserRole userRole;
-    private UserID userID;
+    private final String firstName;
+    private final String lastName;
+    private final UserRole userRole;
+    private final UserID userID;
 
     protected User(final String firstName, final String lastName,
                 final UserRole userRole, final UserID userID) {
@@ -22,43 +17,28 @@ public class User implements Serializable {
         this.userID = userID;
     }
 
-    public static final User getNullUser() {
+    public static User getNullUser() {
         return new User("", "", UserRole.NULL_USER,
                 new UserID("null_user"));
     }
 
     public final String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
-    public final String getLastName() { return lastName; }
+    public final String getLastName() {
+        return this.lastName;
+    }
 
     public final UserRole getUserRole() {
-        return userRole;
+        return this.userRole;
     }
 
     public final String getFullName() {
-        return firstName + " " + lastName;
+        return this.firstName + " " + this.lastName;
     }
 
     public final UserID getID() {
-        return userID;
+        return this.userID;
     }
-
-    public final void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public final void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public final void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
-    public final void setUserSystemName(UserID userID) {
-        this.userID = userID;
-    }
-
 }

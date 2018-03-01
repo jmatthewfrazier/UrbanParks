@@ -189,6 +189,10 @@ public final class Job implements Serializable {
     	this.description = description;
     }
 
+    public ParkManager getJobCreator() {
+    	return this.jobCreator;
+    }
+
 //    public ParkManager getJobCreator() {
 //	    return jobCreator;
 //    }

@@ -1,7 +1,7 @@
 package view;
 
-import controller.Controller;
 import exceptions.UserNotFoundException;
+import model.Controller;
 import model.User;
 import model.UserID;
 

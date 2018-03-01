@@ -1,14 +1,10 @@
 package view;
 
-import controller.Controller;
 import exceptions.UrbanParksSystemOperationException;
 import exceptions.UserInputException;
 import exceptions.UserNotFoundException;
 import exceptions.UserRoleCategoryException;
-import model.Job;
-import model.ParkManager;
-import model.User;
-import model.UserID;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -361,7 +357,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
     public List<Job> getFutureJobsISubmittedAsList() {
 
-        return parkManager.getFutureJobsSubmittedByMe();
+        return parkManager.getMyFutureJobs();
     }
 
     public List<Job> getAllJobsAsList() {
