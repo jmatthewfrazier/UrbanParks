@@ -56,7 +56,7 @@ public final class Volunteer extends User {
 			}
 		}
 
-		newJob.addVolunteer(this);
+//		newJob.addVolunteer(this);
 		jobList.add(newJob);
     }
     
