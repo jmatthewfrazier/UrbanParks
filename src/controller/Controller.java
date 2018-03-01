@@ -5,6 +5,7 @@ import model.*;
 import view.UrbanParksGUI;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +93,11 @@ public class Controller implements Serializable {
     public ArrayList<Job> getAllFutureJobs() {
         //TODO - do we implement some business rule check here also?
         return jobs.getAllFutureJobsFromToday();
+    }
+    
+    public ArrayList<Job> getJobsInDateRange(final LocalDateTime start,
+    	final LocalDateTime end) {
+    	return jobs.getJobsInDateRange(start, end);
     }
 
     public void addNewJobByParkManager(final Job jobToAdd)
