@@ -36,10 +36,9 @@ public class Controller implements Serializable {
         setupController();
     }
 
-
-
     private void setupController() {
-       loadCollectionsFromFile();
+       //any thing else add here or just call in consctr
+        loadCollectionsFromFile();
     }
 
     //////////////add and remove things ///////////////////////////////////////
@@ -146,10 +145,6 @@ public class Controller implements Serializable {
     public User getCurrentUser() {
         return currentUser;
     }
-
-
-
-
 
     //////////////import and export to the collections/////////////////////////
 

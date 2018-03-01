@@ -1,7 +1,9 @@
 package model;
 
 import controller.Controller;
-import exceptions.*;
+import exceptions.UrbanParksSystemOperationException;
+import exceptions.UserNotFoundException;
+import exceptions.UserRoleCategoryException;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -69,7 +71,7 @@ public final class ParkManager extends User implements Serializable {
                              final UserID paramJobCreatorUserID)
             throws UrbanParksSystemOperationException{
         newJobToSubmit = new Job(name, park, ID, beginDate, endDate,
-                description, this.getID());
+                description);
         try {
             systemController.addNewJobByParkManager(newJobToSubmit);
         } catch (UrbanParksSystemOperationException e) {

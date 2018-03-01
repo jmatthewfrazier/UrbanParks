@@ -6,9 +6,9 @@ package recycle_bin;
 
 import model.JobCollection;
 import model.ParkCollection;
+import model.User;
 import model.UserCollection;
 import view.UrbanParksGUI;
-
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class UrbanParksSystemRoot {
     }
 
     private void loadCollectionsFromFile() {
-        //when the system is frist firing up
+        //when the system is first firing up
         FileInputStream fileIn;
         File f = new File("./data.bin");
 
@@ -79,12 +79,12 @@ public class UrbanParksSystemRoot {
         loadCollectionsFromFile();
 
         //pass in all the populated collections to the GUI
-        systemGUI = new UrbanParksGUI(jobs, users, parks);
+//        systemGUI = new UrbanParksGUI(jobs, users, parks);
 
         //system just began so start with the login panel
         //don't think this class needs to be aware of who the user is
         //this class just needs to populate things and get the gui started
-        systemGUI.displayLoginPanel("Welcome to Urban Parks");
+//        systemGUI.displayLoginPanel("Welcome to Urban Parks");
         }
 
 

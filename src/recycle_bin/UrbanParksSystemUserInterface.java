@@ -99,8 +99,8 @@ public class UrbanParksSystemUserInterface {
 		if (users.isEmpty()) {
 			users.addUser(new Volunteer("Robert", "Smith",
 					new UserID("robertsmith")));
-			users.addUser(new ParkManager("Steve", "Lafore", new
-					UserID("stevelafore")));
+//			users.addUser(new ParkManager("Steve", "Lafore", new
+//					UserID("stevelafore")));
 		}
 		if (parks.isEmpty()) {
 			parks.addPark(new Park());

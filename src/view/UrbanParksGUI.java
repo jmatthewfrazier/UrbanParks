@@ -2,7 +2,8 @@ package view;
 
 import controller.Controller;
 import exceptions.UserNotFoundException;
-import model.*;
+import model.User;
+import model.UserID;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +11,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
 import static model.UserRole.PARK_MANAGER;
 import static model.UserRole.VOLUNTEER;
@@ -33,9 +30,10 @@ public class UrbanParksGUI implements PropertyChangeListener {
 
     private static final int TEXT_WIDTH = 30;
 
-    private User currentUser;
+    private static String frameTitle = "Urban Parks Volunteer Management " +
+            "System";
 
-    private String frameTitle = "Urban Parks Volunteer Management System";
+    private User currentUser;
 
     private final JFrame frame;
 
@@ -51,6 +49,7 @@ public class UrbanParksGUI implements PropertyChangeListener {
     public UrbanParksGUI(Controller paramController) {
         this.systemController = paramController;
         frame = new JFrame(frameTitle);
+        currentUser = User.getNullUser();
         setupGUI();
     }
 
