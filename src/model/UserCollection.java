@@ -9,11 +9,11 @@ public final class UserCollection implements Serializable {
     private Map<UserID, User> userMap;
 
     public UserCollection() {
-        userMap = new HashMap<>();
+        this.userMap = new HashMap<>();
     }
 
     public final User getUser(final UserID userID) {
-        return userMap.get(userID);
+        return this.userMap.get(userID);
     }
 
     public final boolean containsUserID(final UserID newUserID) {
