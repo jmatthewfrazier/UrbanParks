@@ -71,6 +71,12 @@ public final class Volunteer extends User {
 		}
 	}
     
+    public void updateJobList() {
+    	for (Job job : jobList) {
+    		if ()
+    	}
+    }
+    
     public int getMinDaysAwaySignUp() {
     	return MINIMUM_SIGN_UP_DAYS_OUT;
     }

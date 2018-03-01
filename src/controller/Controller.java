@@ -64,14 +64,29 @@ public class Controller implements Serializable {
 
     }
 
-    public void removeVolunteersFromUnsubmittedJob(final List<UserID> userIDList,
-                                                   final Job unsubmittedJob ) {
-        for (UserID uid : userIDList) {
-            //TODO - casting here is sketchy, what if user id isn't a volunteer?
-            Volunteer unsubmittedJobVolunteer = (Volunteer) users.getUser(uid);
-            unsubmittedJobVolunteer.removeJobFromMyRegisteredJobs(unsubmittedJob);
-
-        }
+//    public void removeVolunteersFromUnsubmittedJob(final List<UserID> userIDList,
+//                                                   final Job unsubmittedJob ) {
+//        for (UserID uid : userIDList) {
+//            //TODO - casting here is sketchy, what if user id isn't a volunteer?
+//            Volunteer unsubmittedJobVolunteer = (Volunteer) users.getUser(uid);
+//            unsubmittedJobVolunteer.removeJobFromMyRegisteredJobs(unsubmittedJob);
+//
+//        }
+//    }
+    
+    /**
+     * Updates Volunteer's job list so that if a job was removed from the 
+     * master list, it will be removed from the Volunteer's job list.
+     */
+    public void updateVolunteerList() {
+    	if (getCurrentUser().getUserRole() == UserRole.VOLUNTEER) {
+    		Volunteer user = (Volunteer) currentUser;
+        	for (Job job : user.getJobList()) {
+        		if (!jobs.containsJobID(job.getID())) {
+        			user.removeJobFromMyRegisteredJobs(job);
+        		}
+        	}
+    	}
     }
 
     /////////////////getters and setters //////////////////////////////////////
@@ -185,6 +200,7 @@ public class Controller implements Serializable {
             System.out.println(("File is invalid."));
             e.printStackTrace();
         }
+        
     }
 
     /**
