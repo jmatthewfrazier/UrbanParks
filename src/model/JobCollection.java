@@ -42,26 +42,6 @@ public final class JobCollection implements Serializable {
                 && capacity.intValue() > 0;
     }
 
-    public int size() {
-        return jobMap.size();
-    }
-
-    public int getMaxCapacity() {
-        return MAX_CAPACITY;
-    }
-
-    public boolean isAtMaxCapacity() {
-        return (jobMap.size() >= MAX_CAPACITY);
-    }
-
-    public boolean isEmpty() {
-        return jobMap.isEmpty();
-    }
-
-    public boolean containsJobID(JobID id) {
-        return jobMap.containsKey(id);
-    }
-
     public static Comparator<Job> getChronologicalJobComparator() {
         class ChronologicalComparator implements  Comparator<Job> {
             @Override
@@ -80,18 +60,18 @@ public final class JobCollection implements Serializable {
         return new ArrayList<>(jobMap.values());
     }
 
-    public ArrayList<Job> getJobArrayListFilterByUserID(final UserID paramUserID) {
-        ArrayList<Job> jobsFilteredByUserID = new ArrayList<>();
-            for (Job j : this.getJobMap().values()) {
-                if (j.getJobCreatorUserID().equals(paramUserID)) {
-                    jobsFilteredByUserID.add(j);
-                }
-        } return jobsFilteredByUserID;
-    }
+//    public ArrayList<Job> getJobArrayListFilterByUserID(final UserID paramUserID) {
+//        ArrayList<Job> jobsFilteredByUserID = new ArrayList<>();
+//            for (Job j : this.getJobMap().values()) {
+//                if (j.getJobCreatorUserID().equals(paramUserID)) {
+//                    jobsFilteredByUserID.add(j);
+//                }
+//        } return jobsFilteredByUserID;
+//    }
 
-    private Map<JobID, Job> getJobMap() {
-        return jobMap;
-    }
+//    private Map<JobID, Job> getJobMap() {
+//        return jobMap;
+//    }
     
     /**
      * Creates and returns a list of all jobs in a specified date range.
@@ -181,12 +161,13 @@ public final class JobCollection implements Serializable {
 
         if (!jobMap.containsKey(jobToRemoveID)) { // check the job is in the collection
             throw new JobIDNotFoundInCollectionException("JobID not found in collection");
-        //check if the user is the one who submitted the job
-        } else if (!jobToRemove.getJobCreatorUserID().equals(jobRemoverUserID)){
-            throw new UserNotFoundException("\nThis user did not originally " +
-                    "submit this job.\nUser not authorized to unsubmit this " +
-                    "job.\nJob not removed.\n");
         }
+        //check if the user is the one who submitted the job
+//        } else if (!jobToRemove.getJobCreatorUserID().equals(jobRemoverUserID)){
+//            throw new UserNotFoundException("\nThis user did not originally " +
+//                    "submit this job.\nUser not authorized to unsubmit this " +
+//                    "job.\nJob not removed.\n");
+//        }
         LocalDateTime currentDateTime = LocalDateTime.now();
         // job has to be a min number of days in the future to be cancelled
         if (currentDateTime.toLocalDate().isBefore(
@@ -198,7 +179,7 @@ public final class JobCollection implements Serializable {
         jobMap.remove(jobToRemoveID);
 
         //remove any volunteers who may have signed up for this job also
-        removeVolunteersFromDeletedJob(jobToRemove);
+//        removeVolunteersFromDeletedJob(jobToRemove);
     }
 
     /////////////////////////recycling ////////////////////////////////////////
@@ -206,10 +187,26 @@ public final class JobCollection implements Serializable {
 //    public static void removeJobFromCollectionStatic(final Job jobToRemove) {
 //        JobID jobToRemoveID = jobToRemove.getID();
 //
-//    }
+//    }    
 
-    public void removeVolunteersFromDeletedJob(final Job removedJob) {
+    public int size() {
+        return jobMap.size();
+    }
 
+    public int getMaxCapacity() {
+        return MAX_CAPACITY;
+    }
+
+    public boolean isAtMaxCapacity() {
+        return (jobMap.size() >= MAX_CAPACITY);
+    }
+
+    public boolean isEmpty() {
+        return jobMap.isEmpty();
+    }
+
+    public boolean containsJobID(JobID id) {
+        return jobMap.containsKey(id);
     }
 
 

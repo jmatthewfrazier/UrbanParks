@@ -50,27 +50,27 @@ public class VolunteerTest {
 	}
 	
 	@Test(expected = VolunteerDailyJobLimitException.class)
-	public void signUpForJob_jobBeginsOnJobDateInVolList_throwsException() 
+	public void signUpForJob_jobBeginsOnJobEndDateInVolList_throwsException() 
 		throws LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
 		
-		LocalDateTime beginDateOnJobDateInVolList = beginDateTime;
-		Job jobBeginsOnJobDateInVolList = new Job("Test2", parkEastSide, 
-			new JobID(2), beginDateOnJobDateInVolList, 
-			beginDateOnJobDateInVolList.plusDays(2), "test");
+		LocalDateTime beginDateOnJobEndDateInVolList = endDateTime;
+		Job jobBeginsOnJobEndDateInVolList = new Job("Test2", parkEastSide, 
+			new JobID(2), beginDateOnJobEndDateInVolList, 
+			beginDateOnJobEndDateInVolList.plusDays(2), "test");
 		
-		testVolunteer.signUpForJob(jobBeginsOnJobDateInVolList);
+		testVolunteer.signUpForJob(jobBeginsOnJobEndDateInVolList);
 	}
 	
 	@Test(expected = VolunteerDailyJobLimitException.class)
-	public void signUpForJob_jobEndsOnJobDateInVolList_throwsException() 
+	public void signUpForJob_jobEndsOnJobStartDateInVolList_throwsException() 
 		throws LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
 		
-		LocalDateTime endDateOnJobDateInVolList = endDateTime;
-		Job jobEndsOnJobDateInVolList = new Job("Test3", parkEastSide, 
-			new JobID(2), endDateOnJobDateInVolList, 
-			endDateOnJobDateInVolList.plusDays(1), "test");
+		LocalDateTime endDateOnJobStartDateInVolList = beginDateTime;
+		Job jobEndsOnJobStartDateInVolList = new Job("Test3", parkEastSide, 
+			new JobID(2), endDateOnJobStartDateInVolList.minusDays(1), 
+			endDateOnJobStartDateInVolList, "test");
 		
-		testVolunteer.signUpForJob(jobEndsOnJobDateInVolList);
+		testVolunteer.signUpForJob(jobEndsOnJobStartDateInVolList);
 	}
 	
 	@Test(expected = VolunteerDailyJobLimitException.class)

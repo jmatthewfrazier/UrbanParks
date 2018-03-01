@@ -71,9 +71,16 @@ public final class Volunteer extends User {
 		}
 	}
     
-    public void updateJobList() {
+    /**
+     * Removes jobs from jobList that are no longer on the list of all jobs.
+     * 
+     * @param masterJobs is the current master job list.
+     */
+    public void updateJobList(JobCollection masterJobs) {
     	for (Job job : jobList) {
-    		if ()
+    		if (masterJobs.containsJobID(job.getID())) {
+    			this.removeJobFromMyRegisteredJobs(job);
+    		}
     	}
     }
     

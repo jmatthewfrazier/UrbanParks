@@ -80,11 +80,7 @@ public class Controller implements Serializable {
     public void updateVolunteerList() {
     	if (getCurrentUser().getUserRole() == UserRole.VOLUNTEER) {
     		Volunteer user = (Volunteer) currentUser;
-        	for (Job job : user.getJobList()) {
-        		if (!jobs.containsJobID(job.getID())) {
-        			user.removeJobFromMyRegisteredJobs(job);
-        		}
-        	}
+    		user.updateJobList(getJobs());
     	}
     }
 
