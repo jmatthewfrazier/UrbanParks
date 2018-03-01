@@ -46,8 +46,8 @@ public class Controller implements Serializable {
 
     public void unsubmitParkJob(final Job jobToRemove)
             throws UrbanParksSystemOperationException{
-        ArrayList<UserID> volunteerListOfRemovedJob =
-                jobToRemove.getVolunteerUserIDList();
+//        ArrayList<UserID> volunteerListOfRemovedJob =
+//                jobToRemove.getVolunteerUserIDList();
         try {
             jobs.removeJobFromCollection(jobToRemove,
                     this.getCurrentUser().getID());
@@ -59,8 +59,8 @@ public class Controller implements Serializable {
             throw new UrbanParksSystemOperationException(e.getMsgString());
         }
         //made it to here, no exceptions thrown, notify
-        removeVolunteersFromUnsubmittedJob(volunteerListOfRemovedJob,
-                                            jobToRemove);
+//        removeVolunteersFromUnsubmittedJob(volunteerListOfRemovedJob,
+//                                            jobToRemove);
 
     }
 

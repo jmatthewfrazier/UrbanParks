@@ -1,58 +1,55 @@
 package model;
 
-import exceptions.VolunteerDailyJobLimitException;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class Job implements Serializable {
 
     public static final int MAX_NUM_DAYS_FROM_TODAY = 75;
     public static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
-	private List<Volunteer> volunteerList;
+//	private List<Volunteer> volunteerList;
     private String name;
     private Park park;
     private JobID ID;
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
-    private UserID jobCreatorUserID;
+    private ParkManager jobCreator;
 
     public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
-               final LocalDateTime endDate, final String description) {
-    	volunteerList = new ArrayList<>();
+               final LocalDateTime endDate, final String description,
+               final ParkManager jobCreator) {
+//    	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
         this.ID = ID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
-//        this.jobCreatorUserID = paramJobCreatorUserID;
+        this.jobCreator = jobCreator;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-    public void addVolunteer(final Volunteer volunteer)
-		    throws VolunteerDailyJobLimitException {
-
-    	for (Job job : volunteer.getJobList()) {
-    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
-				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
-    			if (this.getBeginDateTime().equals(date) || this
-					    .getEndDateTime().equals(date)) {
-    				throw new VolunteerDailyJobLimitException();
-			    }
-		    }
-	    }
-
-        this.volunteerList.add(volunteer);
-    }
+//    public void addVolunteer(final Volunteer volunteer)
+//		    throws VolunteerDailyJobLimitException {
+//
+//    	for (Job job : volunteer.getJobList()) {
+//    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
+//				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
+//    			if (this.getBeginDateTime().equals(date) || this
+//					    .getEndDateTime().equals(date)) {
+//    				throw new VolunteerDailyJobLimitException();
+//			    }
+//		    }
+//	    }
+//
+//        this.volunteerList.add(volunteer);
+//    }
 
     /**
      * A method to determine if this Job spans an acceptable range of days.
@@ -172,38 +169,36 @@ public final class Job implements Serializable {
     	return description;
     }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+//    public void setName(final String name) {
+//        this.name = name;
+//    }
 
     public void setPark(final Park park) {
         this.park = park;
     }
 
-    public void setBeginDateTime(final LocalDateTime time) {
-        this.beginDateTime = time;
-    }
-
-    public void setEndDateTime(final LocalDateTime time) {
-        this.endDateTime = time;
-    }
+//    public void setBeginDateTime(final LocalDateTime time) {
+//        this.beginDateTime = time;
+//    }
+//
+//    public void setEndDateTime(final LocalDateTime time) {
+//        this.endDateTime = time;
+//    }
     
     public void setDescription(final String description) {
     	this.description = description;
     }
 
-    public UserID getJobCreatorUserID() {
-	    return jobCreatorUserID;
-    }
+//    public ParkManager getJobCreator() {
+//	    return jobCreator;
+//    }
 
-    public ArrayList<UserID> getVolunteerUserIDList() {
-	    ArrayList<UserID> volunteerUserIDList = new ArrayList<>();
-	    for (Volunteer v : volunteerList) {
-	        volunteerUserIDList.add(v.getID());
-        }
-	    return volunteerUserIDList;
-    }
-
-    //end Job class
+//    public ArrayList<UserID> getVolunteerUserIDList() {
+//	    ArrayList<UserID> volunteerUserIDList = new ArrayList<>();
+//	    for (Volunteer v : volunteerList) {
+//	        volunteerUserIDList.add(v.getID());
+//        }
+//	    return volunteerUserIDList;
+//    }
 }
 
