@@ -235,7 +235,7 @@ public class UrbanParksSystemUserInterface {
 		System.out.println(BREAK);
 		System.out.println("Welcome " + currentUser.getFirstName() + " " +
 				currentUser.getLastName() + " (" +
-				currentUser.getID().getUserID() + ")!");
+				currentUser.getID().toString() + ")!");
 		System.out.println("You have been logged in as a " +
 				currentUser.getUserRole() +	".\n");
 
