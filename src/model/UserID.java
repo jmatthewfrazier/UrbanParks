@@ -11,10 +11,12 @@ public final class UserID implements Serializable,  Comparable<UserID> {
         this.userID = userID;
     }
 
+    @Override
     public final String toString() {
         return this.userID;
     }
 
+    @Override
     public int compareTo(UserID other) {
         return this.userID.compareTo(other.userID);
     }
