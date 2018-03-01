@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParkCollection implements Serializable {
+public final class ParkCollection implements Serializable {
 
 	private Map<ParkID, Park> parkMap;
 
@@ -18,21 +18,21 @@ public class ParkCollection implements Serializable {
 	 *
 	 * Pre: ParkID does not exist within the collection.
 	 */
-	public final void addPark(Park park) {
+	public final void addPark(final Park park) {
 		if (!parkMap.containsKey(park.getID())) {
 			parkMap.put(park.getID(), park);
 		}
 	}
 
-	public boolean isEmpty() {
-		return parkMap.isEmpty();
+	public final boolean isEmpty() {
+		return this.parkMap.isEmpty();
 	}
 
-	public boolean containsParkID(ParkID ID) {
-		return parkMap.containsKey(ID);
+	public final boolean containsParkID(final ParkID ID) {
+		return this.parkMap.containsKey(ID);
 	}
 
-    public final Park getPark(ParkID parkID) {
-	    return parkMap.get(parkID);
+    public final Park getPark(final ParkID parkID) {
+	    return this.parkMap.get(parkID);
     }
 }
