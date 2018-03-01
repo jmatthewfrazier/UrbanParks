@@ -43,10 +43,9 @@ public class Controller implements Serializable {
 >>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     }
 
-
-
     private void setupController() {
-       loadCollectionsFromFile();
+       //any thing else add here or just call in consctr
+        loadCollectionsFromFile();
     }
 
 <<<<<<< HEAD
@@ -56,8 +55,8 @@ public class Controller implements Serializable {
 >>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
     public void unsubmitParkJob(final Job jobToRemove)
             throws UrbanParksSystemOperationException{
-        ArrayList<UserID> volunteerListOfRemovedJob =
-                jobToRemove.getVolunteerUserIDList();
+//        ArrayList<UserID> volunteerListOfRemovedJob =
+//                jobToRemove.getVolunteerUserIDList();
         try {
             jobs.removeJobFromCollection(jobToRemove,
                     this.getCurrentUser().getID());
@@ -69,6 +68,7 @@ public class Controller implements Serializable {
             throw new UrbanParksSystemOperationException(e.getMsgString());
         }
         //made it to here, no exceptions thrown, notify
+<<<<<<< HEAD
 <<<<<<< HEAD
         removeVolunteersFromAbandonedJob(volunteerListOfRemovedJob,
                                             jobToRemove);
@@ -99,6 +99,10 @@ public class Controller implements Serializable {
 =======
         removeVolunteersFromUnsubmittedJob(volunteerListOfRemovedJob,
                                             jobToRemove);
+=======
+//        removeVolunteersFromUnsubmittedJob(volunteerListOfRemovedJob,
+//                                            jobToRemove);
+>>>>>>> 14fb20d306d5fc30d7c9a0cda64dc4bc80dd5926
 
     }
 
@@ -224,10 +228,6 @@ public class Controller implements Serializable {
     public User getCurrentUser() {
         return currentUser;
     }
-
-
-
-
 
     //////////////import and export to the collections/////////////////////////
 

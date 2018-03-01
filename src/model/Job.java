@@ -1,11 +1,7 @@
 package model;
 
-import exceptions.VolunteerDailyJobLimitException;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class Job implements Serializable {
 
@@ -13,33 +9,34 @@ public final class Job implements Serializable {
     public static final int MAX_JOB_LENGTH_IN_DAYS = 3;
     public final static int MIN_DAYS_REMOVAL_BUFFER = 3;
 
-	private List<Volunteer> volunteerList;
+//	private List<Volunteer> volunteerList;
     private String name;
     private Park park;
     private JobID ID;
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
-    private UserID jobCreatorUserID;
+    private ParkManager jobCreator;
 
     public Job(final String name, final Park park, final JobID ID,
                final LocalDateTime beginDate,
                final LocalDateTime endDate, final String description,
-               final UserID paramJobCreatorUserID) {
-    	volunteerList = new ArrayList<>();
+               final ParkManager jobCreator) {
+//    	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
         this.ID = ID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
-        this.jobCreatorUserID = paramJobCreatorUserID;
+        this.jobCreator = jobCreator;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
+<<<<<<< HEAD
     public void addVolunteer(final Volunteer volunteer)
 		    throws VolunteerDailyJobLimitException {
 
@@ -60,6 +57,23 @@ public final class Job implements Serializable {
     	this.volunteerList.remove(volunteer);
     	
     }
+=======
+//    public void addVolunteer(final Volunteer volunteer)
+//		    throws VolunteerDailyJobLimitException {
+//
+//    	for (Job job : volunteer.getJobList()) {
+//    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
+//				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
+//    			if (this.getBeginDateTime().equals(date) || this
+//					    .getEndDateTime().equals(date)) {
+//    				throw new VolunteerDailyJobLimitException();
+//			    }
+//		    }
+//	    }
+//
+//        this.volunteerList.add(volunteer);
+//    }
+>>>>>>> 14fb20d306d5fc30d7c9a0cda64dc4bc80dd5926
 
     /**
      * A method to determine if this Job spans an acceptable range of days.
@@ -91,12 +105,52 @@ public final class Job implements Serializable {
                 (LocalDateTime.now()) <= 0;
     }
     
+	/**
+	 * Checks if theCandidateJob starts at the end date of this job.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isStartAtEndDate(Job theCandidateJob){
+		return this.endDateTime.toLocalDate().equals(
+				theCandidateJob.beginDateTime.toLocalDate());
+	}
+	
+	/**
+	 * Checks if theCandidateJob ends at the start date of this job.
+	 * 
+	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
+	 * @return boolean value indicates whether or not the Volunteer can get the job.
+	 */
+	public boolean isEndAtStartDate(Job theCandidateJob) {
+		return this.beginDateTime.toLocalDate().equals(
+				theCandidateJob.endDateTime.toLocalDate());
+	}
+	
+	/**
+	 * Checks if theCandidateJob's start and end dates overlaps with this job's 
+	 * start and end dates.
+	 * 
+	 * @param theCandidateJob is the job to compare dates with.
+	 * @return False iff the dates of theCandidateJob do not extend across any 
+	 * of the days of this job.
+	 */
+	public boolean isOverlapping(Job theCandidateJob) {
+
+	    return (this.endDateTime.isAfter(theCandidateJob.beginDateTime) && 
+	    	this.beginDateTime.isBefore(theCandidateJob.beginDateTime)) ||
+	    	(this.beginDateTime.isBefore(theCandidateJob.endDateTime) && 
+	    	this.endDateTime.isAfter(theCandidateJob.endDateTime)) || 
+	    	(this.endDateTime.isBefore(theCandidateJob.endDateTime) && 
+	    	this.beginDateTime.isAfter(theCandidateJob.beginDateTime));
+	}
+    
     /**
      * Determines if the start date of this job is after or equal to the date
      * specified.
      * 
      * @param date is the date to compare the job start date to.
-     * @return true if the job start date is after or equal to the date 
+     * @return true iff the job start date is after or equal to the date 
      * specified.
      */
     public boolean isJobStartAfterEqualDate(LocalDateTime date) {
@@ -108,7 +162,7 @@ public final class Job implements Serializable {
      * specified.
      * 
      * @param date is the date to compare the job start date to.
-     * @return true if the job end date is before or equal to the date 
+     * @return true iff the job end date is before or equal to the date 
      * specified.
      */
     public boolean isJobEndBeforeEqualDate(LocalDateTime date) {
@@ -151,35 +205,6 @@ public final class Job implements Serializable {
     public JobID getID() {
         return ID;
     }
-	
-	/**
-	 * Check if the job the Volunteer is applying starts at the end date
-	 * of the jobs that he already signed up.
-	 * 
-	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
-	 * @return boolean value indicates whether or not the Volunteer can get the job.
-	 */
-	public boolean isStartAtEndDate(Job theCandidateJob){
-		return this.endDateTime.toLocalDate().equals(
-				theCandidateJob.beginDateTime.toLocalDate());
-	}
-	
-	/**
-	 * Check if the job the Volunteer is applying ends at the start date
-	 * of the jobs that he already signed up.
-	 * 
-	 * @param theCandidateJob the Job that the Volunteer is trying to sign up.
-	 * @return boolean value indicates whether or not the Volunteer can get the job.
-	 */
-	public boolean isEndAtStartDate(Job theCandidateJob) {
-		return this.beginDateTime.toLocalDate().equals(
-				theCandidateJob.endDateTime.toLocalDate());
-	}
-	
-	public boolean isOverlapping(Job theCandidateJob) {
-
-	    return this.endDateTime.isAfter(theCandidateJob.beginDateTime);
-	}
 
     public LocalDateTime getBeginDateTime() {
         return beginDateTime;
@@ -193,38 +218,40 @@ public final class Job implements Serializable {
     	return description;
     }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+//    public void setName(final String name) {
+//        this.name = name;
+//    }
 
     public void setPark(final Park park) {
         this.park = park;
     }
 
-    public void setBeginDateTime(final LocalDateTime time) {
-        this.beginDateTime = time;
-    }
-
-    public void setEndDateTime(final LocalDateTime time) {
-        this.endDateTime = time;
-    }
+//    public void setBeginDateTime(final LocalDateTime time) {
+//        this.beginDateTime = time;
+//    }
+//
+//    public void setEndDateTime(final LocalDateTime time) {
+//        this.endDateTime = time;
+//    }
     
     public void setDescription(final String description) {
     	this.description = description;
     }
 
-    public UserID getJobCreatorUserID() {
-	    return jobCreatorUserID;
+    public ParkManager getJobCreator() {
+    	return this.jobCreator;
     }
 
-    public ArrayList<UserID> getVolunteerUserIDList() {
-	    ArrayList<UserID> volunteerUserIDList = new ArrayList<>();
-	    for (Volunteer v : volunteerList) {
-	        volunteerUserIDList.add(v.getID());
-        }
-	    return volunteerUserIDList;
-    }
+//    public ParkManager getJobCreator() {
+//	    return jobCreator;
+//    }
 
-    //end Job class
+//    public ArrayList<UserID> getVolunteerUserIDList() {
+//	    ArrayList<UserID> volunteerUserIDList = new ArrayList<>();
+//	    for (Volunteer v : volunteerList) {
+//	        volunteerUserIDList.add(v.getID());
+//        }
+//	    return volunteerUserIDList;
+//    }
 }
 

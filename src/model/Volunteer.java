@@ -19,7 +19,11 @@ public final class Volunteer extends User {
 	 * A default minimum number of calendar days after the current date that a
 	 * job begins and a volunteer may sign up for.
 	 */
+<<<<<<< HEAD
 	public static final int MINIMUM_SIGN_UP_DAYS_OUT = 3;
+=======
+	public static int MINIMUM_SIGN_UP_DAYS_OUT = 2;
+>>>>>>> 14fb20d306d5fc30d7c9a0cda64dc4bc80dd5926
 
 	private List<Job> jobSignupByMe;
 	
@@ -56,6 +60,7 @@ public final class Volunteer extends User {
         }
         return futureJobsSignupByMe;
     }
+<<<<<<< HEAD
 
     public int getMinDaysAwaySignUp() {
     	return MINIMUM_SIGN_UP_DAYS_OUT;
@@ -98,6 +103,19 @@ public final class Volunteer extends User {
 	}
     
     /**
+=======
+    
+    /**
+     * Adds newJob to the Volunteer's list of jobs and the Volunteer to 
+     * newJob's list of volunteers if the preconditions are met.
+     * 
+     * @param newJob is the job the volunteer is attempting to sign up for.
+     * @throws VolunteerDailyJobLimitException iff the volunteer has an 
+     * existing job on a same calendar day as newJob.
+     * @throws LessThanMinDaysAwayException iff the job is less than the 
+     * MINIMUM_SIGN_UP_DAYS_OUT.
+     */
+>>>>>>> 14fb20d306d5fc30d7c9a0cda64dc4bc80dd5926
     public void signUpForJob(Job newJob) throws VolunteerDailyJobLimitException,
 		    LessThanMinDaysAwayException {
 
@@ -122,6 +140,7 @@ public final class Volunteer extends User {
 			}
 		}
 
+<<<<<<< HEAD
 		newJob.addVolunteer(this);
 		jobSignupByMe.add(newJob);
     }
@@ -140,6 +159,34 @@ public final class Volunteer extends User {
     				
     			
     }*/
+=======
+//		newJob.addVolunteer(this);
+		jobList.add(newJob);
+    }
+    
+    /**
+     * Removes jobToRemove from this volunteer's jobList.
+     * 
+     * @param jobToRemove is the job being unvolunteered for.
+     */
+    public void removeJobFromMyRegisteredJobs(final Job jobToRemove) {
+    	if (jobList.contains(jobToRemove)) {
+    		jobList.remove(jobToRemove);
+		}
+	}
+    
+    public int getMinDaysAwaySignUp() {
+    	return MINIMUM_SIGN_UP_DAYS_OUT;
+    }
+    
+    public void setMinDaysAwaySignUp(int newValue) {
+    	MINIMUM_SIGN_UP_DAYS_OUT = newValue;
+    }
+
+    public List<Job> getJobList() {
+   	    return new ArrayList<>(jobList);
+    }
+>>>>>>> 14fb20d306d5fc30d7c9a0cda64dc4bc80dd5926
 
 <<<<<<< HEAD
 =======
@@ -149,6 +196,7 @@ public final class Volunteer extends User {
    	    return chronologicalList;
     }
 
+<<<<<<< HEAD
     public void removeJobFromMyRegisteredJobs(final Job jobToRemove) {
     	if (jobList.contains(jobToRemove)) {
     		jobList.remove(jobToRemove);
@@ -156,5 +204,7 @@ public final class Volunteer extends User {
 	}
 
 >>>>>>> e2691b3aecaec15d895a32d31b94d95962fd244a
+=======
+>>>>>>> 14fb20d306d5fc30d7c9a0cda64dc4bc80dd5926
     //end Volunteer class
 }
