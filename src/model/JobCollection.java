@@ -15,14 +15,11 @@ public final class JobCollection implements Serializable {
     private Map<JobID, Job> jobMap;
 
     public JobCollection() {
-
-        jobMap = new HashMap<>();
+        this.jobMap = new HashMap<>();
     }
 
-    //////////////info and settings for Job collection class///////////////////
-
-    public void setMaxCapacity(User user, int capacity)
-            throws InvalidJobCollectionCapacityException {
+    public final void setMaxCapacity(final User user, int capacity)
+            throws InvalidJobCollectionCapacityException, InvalidUserException {
         if (user.getUserRole() == UserRole.STAFF_MEMBER) {
             if (isValidCapacity(capacity)) {
                 MAX_CAPACITY = capacity;
@@ -31,62 +28,46 @@ public final class JobCollection implements Serializable {
                         "must be an Integer that is equal to or greater than " +
                         "0.");
             }
+        } else {
+            throw new InvalidUserException("Only a staff member may change " +
+                    "the job collection capacity.");
         }
     }
 
     /**
      * Pre: capacity must be an Integer that is greater than or equal to 0.
      */
-    public final boolean isValidCapacity(Number capacity) {
+    public final boolean isValidCapacity(final Number capacity) {
         return capacity.getClass().equals(Integer.class)
                 && capacity.intValue() > 0;
     }
 
-    public int size() {
-        return jobMap.size();
+    public final int size() {
+        return this.jobMap.size();
     }
 
-    public int getMaxCapacity() {
+    public final int getMaxCapacity() {
         return MAX_CAPACITY;
     }
 
-    public boolean isAtMaxCapacity() {
-        return (jobMap.size() >= MAX_CAPACITY);
+    public final boolean isAtMaxCapacity() {
+        return this.jobMap.size() >= MAX_CAPACITY;
     }
 
-    public boolean isEmpty() {
-        return jobMap.isEmpty();
-    }
-
-    public boolean containsJobID(JobID id) {
-        return jobMap.containsKey(id);
-    }
-
-    public static Comparator<Job> getChronologicalJobComparator() {
-        class ChronologicalComparator implements  Comparator<Job> {
-            @Override
-            public int compare(Job o1, Job o2) {
-                String s1 = o1.getName();
-                String s2 = o2.getName();
-                return s1.compareTo(s2);
-            }
-        }
-        return new ChronologicalComparator();
-    }
-
-    /////////////fetch a collection of jobs //////////////////////////////////////
-
-    public List<Job> getList() {
+    public final List<Job> getJobList() {
         return new ArrayList<>(jobMap.values());
     }
 
-    public ArrayList<Job> getJobArrayListFilterByUserID(final UserID paramUserID) {
-        ArrayList<Job> jobsFilteredByUserID = new ArrayList<>();
-            for (Job j : this.getJobMap().values()) {
-                if (j.getJobCreatorUserID().equals(paramUserID)) {
-                    jobsFilteredByUserID.add(j);
+    public List<Job> getJobsForUser(final User user) {
+        final List<Job> jobsForUser = new ArrayList<>();
+
+        for (Job job : this.getJobList()) {
+                if (job.getJobCreatorUserID().equals(paramUserID)) {
+                    jobsFilteredByUserID.add(job);
                 }
-        } return jobsFilteredByUserID;
+        }
+
+        return jobsForUser;
     }
 
     private Map<JobID, Job> getJobMap() {
@@ -104,7 +85,7 @@ public final class JobCollection implements Serializable {
     		final LocalDateTime end) {
     	ArrayList<Job> jobs = new ArrayList<Job>();
 
-    	for (Job job : this.getList()) {
+    	for (Job job : this.getJobList()) {
     		if (job.isJobStartAfterEqualDate(start) &&
     				job.isJobEndBeforeEqualDate(end)) jobs.add(job);
     	}
@@ -201,15 +182,18 @@ public final class JobCollection implements Serializable {
         removeVolunteersFromDeletedJob(jobToRemove);
     }
 
-    /////////////////////////recycling ////////////////////////////////////////
+    public static Comparator<Job> getChronologicalJobComparator() {
+        class ChronologicalComparator implements Comparator<Job> {
 
-//    public static void removeJobFromCollectionStatic(final Job jobToRemove) {
-//        JobID jobToRemoveID = jobToRemove.getID();
-//
-//    }
+            @Override
+            public int compare(Job o1, Job o2) {
+                String s1 = o1.getName();
+                String s2 = o2.getName();
+                return s1.compareTo(s2);
+            }
+        }
 
-    public void removeVolunteersFromDeletedJob(final Job removedJob) {
-
+        return new ChronologicalComparator();
     }
 
 

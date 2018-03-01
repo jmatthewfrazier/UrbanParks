@@ -83,7 +83,7 @@ public class Controller implements Serializable {
         } else if (!users.containsUserID(paramUserID)) {
             throw new UserNotFoundException("User ID was not found in the system");
         } else {
-            jobList = jobs.getJobArrayListFilterByUserID(paramUserID);
+            jobList = jobs.getJobsForUser(paramUserID);
         }
         return jobList;
     }

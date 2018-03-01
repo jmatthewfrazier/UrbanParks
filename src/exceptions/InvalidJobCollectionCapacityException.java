@@ -2,13 +2,13 @@ package exceptions;
 
 public class InvalidJobCollectionCapacityException extends Exception {
 
-	private String msg;
+	private final String msg;
 
 	public InvalidJobCollectionCapacityException() {
 		this("");
 	}
 
-	public InvalidJobCollectionCapacityException(String msg) {
+	public InvalidJobCollectionCapacityException(final String msg) {
 		this.msg = msg;
 	}
 }

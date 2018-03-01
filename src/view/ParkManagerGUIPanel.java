@@ -362,7 +362,7 @@ public class ParkManagerGUIPanel extends JPanel {
 
     public List<Job> getAllJobsAsList() {
 
-        return systemController.getJobs().getList();
+        return systemController.getJobs().getJobList();
     }
 
     /////Message factory methods///////////////////////////////////////////////

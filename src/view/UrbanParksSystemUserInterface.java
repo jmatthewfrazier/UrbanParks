@@ -305,7 +305,7 @@
 //		}
 //		System.out.println();
 //
-//		for (Job job : jobs.getList()) {
+//		for (Job job : jobs.getJobList()) {
 //			if (!((Volunteer) currentUser).getJobList().contains(job)) {
 //				System.out.printf("|%-9s|", count);
 //				System.out.printf("%-50s|", job.getName());
