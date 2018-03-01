@@ -1,34 +1,28 @@
 package model;
 
-import exceptions.UserNotFoundException;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Represents a collection of Users.
- */
 public final class UserCollection implements Serializable {
 
     private Map<UserID, User> userMap;
 
     public UserCollection() {
-        userMap = new HashMap<>();
+        this.userMap = new HashMap<>();
     }
 
-    public final User getUser(UserID userID) {
-        return userMap.get(userID);
+    public final User getUser(final UserID userID) {
+        return this.userMap.get(userID);
     }
 
-    public final boolean containsUserID(UserID newUserID) {
-        boolean result = false;
-        for (UserID userID : userMap.keySet()) {
+    public final boolean containsUserID(final UserID newUserID) {
+        for (final UserID userID : this.userMap.keySet()) {
             if (userID.equals(newUserID)) {
-                result = true;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     /**
@@ -37,24 +31,9 @@ public final class UserCollection implements Serializable {
      *
      * Pre: UserID does not exist within the collection.
      */
-    public final void addUser(User user) {
-        if (!userMap.containsKey(user.getID())) {
-            userMap.put(user.getID(), user);
+    public final void addUser(final User user) {
+        if (!this.userMap.containsKey(user.getID())) {
+            this.userMap.put(user.getID(), user);
         }
     }
-
-    public final User getUserFromUserID(final UserID userID)
-            throws UserNotFoundException{
-        User genericUser;
-        if (!userMap.containsKey(userID)) {
-            throw new UserNotFoundException("No user associated with that UserID");
-        } else {
-            genericUser = userMap.get(userID);
-        }
-        return genericUser;
-    }
-
-	public boolean isEmpty() {
-		return userMap.isEmpty();
-	}
 }

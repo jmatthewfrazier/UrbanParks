@@ -4,14 +4,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public final class JobID implements Serializable {
-    private final int jobID;
+
+    private final int jobIDNumber;
 
     public JobID(int jobID) {
-        this.jobID = jobID;
+        this.jobIDNumber = jobID;
     }
 
-    public final int getJobID() {
-        return jobID;
+    public final int getJobIDNumber() {
+        return jobIDNumber;
     }
 
     @Override
@@ -22,12 +23,12 @@ public final class JobID implements Serializable {
         if (!(o instanceof JobID)) {
             return false;
         }
-        JobID other = (JobID) o;
-        return this.getJobID() == other.getJobID();
+        final JobID other = (JobID) o;
+        return this.getJobIDNumber() == other.getJobIDNumber();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(jobID);
+        return Objects.hash(jobIDNumber);
     }
 }

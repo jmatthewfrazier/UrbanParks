@@ -96,11 +96,11 @@ public final class Volunteer extends User {
    	    return new ArrayList<>(jobList);
     }
 
-    public List<Job> getChronologicalJobList() {
-   	    List<Job> chronologicalList = new ArrayList<>(jobList);
-   	    chronologicalList.sort(JobCollection.getChronologicalJobComparator());
-   	    return chronologicalList;
-    }
+//    public List<Job> getChronologicalJobList() {
+//   	    List<Job> chronologicalList = new ArrayList<>(jobList);
+//   	    chronologicalList.sort(JobCollection.getChronologicalJobComparator());
+//   	    return chronologicalList;
+//    }
 
     //end Volunteer class
 }

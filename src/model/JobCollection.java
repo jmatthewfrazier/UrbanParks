@@ -15,14 +15,11 @@ public final class JobCollection implements Serializable {
     private Map<JobID, Job> jobMap;
 
     public JobCollection() {
-
-        jobMap = new HashMap<>();
+        this.jobMap = new HashMap<>();
     }
 
-    //////////////info and settings for Job collection class///////////////////
-
-    public void setMaxCapacity(User user, int capacity)
-            throws InvalidJobCollectionCapacityException {
+    public final void setMaxCapacity(final User user, int capacity)
+            throws InvalidJobCollectionCapacityException, InvalidUserException {
         if (user.getUserRole() == UserRole.STAFF_MEMBER) {
             if (isValidCapacity(capacity)) {
                 MAX_CAPACITY = capacity;
@@ -31,27 +28,18 @@ public final class JobCollection implements Serializable {
                         "must be an Integer that is equal to or greater than " +
                         "0.");
             }
+        } else {
+            throw new InvalidUserException("Only a staff member may change " +
+                    "the job collection capacity.");
         }
     }
 
     /**
      * Pre: capacity must be an Integer that is greater than or equal to 0.
      */
-    public final boolean isValidCapacity(Number capacity) {
+    public final boolean isValidCapacity(final Number capacity) {
         return capacity.getClass().equals(Integer.class)
                 && capacity.intValue() > 0;
-    }
-
-    public static Comparator<Job> getChronologicalJobComparator() {
-        class ChronologicalComparator implements  Comparator<Job> {
-            @Override
-            public int compare(Job o1, Job o2) {
-                String s1 = o1.getName();
-                String s2 = o2.getName();
-                return s1.compareTo(s2);
-            }
-        }
-        return new ChronologicalComparator();
     }
 
     /////////////fetch a collection of jobs //////////////////////////////////////
@@ -68,6 +56,7 @@ public final class JobCollection implements Serializable {
 //                }
 //        } return jobsFilteredByUserID;
 //    }
+
 
 //    private Map<JobID, Job> getJobMap() {
 //        return jobMap;
@@ -189,24 +178,36 @@ public final class JobCollection implements Serializable {
 //
 //    }    
 
-    public int size() {
-        return jobMap.size();
-    }
+     public int size() {
+         return jobMap.size();
+     }
 
-    public int getMaxCapacity() {
-        return MAX_CAPACITY;
-    }
+     public int getMaxCapacity() {
+         return MAX_CAPACITY;
+     }
 
-    public boolean isAtMaxCapacity() {
-        return (jobMap.size() >= MAX_CAPACITY);
-    }
+     public boolean isAtMaxCapacity() {
+         return (jobMap.size() >= MAX_CAPACITY);
+     }
 
-    public boolean isEmpty() {
-        return jobMap.isEmpty();
-    }
+     public boolean isEmpty() {
+         return jobMap.isEmpty();
+     }
 
-    public boolean containsJobID(JobID id) {
-        return jobMap.containsKey(id);
+     public boolean containsJobID(JobID id) {
+         return jobMap.containsKey(id);
+     }
+
+    public static Comparator<Job> getChronologicalJobComparator() {
+    	class ChronologicalComparator implements Comparator<Job> {
+    		@Override
+            public int compare(Job o1, Job o2) {
+                String s1 = o1.getName();
+                String s2 = o2.getName();
+                return s1.compareTo(s2);
+            }
+    	}
+    	return new ChronologicalComparator();
     }
 
 

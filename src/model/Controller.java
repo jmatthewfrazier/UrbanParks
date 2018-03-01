@@ -86,19 +86,19 @@ public class Controller implements Serializable {
 
     /////////////////getters and setters //////////////////////////////////////
 
-    public ArrayList<Job> getFutureJobsSubmittedByParkManager
-            (final UserID paramUserID) throws InvalidUserException,
-            UserNotFoundException {
-        ArrayList<Job> jobList;
-        if (currentUser.getUserRole() != UserRole.PARK_MANAGER) {
-            throw new InvalidUserException("User is not a Park Manager");
-        } else if (!users.containsUserID(paramUserID)) {
-            throw new UserNotFoundException("User ID was not found in the system");
-        } else {
-            jobList = jobs.getJobArrayListFilterByUserID(paramUserID);
-        }
-        return jobList;
-    }
+//    public ArrayList<Job> getFutureJobsSubmittedByParkManager
+//            (final UserID paramUserID) throws InvalidUserException,
+//            UserNotFoundException {
+//        ArrayList<Job> jobList;
+//        if (currentUser.getUserRole() != UserRole.PARK_MANAGER) {
+//            throw new InvalidUserException("User is not a Park Manager");
+//        } else if (!users.containsUserID(paramUserID)) {
+//            throw new UserNotFoundException("User ID was not found in the system");
+//        } else {
+//            jobList = jobs.getJobsForUser(paramUserID);
+//        }
+//        return jobList;
+//    }
 
     public ArrayList<Job> getAllFutureJobs() {
         //TODO - do we implement some business rule check here also?
@@ -125,11 +125,15 @@ public class Controller implements Serializable {
         }
     }
 
-    public void setJobCollectionCapacity(int capacity) {
+    public void setJobCollectionCapacity(int capacity) throws 
+    		UrbanParksSystemOperationException {
         try {
             jobs.setMaxCapacity(currentUser, capacity);
         } catch (InvalidJobCollectionCapacityException e) {
             e.printStackTrace();
+        } catch (InvalidUserException e) {
+        	throw new UrbanParksSystemOperationException("You must be a "
+        			+ "Staff Member to do that.");
         }
     }
 
