@@ -14,10 +14,20 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.UrbanParksData;
+import model.User;
+import model.UserID;
 
 public final class UrbanParks extends Application {
 
+	private final UrbanParksData data;
+
 	public static void main(String[] args) { launch(args); }
+
+	public UrbanParks() {
+		super();
+		data = new UrbanParksData();
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -30,7 +40,7 @@ public final class UrbanParks extends Application {
 		primaryStage.show();
 	}
 
-	private static Pane getLoginPane() {
+	private final Pane getLoginPane() {
 		final GridPane grid = new GridPane();
 
 		grid.setAlignment(Pos.CENTER);
@@ -54,7 +64,17 @@ public final class UrbanParks extends Application {
 		hbBtn.getChildren().add(btn);
 		grid.add(hbBtn, 1, 4);
 
-		btn.setOnAction(event -> System.out.println("It worked!"));
+		btn.setOnAction(event -> {
+			final UserID userID = new UserID(userTextField.getText());
+			data.loginUserID(userID);
+
+			if (data.getCurrentUser().equals(User.getNullUser())) {
+				System.out.println("Log in was unsuccessful.");
+			} else {
+				System.out.println("Current user: "
+						+ data.getCurrentUser().getFullName());
+			}
+		});
 
 		return grid;
 	}
