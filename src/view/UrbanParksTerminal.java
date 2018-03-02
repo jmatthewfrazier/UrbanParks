@@ -11,7 +11,7 @@
 //import java.util.List;
 //import java.util.Scanner;
 //
-//public class UrbanParksSystemUserInterface {
+//public class UrbanParksTerminal {
 //
 //	private Scanner console;
 //
@@ -28,7 +28,7 @@
 //	private static final String BREAK = "=============================URBAN " +
 //			"PARKS=============================\n";
 //
-//    UrbanParksSystemUserInterface() {
+//    UrbanParksTerminal() {
 //	    console = new Scanner(System.in);
 //	    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 //        jobs = new JobCollection();

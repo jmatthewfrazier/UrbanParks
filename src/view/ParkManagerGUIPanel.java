@@ -1,15 +1,16 @@
 package view;
 
-import exceptions.UrbanParksSystemOperationException;
 import exceptions.UserInputException;
-import exceptions.UserNotFoundException;
-import exceptions.UserRoleCategoryException;
-import model.*;
+import model.Controller;
+import model.Job;
+import model.ParkManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+//import exceptions.UserRoleCategoryException;
 
 //import listeners.logoutUserListener;
 
@@ -42,19 +43,19 @@ public class ParkManagerGUIPanel extends JPanel {
         super();
 
         this.systemController = paramController;
-        parkManager = createParkManagerFromUser();
+//        parkManager = createParkManagerFromUser();
 
         setupPanelGUI();
 
     }
 
-    private ParkManager createParkManagerFromUser() {
-        User currentUser = systemController.getCurrentUser();
-        ParkManager newParkManager =
-                new ParkManager(currentUser.getFirstName(),
-                        currentUser.getLastName(), systemController);
-        return newParkManager;
-    }
+//    private ParkManager createParkManagerFromUser() {
+//        User currentUser = systemController.getCurrentUser();
+//        ParkManager newParkManager =
+//                new ParkManager(currentUser.getFirstName(),
+//                        currentUser.getLastName(), systemController);
+//        return newParkManager;
+//    }
 
     ////////////panel gui setup methods ///////////////////////////////////////
 
@@ -120,12 +121,12 @@ public class ParkManagerGUIPanel extends JPanel {
     private void addButtonListeners() {
         createNewJobBtn.addActionListener(e -> displayAddFutureJobPanel());
         returnAllJobsBtn.addActionListener(e -> displayAllFutureJobs());
-        returnMyJobsBtn.addActionListener(e -> {try {
-            displayMyFutureJobs();
-            } catch (UrbanParksSystemOperationException upsoe) {
-                textOutputDisplayArea.append(upsoe.getMsgString());
-            }
-        });
+//        returnMyJobsBtn.addActionListener(e -> {try {
+////            displayMyFutureJobs();
+//            } catch (UrbanParksSystemOperationException upsoe) {
+//                textOutputDisplayArea.append(upsoe.getMsgString());
+//            }
+//        });
         viewJobDetailsBtn.addActionListener(e -> {
 
                     try {
@@ -161,29 +162,29 @@ public class ParkManagerGUIPanel extends JPanel {
     private void logoutUser() {
         }
 
-    public void displayMyFutureJobs() throws UrbanParksSystemOperationException{
-        //need to grab this out to keep for loop line < ~80 chars wide
-        UserID userID = parkManager.getID();
-        textOutputDisplayArea.requestFocus();
-        textOutputDisplayArea.append("\n\n\nFUTURE PARK JOBS " +
-                "                                   I HAVE SUBMITTED:\n");
-        try {
-            jobsDisplayList =
-                    systemController.getFutureJobsSubmittedByParkManager(userID);
-            for (Job j : jobsDisplayList) {
-                int jobNumber = jobsDisplayList.indexOf(j);
-                displayJobOverview(j, jobNumber);
-            }
-        } catch (UserRoleCategoryException e) {
-            throw new UrbanParksSystemOperationException(e.getMsgString());
-        } catch (UserNotFoundException e) {
-            throw new UrbanParksSystemOperationException(e.getMsgString());
-        }
-        textOutputDisplayArea.append(selectJobForDetailsMsg());
-        userInputField.grabFocus();
-        viewJobDetailsBtn.setEnabled(true);
-        //still need to handle the event of entering the number and clicking the button
-    }
+//    public void displayMyFutureJobs() throws UrbanParksSystemOperationException{
+//        //need to grab this out to keep for loop line < ~80 chars wide
+//        UserID userID = parkManager.getID();
+//        textOutputDisplayArea.requestFocus();
+//        textOutputDisplayArea.append("\n\n\nFUTURE PARK JOBS " +
+//                "                                   I HAVE SUBMITTED:\n");
+//        try {
+//            jobsDisplayList =
+//                    systemController.getFutureJobsSubmittedByParkManager(userID);
+//            for (Job j : jobsDisplayList) {
+//                int jobNumber = jobsDisplayList.indexOf(j);
+//                displayJobOverview(j, jobNumber);
+//            }
+//        } catch (UserRoleCategoryException e) {
+//            throw new UrbanParksSystemOperationException(e.getMsgString());
+//        } catch (UserNotFoundException e) {
+//            throw new UrbanParksSystemOperationException(e.getMsgString());
+//        }
+//        textOutputDisplayArea.append(selectJobForDetailsMsg());
+//        userInputField.grabFocus();
+//        viewJobDetailsBtn.setEnabled(true);
+//        //still need to handle the event of entering the number and clicking the button
+//    }
 
     public void displayAllFutureJobs() {
         textOutputDisplayArea.append("\n\n\nALL FUTURE PARK JOBS: \n");
@@ -360,10 +361,10 @@ public class ParkManagerGUIPanel extends JPanel {
         return parkManager.getMyFutureJobs();
     }
 
-    public List<Job> getAllJobsAsList() {
+//    public List<Job> getAllJobsAsList() {
 
-        return systemController.getJobs().getJobList();
-    }
+//        return systemController.getJobs().getJobList();
+//    }
 
     /////Message factory methods///////////////////////////////////////////////
 
