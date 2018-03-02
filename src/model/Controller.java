@@ -1,12 +1,13 @@
 package model;
 
 import exceptions.*;
-import view.UrbanParksGUI;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+//import view.UrbanParksGUI;
 
 /**
  * The wiring hub of the system.  An instance of this class will
@@ -23,7 +24,7 @@ public class Controller implements Serializable {
 
     private ParkCollection parks;
 
-    private UrbanParksGUI systemGUI;
+//    private UrbanParksGUI systemGUI;
 
 	private User currentUser;
 
@@ -72,9 +73,9 @@ public class Controller implements Serializable {
 //
 //        }
 //    }
-    
+
     /**
-     * Updates Volunteer's job list so that if a job was removed from the 
+     * Updates Volunteer's job list so that if a job was removed from the
      * master list, it will be removed from the Volunteer's job list.
      */
     public void updateVolunteerList() {
@@ -104,7 +105,7 @@ public class Controller implements Serializable {
         //TODO - do we implement some business rule check here also?
         return jobs.getAllFutureJobsFromToday();
     }
-    
+
     public ArrayList<Job> getJobsInDateRange(final LocalDateTime start,
     	final LocalDateTime end) {
     	return jobs.getJobsInDateRange(start, end);
@@ -125,7 +126,7 @@ public class Controller implements Serializable {
         }
     }
 
-    public void setJobCollectionCapacity(int capacity) throws 
+    public void setJobCollectionCapacity(int capacity) throws
     		UrbanParksSystemOperationException {
         try {
             jobs.setMaxCapacity(currentUser, capacity);
@@ -199,7 +200,7 @@ public class Controller implements Serializable {
             System.out.println(("File is invalid."));
             e.printStackTrace();
         }
-        
+
     }
 
     /**
