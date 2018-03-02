@@ -36,4 +36,8 @@ public final class UserCollection implements Serializable {
             this.userMap.put(user.getID(), user);
         }
     }
+    
+	public boolean isEmpty() {
+		return userMap.isEmpty();
+	}
 }
