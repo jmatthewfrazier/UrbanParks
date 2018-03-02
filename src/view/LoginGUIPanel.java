@@ -11,7 +11,7 @@
 //import javax.swing.*;
 //import javax.swing.border.LineBorder;
 //
-//import model.Controller;
+//import model.UrbanParksData;
 //import model.UserRole;
 //
 //
@@ -32,10 +32,10 @@
 //
 //	private static boolean succeeded;
 //
-//	private Controller systemController;
+//	private UrbanParksData systemController;
 //
 //
-//	public LoginGUIPanel(Frame parent, Controller theSystemController){
+//	public LoginGUIPanel(Frame parent, UrbanParksData theSystemController){
 //		super(parent, "Login", true);
 //
 //		this.systemController = theSystemController;

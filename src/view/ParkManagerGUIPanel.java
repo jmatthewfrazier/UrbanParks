@@ -1,9 +1,9 @@
 package view;
 
 import exceptions.UserInputException;
-import model.Controller;
 import model.Job;
 import model.ParkManager;
+import model.UrbanParksData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class ParkManagerGUIPanel extends JPanel {
 
     private Popup deleteJobPopup;
 
-    private Controller systemController;
+    private UrbanParksData systemController;
 
     //will need a popup window for confirming actions, etc
 
-    public ParkManagerGUIPanel(final Controller paramController) {
+    public ParkManagerGUIPanel(final UrbanParksData paramController) {
 
         super();
 

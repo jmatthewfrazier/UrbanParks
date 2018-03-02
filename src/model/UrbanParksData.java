@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @Created by Chad on 2/24/18.
  */
-public class Controller implements Serializable {
+public class UrbanParksData implements Serializable {
 
     private JobCollection jobs;
 
@@ -24,22 +24,25 @@ public class Controller implements Serializable {
 
     private ParkCollection parks;
 
-//    private UrbanParksGUI systemGUI;
-
 	private User currentUser;
 
-    public Controller() {
+    public UrbanParksData() {
         jobs = new JobCollection();
         users = new UserCollection();
         parks = new ParkCollection();
         currentUser = User.getNullUser();
 
-        setupController();
+        importCollections();
+        validate();
     }
 
-    private void setupController() {
-       //any thing else add here or just call in consctr
-        loadCollectionsFromFile();
+    private void validate() {
+        if (users.isEmpty()) {
+            users.addUser(new Volunteer("Robert", "Smith",
+                    new UserID("robertsmith")));
+            users.addUser(new ParkManager("Steve", "Lafore",
+                    new UserID("stevelafore")));
+        }
     }
 
     //////////////add and remove things ///////////////////////////////////////
@@ -151,6 +154,12 @@ public class Controller implements Serializable {
         }
     }
 
+    public void loginUserID(final UserID userID) {
+        if (users.containsUserID(userID)) {
+            setCurrentUser(users.getUser(userID));
+        }
+    }
+
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
@@ -169,8 +178,7 @@ public class Controller implements Serializable {
 
     //////////////import and export to the collections/////////////////////////
 
-    private void loadCollectionsFromFile() {
-        //when the system is frist firing up
+    private void importCollections() {
         FileInputStream fileIn;
         File f = new File("./data.bin");
 
@@ -198,7 +206,6 @@ public class Controller implements Serializable {
             // e.printStackTrace();
         } catch (ClassNotFoundException e) {
             System.out.println(("File is invalid."));
-            e.printStackTrace();
         }
 
     }
@@ -225,5 +232,5 @@ public class Controller implements Serializable {
     /////////////////////////recycling ////////////////////////////////////////
 
 
-    //end of Controller class
+    //end of UrbanParksData class
 }
