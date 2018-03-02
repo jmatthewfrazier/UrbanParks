@@ -227,7 +227,7 @@ public class Controller implements Serializable {
     /**
      * Loads test users, parks, and jobs into the system for testing.
      */
-	public void runInterface() {
+	public void loadDefaults() {
 
 		if (users.isEmpty()) {
 			users.addUser(new Volunteer("Robert", "Smith",
