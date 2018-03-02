@@ -7,6 +7,8 @@ import model.UserID;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
@@ -46,8 +48,8 @@ public class UrbanParksGUI implements PropertyChangeListener {
     private Controller systemController;
 
 
-    public UrbanParksGUI(Controller paramController) {
-        this.systemController = paramController;
+    public UrbanParksGUI() {
+        this.systemController = new Controller();
         frame = new JFrame(frameTitle);
         currentUser = User.getNullUser();
         setupGUI();
@@ -60,13 +62,33 @@ public class UrbanParksGUI implements PropertyChangeListener {
     private void setupFrame() {
         //do we need a window event to close it or is it ok to EXITONCLOSE?
         //like will there be data to write to?
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(new CloseApplicationWindowListener());
-        frame.pack();
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
+    	
+    	final JButton btnLogin = new JButton("Click to login");
+    	 
+        btnLogin.addActionListener(
+                new ActionListener(){
+                    public void actionPerformed(ActionEvent e) {
+                        LoginGUIPanel loginDlg = new LoginGUIPanel(frame, systemController);
+                        loginDlg.setVisible(true);
+                        if (LoginGUIPanel.isSucceeded()){
+                        	submitLoginInfo(LoginGUIPanel.getUsername());
+                        }
+                    }
+                });
+ 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 100);
+        frame.setLayout(new FlowLayout());
+        frame.getContentPane().add(btnLogin);
         frame.setVisible(true);
     }
+//        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//        frame.addWindowListener(new CloseApplicationWindowListener());
+//        frame.pack();
+//        frame.setResizable(false);
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+//    }
 
     ///////////////////////display on the frame ///////////////////////////////
     /**
@@ -95,9 +117,9 @@ public class UrbanParksGUI implements PropertyChangeListener {
 
         //button to press to login
         //add loginListener to button
-        loginButton = new JButton("Submit");
+        loginButton = new JButton("Login");
         loginButton.setEnabled(true);
-        loginButton.addActionListener(e -> submitLoginInfo(userInputField.getText()));
+        loginButton.addActionListener(e -> submitLoginInfo(userInputField.getText().trim()));
 
         newLoginPanel.setLayout(new BorderLayout());
         newLoginPanel.add(outputDisplayArea);
