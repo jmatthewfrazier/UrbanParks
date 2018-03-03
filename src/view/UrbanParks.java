@@ -1,6 +1,8 @@
 package view;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,9 +17,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.UrbanParksData;
-import model.User;
-import model.UserID;
+import model.*;
+
+import java.util.List;
 
 public final class UrbanParks extends Application {
 
@@ -25,7 +27,7 @@ public final class UrbanParks extends Application {
 
 	public static void main(String[] args) { launch(args); }
 
-	public UrbanParks() {
+	private UrbanParks() {
 		super();
 		data = new UrbanParksData();
 	}
@@ -35,6 +37,12 @@ public final class UrbanParks extends Application {
 		primaryStage.setTitle("Urban Parks");
 		Pane root = getLoginPane();
 		Scene scene = new Scene(root);
+
+//		final MenuBar menuBar = new MenuBar();
+//
+//		final Menu menuFile = new Menu("File");
+//
+//		menuBar.getMenus().add(menuFile);
 
 		primaryStage.setScene(scene);
 		primaryStage.sizeToScene();
@@ -80,5 +88,59 @@ public final class UrbanParks extends Application {
 		});
 
 		return grid;
+	}
+
+	public final Pane getVolunteerPane(){
+		final BorderPane border = new BorderPane();
+
+		Text text = new Text("User: " + data.getCurrentUser().getFullName()
+				+ "login as Volunteer");
+		text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		border.setTop(text);
+		border.setLeft(addFirstGridPane());
+		border.setRight(addSecondGridPane());
+		border.setBottom(addHBox());
+
+		return border;
+	}
+
+	public final Pane addFirstGridPane(){
+		final GridPane grid = new GridPane();
+
+		Text title = new Text("Future Jobs");
+		title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 10));
+
+		List<Job> jobList = ((Volunteer) data.getCurrentUser()).getJobList();
+
+		return grid;
+
+
+	}
+
+	public final Pane addSecondGridPane(){
+		final GridPane grid = new GridPane();
+
+		return grid;
+	}
+
+	public final HBox addHBox(){
+		final HBox hb = new HBox();
+		hb.setPadding(new Insets(15, 12, 15, 12));
+		hb.setSpacing(10);
+		hb.setStyle("-fx-background-color: #336699");
+
+		Button buttonHome = new Button("Home");
+		buttonHome.setPrefSize(100, 20);
+
+		buttonHome.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e){
+//				new Volunteer();
+			}
+		});
+
+		hb.getChildren().addAll(buttonHome);
+
+		return hb;
 	}
 }
