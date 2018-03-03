@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -89,7 +90,7 @@ public final class UrbanParks extends Application {
 
 		return grid;
 	}
-
+	
 	public final Pane getVolunteerPane(){
 		final BorderPane border = new BorderPane();
 
@@ -97,50 +98,83 @@ public final class UrbanParks extends Application {
 				+ "login as Volunteer");
 		text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		border.setTop(text);
-		border.setLeft(addFirstGridPane());
-		border.setRight(addSecondGridPane());
-		border.setBottom(addHBox());
+		border.setCenter(addButtons());
 
 		return border;
 	}
 
-	public final Pane addFirstGridPane(){
-		final GridPane grid = new GridPane();
-
-		Text title = new Text("Future Jobs");
-		title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 10));
-
-		List<Job> jobList = ((Volunteer) data.getCurrentUser()).getJobList();
-
-		return grid;
-
-
-	}
-
-	public final Pane addSecondGridPane(){
-		final GridPane grid = new GridPane();
-
-		return grid;
-	}
-
-	public final HBox addHBox(){
+	public final HBox addButtons(){
+		final HBox hbox = new HBox();
 		final HBox hb = new HBox();
-		hb.setPadding(new Insets(15, 12, 15, 12));
-		hb.setSpacing(10);
-		hb.setStyle("-fx-background-color: #336699");
+	    hbox.setPadding(new Insets(15, 12, 15, 12));
+	    hb.setPadding(new Insets(20, 12, 20, 12));
+	    hbox.setSpacing(10);
+	    hb.setSpacing(10);
+	    hbox.setStyle("-fx-background-color: #336699;");
+	    hb.setStyle("-fx-background-color: #336699;");
 
-		Button buttonHome = new Button("Home");
-		buttonHome.setPrefSize(100, 20);
+	    Button buttonSignup = new Button("Sign up");
+	    buttonSignup.setPrefSize(100, 20);
 
-		buttonHome.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e){
-//				new Volunteer();
-			}
-		});
+	    Button buttonUnvolunteer = new Button("Unvolunteer");
+	    buttonUnvolunteer.setPrefSize(100, 20);
+	    hbox.getChildren().addAll(buttonSignup, buttonUnvolunteer);
+	    
+	    Button buttonViewMyJob = new Button("View My Job");
+	    buttonViewMyJob.setPrefSize(100, 20);
+	    
+	    Button buttonLogout = new Button("Log out");
+	    buttonLogout.setPrefSize(100, 20);
+	    hb.getChildren().addAll(buttonViewMyJob, buttonLogout);
+	    
+	    buttonSignup.setOnAction(event -> {
+	    	SignupPane();
+	    });
+	    
+	    buttonUnvolunteer.setOnAction(event -> {
+	    	UnvolunteerPane();
+	    });
+	    
+	    buttonViewMyJob.setOnAction(event -> {
+	    	ViewMyJobPane();
+	    });
+	    
+	    buttonLogout.setOnAction(event -> {
+	    	Logout();
+	    });
+	    
 
-		hb.getChildren().addAll(buttonHome);
-
-		return hb;
+	    return hbox;
 	}
+	
+	public final Pane SignupPane(){
+		// Here the left side is VBox buttons that shows the future jobs that are no sign up for (buttons will contains the name of the job, nothing else)
+		// The right pane will show jobs that once the user select a job
+		GridPane grid = new GridPane();
+		
+		return grid;
+	}
+	
+	public final Pane UnvolunteerPane(){
+		// Here the left side is VBox buttons that shows the jobs sign up already
+		// The right pane will be their input to unvolunteer a job
+		GridPane grid = new GridPane();
+		
+		return grid;
+	}
+	
+	public final Pane ViewMyJobPane(){
+		//Here the we have two options;
+		//One, having a left side VBox buttons that you can select to see, and display on the right
+		//Or just display them all the informaton in one pane set to central.
+		GridPane grid = new GridPane();
+		
+		return grid;
+	}
+	
+	public final void Logout(){
+		data.storeCollectionsIntoFile();
+		getLoginPane();
+	}
+	
 }
