@@ -25,10 +25,6 @@ public final class UserCollection implements Serializable {
         return false;
     }
 
-    public boolean isEmpty() {
-        return userMap.isEmpty();
-    }
-
     /**
      * Maps a UserID to a User if the UserID is not already contained within
      * this map's key set.
