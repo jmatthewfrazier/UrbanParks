@@ -1,5 +1,7 @@
 package view;
 
+import javafx.*;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,7 +17,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
- 
+
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Text;
+
 public class Login extends Application {
     public static void main(String[] args) {
         launch(args);
