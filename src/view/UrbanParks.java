@@ -4,10 +4,12 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -87,42 +89,37 @@ public final class UrbanParks extends Application {
 
 //			role = data.getCurrentUser().getUserRole();
 			if (data.getCurrentUser().equals(User.getNullUser())) {
-				System.out.println("Log in was unsuccessful.");
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Message");
+				alert.setContentText("Invalid usernamer");
+				
+				alert.showAndWait();
 			} else if (data.getCurrentUser().getUserRole()
 					.equals(UserRole.VOLUNTEER)) {
 				root.getChildren().remove(grid);
-				root.getChildren().add(getVolunteerPane());
+				DisplayVolunteerPane(root);
 
 			}
 		});
 		}
 	
-	public final Pane getVolunteerPane(){
+	public final void DisplayVolunteerPane(Pane root){
 		final BorderPane border = new BorderPane();
 
 		Text text = new Text("User: " + data.getCurrentUser().getFullName()
-				+ "login as Volunteer");
+				+ "\tlogin as Volunteer");
 		text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		border.setTop(text);
-		border.setCenter(addButtons());
 
-		return border;
-	}
-
-	public final HBox addButtons(){
 		final HBox hbox = new HBox();
-//		final HBox hb = new HBox();
 	    hbox.setPadding(new Insets(15, 12, 15, 12));
-//	    hb.setPadding(new Insets(20, 12, 20, 12));
 	    hbox.setSpacing(10);
-//	    hb.setSpacing(10);
 	    hbox.setStyle("-fx-background-color: #336699;");
-//	    hb.setStyle("-fx-background-color: #336699;");
 
 	    Button buttonSignUp = new Button("Sign up");
 	    buttonSignUp.setPrefSize(100, 20);
 
-	    Button buttonUnvolunteer = new Button("Unvolunteer");// What if the volunteer did not sign up for any job before, do we show this button to the volunteer?
+	    Button buttonUnvolunteer = new Button("Unvolunteer");
 	    buttonUnvolunteer.setPrefSize(100, 20);
 	    hbox.getChildren().addAll(buttonSignUp, buttonUnvolunteer);
 	    
@@ -133,28 +130,32 @@ public final class UrbanParks extends Application {
 	    buttonLogout.setPrefSize(100, 20);
 	    hbox.getChildren().addAll(buttonViewMyJob, buttonLogout);
 
-
+	    border.setBottom(hbox);
+	    root.getChildren().add(border);
 	    
 	    buttonSignUp.setOnAction(event -> {
-	    	getSignUpPane();
+	    	root.getChildren().remove(border);
+	    	DisplaySignUpPane(root);
 	    });
 	    
 	    buttonUnvolunteer.setOnAction(event -> {
-	    	getUnvolunteerPane();
+	    	root.getChildren().remove(border);
+	    	DisplayUnvolunteerPane(root);
 	    });
 	    
 	    buttonViewMyJob.setOnAction(event -> {
-	    	ViewMyJobPane();
+	    	root.getChildren().remove(border);
+	    	ViewMyJobPane(root);
 	    });
 	    
 	    buttonLogout.setOnAction(event -> {
-	    	logout();
-	    });
-
-	    return hbox;
+	    	root.getChildren().remove(border);
+	    	logout(root);
+	    });		
 	}
+
 	
-	public final Pane getSignUpPane(){
+	public final void DisplaySignUpPane(Pane root){
 		BorderPane bord = new BorderPane();
 		
 		final VBox vb = new VBox();
@@ -208,11 +209,10 @@ public final class UrbanParks extends Application {
 //			bord.setLeft(vb);
 //			bord.setBottom(hb);
 		}
-		
-		return bord;
+		root.getChildren().add(bord);
 	}
 	
-	public final Pane getUnvolunteerPane() {
+	public final void DisplayUnvolunteerPane(Pane root) {
 		BorderPane bord = new BorderPane();
 		
 		final VBox vb = new VBox();
@@ -245,11 +245,10 @@ public final class UrbanParks extends Application {
 			}
 			bord.setLeft(vb);
 		}
-		
-		return bord;
+		root.getChildren().add(bord);
 	}
 	
-	public final ScrollPane ViewMyJobPane(){
+	public final void ViewMyJobPane(Pane root){
 		ScrollPane scroll = new ScrollPane();
 		
 		Volunteer vol = (Volunteer) data.getCurrentUser();
@@ -258,9 +257,7 @@ public final class UrbanParks extends Application {
 		for (int i = 0; i < jobList.size(); i++){
 			//TO-DO I am not sure how to set the size of this scroll pane
 		}
-		
-		
-		return scroll;
+		root.getChildren().add(scroll);
 	}
 	
 	public final Pane displayJobDetail(Job theJob){
@@ -280,14 +277,12 @@ public final class UrbanParks extends Application {
 				theJob.getEndDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 		grid.add(endTime, 0, 6);
 		
-		
-		
 		return grid;
 	}
 	
-	public final void logout(){
+	public final void logout(Pane root){
 		data.storeCollectionsIntoFile();
-//		getLoginPane();
+		displayLoginPane(root);
 	}
 	
 }
