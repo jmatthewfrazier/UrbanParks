@@ -118,6 +118,18 @@ public final class UrbanParks extends Application {
 		return border;
 	}
 
+    public final Pane getStaffMemberPane(){
+        final BorderPane border = new BorderPane();
+
+        Text text = new Text("User: " + data.getCurrentUser().getFullName()
+                + "login as Urban Parks Staff Member");
+        text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        border.setTop(text);
+        border.setCenter(addButtons());
+
+        return border;
+    }
+
 	public final HBox addButtons(){
 		final HBox hbox = new HBox();
 		final HBox hb = new HBox();
