@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class User implements Serializable {
 
@@ -40,5 +41,28 @@ public class User implements Serializable {
 
     public final UserID getID() {
         return this.userID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (this == null) {
+            return false;
+        }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        final User other = (User) o;
+        return this.firstName.equals(other.firstName)
+                && this.lastName.equals(other.lastName)
+                && this.userRole.equals(other.userRole)
+                && this.userID.equals(other.userID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, userRole, userID);
     }
 }

@@ -1,7 +1,7 @@
 //package view;
 //
 //import exceptions.UserNotFoundException;
-//import model.Controller;
+//import model.UrbanParksData;
 //import model.User;
 //import model.UserID;
 //
@@ -45,11 +45,11 @@
 //
 //    private JButton loginButton;
 //
-//    private Controller systemController;
+//    private UrbanParksData systemController;
 //
 //
 //    public UrbanParksGUI() {
-//        this.systemController = new Controller();
+//        this.systemController = new UrbanParksData();
 //        frame = new JFrame(frameTitle);
 //        currentUser = User.getNullUser();
 //        setupGUI();
