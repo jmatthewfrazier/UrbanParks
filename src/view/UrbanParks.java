@@ -8,11 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -39,7 +35,10 @@ public final class UrbanParks extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Urban Parks");
-		Pane root = getLoginPane();
+
+		Pane root = new Pane();
+		displayLoginPane(root);
+
 		Scene scene = new Scene(root);
 
 //		final MenuBar menuBar = new MenuBar();
@@ -53,7 +52,7 @@ public final class UrbanParks extends Application {
 		primaryStage.show();
 	}
 
-	private final Pane getLoginPane() {
+	private final void displayLoginPane(Pane root) {
 		final GridPane grid = new GridPane();
 
 		grid.setAlignment(Pos.CENTER);
@@ -78,21 +77,25 @@ public final class UrbanParks extends Application {
 		hbBtn.setAlignment(Pos.BOTTOM_CENTER);
 		hbBtn.getChildren().add(btn);
 		grid.add(hbBtn, 1, 4);
+		root.getChildren().add(grid);
+
+//		UserRole role = UserRole.NULL_USER;
 
 		btn.setOnAction(event -> {
 			final UserID userID = new UserID(userTextField.getText());
 			data.loginUserID(userID);
 
+//			role = data.getCurrentUser().getUserRole();
 			if (data.getCurrentUser().equals(User.getNullUser())) {
 				System.out.println("Log in was unsuccessful.");
-			} else {
-				System.out.println("Current user: "
-						+ data.getCurrentUser().getFullName());
+			} else if (data.getCurrentUser().getUserRole()
+					.equals(UserRole.VOLUNTEER)) {
+				root.getChildren().remove(grid);
+				root.getChildren().add(getVolunteerPane());
+
 			}
 		});
-
-		return grid;
-	}
+		}
 	
 	public final Pane getVolunteerPane(){
 		final BorderPane border = new BorderPane();
@@ -132,34 +135,36 @@ public final class UrbanParks extends Application {
 
 	public final HBox addButtons(){
 		final HBox hbox = new HBox();
-		final HBox hb = new HBox();
+//		final HBox hb = new HBox();
 	    hbox.setPadding(new Insets(15, 12, 15, 12));
-	    hb.setPadding(new Insets(20, 12, 20, 12));
+//	    hb.setPadding(new Insets(20, 12, 20, 12));
 	    hbox.setSpacing(10);
-	    hb.setSpacing(10);
+//	    hb.setSpacing(10);
 	    hbox.setStyle("-fx-background-color: #336699;");
-	    hb.setStyle("-fx-background-color: #336699;");
+//	    hb.setStyle("-fx-background-color: #336699;");
 
-	    Button buttonSignup = new Button("Sign up");
-	    buttonSignup.setPrefSize(100, 20);
+	    Button buttonSignUp = new Button("Sign up");
+	    buttonSignUp.setPrefSize(100, 20);
 
 	    Button buttonUnvolunteer = new Button("Unvolunteer");// What if the volunteer did not sign up for any job before, do we show this button to the volunteer?
 	    buttonUnvolunteer.setPrefSize(100, 20);
-	    hbox.getChildren().addAll(buttonSignup, buttonUnvolunteer);
+	    hbox.getChildren().addAll(buttonSignUp, buttonUnvolunteer);
 	    
 	    Button buttonViewMyJob = new Button("View My Job");
 	    buttonViewMyJob.setPrefSize(100, 20);
 	    
 	    Button buttonLogout = new Button("Log out");
 	    buttonLogout.setPrefSize(100, 20);
-	    hb.getChildren().addAll(buttonViewMyJob, buttonLogout);
+	    hbox.getChildren().addAll(buttonViewMyJob, buttonLogout);
+
+
 	    
-	    buttonSignup.setOnAction(event -> {
-	    	SignupPane();
+	    buttonSignUp.setOnAction(event -> {
+	    	getSignUpPane();
 	    });
 	    
 	    buttonUnvolunteer.setOnAction(event -> {
-	    	UnvolunteerPane();
+	    	getUnvolunteerPane();
 	    });
 	    
 	    buttonViewMyJob.setOnAction(event -> {
@@ -167,14 +172,13 @@ public final class UrbanParks extends Application {
 	    });
 	    
 	    buttonLogout.setOnAction(event -> {
-	    	Logout();
+	    	logout();
 	    });
-	    
 
 	    return hbox;
 	}
 	
-	public final Pane SignupPane(){
+	public final Pane getSignUpPane(){
 		BorderPane bord = new BorderPane();
 		
 		final VBox vb = new VBox();
@@ -201,7 +205,7 @@ public final class UrbanParks extends Application {
 					Button btn = new Button();
 					btn.setText(futureJobList.get(i).getName());
 					btn.setOnAction(event -> {
-						final Pane displayPane = DisplayJobDetail(theJob);
+						final Pane displayPane = displayJobDetail(theJob);
 						bord.setRight(displayPane);
 					});
 					vb.getChildren().add(btn);
@@ -232,7 +236,7 @@ public final class UrbanParks extends Application {
 		return bord;
 	}
 	
-	public final Pane UnvolunteerPane(){
+	public final Pane getUnvolunteerPane() {
 		BorderPane bord = new BorderPane();
 		
 		final VBox vb = new VBox();
@@ -258,7 +262,7 @@ public final class UrbanParks extends Application {
 					Button btn = new Button();
 					btn.setText(volunteerJobList.get(i).getName());
 					btn.setOnAction(event -> {
-						bord.setRight(DisplayJobDetail(theJob));
+						bord.setRight(displayJobDetail(theJob));
 					});
 					vb.getChildren().add(btn);
 				}
@@ -283,7 +287,7 @@ public final class UrbanParks extends Application {
 		return scroll;
 	}
 	
-	public final Pane DisplayJobDetail(Job theJob){
+	public final Pane displayJobDetail(Job theJob){
 		GridPane grid = new GridPane();
 		
 		final Label jobName = new Label("Job Name: " + theJob.getName());
@@ -305,9 +309,9 @@ public final class UrbanParks extends Application {
 		return grid;
 	}
 	
-	public final void Logout(){
+	public final void logout(){
 		data.storeCollectionsIntoFile();
-		getLoginPane();
+//		getLoginPane();
 	}
 	
 }
