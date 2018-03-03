@@ -28,7 +28,7 @@ public final class UrbanParks extends Application {
 
 	public static void main(String[] args) { launch(args); }
 
-	private UrbanParks() {
+	public UrbanParks() {
 		super();
 		data = new UrbanParksData();
 	}
