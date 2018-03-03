@@ -55,10 +55,37 @@ public final class Volunteer extends User {
 						"signed up already.");
 			}
 		}
-
-//		newJob.addVolunteer(this);
 		jobList.add(newJob);
-    }
+	}
+		
+	public boolean canSignUpForJob(Job newJob) {
+		
+		for (Job job : getJobList()) {
+    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
+				    (job.getEndDateTime()) <= 0; date = date.plusDays(1)) {
+    			if (newJob.getBeginDateTime().equals(date) || newJob
+					    .getEndDateTime().equals(date)) {
+    				return false;
+			    }
+		    }
+	    }
+
+		if (newJob.getBeginDateTime().isBefore(LocalDateTime
+		    .now().plusDays(getMinDaysAwaySignUp()))) {
+		    return false;
+		}
+	
+		for (Job job : jobList) {
+			if (job.isStartAtEndDate(newJob)) {
+				return false;
+			} else if (job.isEndAtStartDate(newJob)) {
+				return false;
+			} else if (job.isOverlapping(newJob)) {
+				return false;
+			}
+		}
+		return true;
+	}
     
     /**
      * Removes jobToRemove from this volunteer's jobList.
@@ -78,7 +105,7 @@ public final class Volunteer extends User {
      */
     public void updateJobList(JobCollection masterJobs) {
     	for (Job job : jobList) {
-    		if (masterJobs.containsJobID(job.getID())) {
+    		if (!masterJobs.containsJobID(job.getID())) {
     			this.removeJobFromMyRegisteredJobs(job);
     		}
     	}

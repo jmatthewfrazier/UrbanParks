@@ -1,13 +1,12 @@
 package view;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -20,9 +19,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public final class UrbanParks extends Application {
+	
+	public static final int MINIMUM_REMOVAL_BUFFER = 2;
 
 	private final UrbanParksData data;
 
@@ -116,7 +119,7 @@ public final class UrbanParks extends Application {
 	    Button buttonSignup = new Button("Sign up");
 	    buttonSignup.setPrefSize(100, 20);
 
-	    Button buttonUnvolunteer = new Button("Unvolunteer");
+	    Button buttonUnvolunteer = new Button("Unvolunteer");// What if the volunteer did not sign up for any job before, do we show this button to the volunteer?
 	    buttonUnvolunteer.setPrefSize(100, 20);
 	    hbox.getChildren().addAll(buttonSignup, buttonUnvolunteer);
 	    
@@ -148,26 +151,132 @@ public final class UrbanParks extends Application {
 	}
 	
 	public final Pane SignupPane(){
-		// Here the left side is VBox buttons that shows the future jobs that are no sign up for (buttons will contains the name of the job, nothing else)
-		// The right pane will show jobs that once the user select a job
-		GridPane grid = new GridPane();
+		BorderPane bord = new BorderPane();
 		
-		return grid;
+		final VBox vb = new VBox();
+		vb.setPadding(new Insets(10));
+		vb.setSpacing(10);
+		
+		Text name = new Text("Available Jobs");
+		name.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+		vb.getChildren().add(name);
+		
+		ArrayList<Job> futureJobList = data.getAllFutureJobs();
+		ArrayList<Job> volunteerJobList = (ArrayList<Job>) ((Volunteer) data.getCurrentUser()).getJobList();
+		
+		if (futureJobList.size() == 0){
+			Text message = new Text("Sorry, there is currently no available jobs");
+			message.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+			bord.setCenter(message);
+		}
+		else{
+			for (int i = 0; i< futureJobList.size(); i++){
+				if (!volunteerJobList.contains(futureJobList.get(i)) &&
+						((Volunteer) data.getCurrentUser()).canSignUpForJob(futureJobList.get(i))){
+					Job theJob = futureJobList.get(i);
+					Button btn = new Button();
+					btn.setText(futureJobList.get(i).getName());
+					btn.setOnAction(event -> {
+						final Pane displayPane = DisplayJobDetail(theJob);
+						bord.setRight(displayPane);
+					});
+					vb.getChildren().add(btn);
+				}
+			}
+			//Trying to add buttons on the bottom to confirm sign up or cancel that will bring the user to the previous page
+			
+//			final HBox hb = new HBox();
+//			final HBox hbBtn = new HBox(10);
+//			hbBtn.setAlignment(Pos.BOTTOM_CENTER);
+//			final Button btnConfirm = new Button();
+//			final Button btnCancel = new Button();
+//			btnConfirm.setText("Confirm");
+//			btnCancel.setText("Cancel");
+//			btnConfirm.setOnAction(event -> {
+//				((Volunteer) data.getCurrentUser()).signUpForJob(theJob);
+//			});
+//			
+//			btnCancel.setOnAction(event -> {
+//				
+//			});
+//			hb.getChildren().addAll(btnConfirm, btnCancel);
+//			
+//			bord.setLeft(vb);
+//			bord.setBottom(hb);
+		}
+		
+		return bord;
 	}
 	
 	public final Pane UnvolunteerPane(){
-		// Here the left side is VBox buttons that shows the jobs sign up already
-		// The right pane will be their input to unvolunteer a job
-		GridPane grid = new GridPane();
+		BorderPane bord = new BorderPane();
 		
-		return grid;
+		final VBox vb = new VBox();
+		vb.setPadding(new Insets(10));
+		vb.setSpacing(10);
+		
+		Text name = new Text("Sign Up Jobs");
+		name.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+		vb.getChildren().add(name);
+		
+		ArrayList<Job> volunteerJobList = (ArrayList<Job>) ((Volunteer) data.getCurrentUser()).getJobList();
+		
+		if (volunteerJobList.size() == 0){
+			Text message = new Text("Sorry, you don't have Job sign up already");
+			message.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+			bord.setLeft(message);
+		}
+		else{
+			for (int i = 0; i < volunteerJobList.size(); i++){
+				if (volunteerJobList.get(i).isJobStartAfterEqualDate(
+							LocalDateTime.now().plusDays(MINIMUM_REMOVAL_BUFFER))){
+					Job theJob = volunteerJobList.get(i);
+					Button btn = new Button();
+					btn.setText(volunteerJobList.get(i).getName());
+					btn.setOnAction(event -> {
+						bord.setRight(DisplayJobDetail(theJob));
+					});
+					vb.getChildren().add(btn);
+				}
+			}
+			bord.setLeft(vb);
+		}
+		
+		return bord;
 	}
 	
-	public final Pane ViewMyJobPane(){
-		//Here the we have two options;
-		//One, having a left side VBox buttons that you can select to see, and display on the right
-		//Or just display them all the informaton in one pane set to central.
+	public final ScrollPane ViewMyJobPane(){
+		ScrollPane scroll = new ScrollPane();
+		
+		Volunteer vol = (Volunteer) data.getCurrentUser();
+		ArrayList<Job> jobList = (ArrayList<Job>) vol.getJobList();
+		
+		for (int i = 0; i < jobList.size(); i++){
+			//TO-DO I am not sure how to set the size of this scroll pane
+		}
+		
+		
+		return scroll;
+	}
+	
+	public final Pane DisplayJobDetail(Job theJob){
 		GridPane grid = new GridPane();
+		
+		final Label jobName = new Label("Job Name: " + theJob.getName());
+		grid.add(jobName, 0, 0);
+		
+		final Label parkName = new Label("Park Name: " + theJob.getPark().toString());
+		grid.add(parkName, 0, 2);
+		
+		final Label startTime = new Label("Start Time: " + 
+					theJob.getBeginDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		grid.add(startTime, 0, 4);
+		
+		final Label endTime = new Label("End Time: " + 
+				theJob.getEndDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+		grid.add(endTime, 0, 6);
+		
+		
 		
 		return grid;
 	}
