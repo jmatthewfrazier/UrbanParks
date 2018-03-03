@@ -42,6 +42,8 @@ public class UrbanParksData implements Serializable {
                     new UserID("robertsmith")));
             users.addUser(new ParkManager("Steve", "Lafore",
                     new UserID("stevelafore")));
+            users.addUser(new StaffMember("Frederico", "Montoya",
+		            new UserID("fred")));
         }
     }
 

@@ -60,6 +60,8 @@ public final class UrbanParks extends Application {
 		grid.add(userTextField, 1, 1);
 
 		final Button btn = new Button("Sign in");
+		btn.setDefaultButton(true);
+
 		final HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_CENTER);
 		hbBtn.getChildren().add(btn);
@@ -79,10 +81,4 @@ public final class UrbanParks extends Application {
 
 		return grid;
 	}
-	
-//	private final Pane getVolunteerPane(){
-//		final BorderPane grid = new BorderPane();
-//		
-//		return grid;
-//	}
 }
