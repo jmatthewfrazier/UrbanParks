@@ -19,14 +19,16 @@ public class ParkManagerPane extends StackPane {
 	private static final int MAX_BUTTON_WIDTH = 800;
 
 	private final UrbanParksData data;
-	private Pane pane;
+//	private Pane pane;
 	private HBox userInfo;
 
 	public ParkManagerPane(UrbanParksData data, HBox userInfo) {
+		super();
 		this.data = data;
-		this.pane = getParkManagerPane();
+//		this.pane = getParkManagerPane();
 		this.userInfo = userInfo;
 		this.setAlignment(Pos.CENTER);
+		getParkManagerPane();
 	}
 
 	private final Pane getParkManagerPane() {
@@ -87,7 +89,7 @@ public class ParkManagerPane extends StackPane {
 //			logout(root);
 		});
 
-		return border;
+		return this;
 	}
 
 	private final VBox getUpcomingJobsPane() {

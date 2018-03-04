@@ -18,7 +18,7 @@ public class StaffMemberPane extends StackPane {
 
 	private final UrbanParksData data;
 	private final HBox userInfo;
-	private Pane pane;
+//	private Pane pane;
 //	private ArrayList<Job> jobList;
 	private ToggleGroup jobGroup;
 
@@ -27,8 +27,9 @@ public class StaffMemberPane extends StackPane {
 		super();
 		this.data = data;
 		this.userInfo = userInfo;
-		this.pane = getStaffMemberPane();
+//		this.pane = getStaffMemberPane();
 		this.setAlignment(Pos.CENTER);
+		getStaffMemberPane();
 	}
 
 	private final Pane getStaffMemberPane() {
@@ -46,30 +47,6 @@ public class StaffMemberPane extends StackPane {
 
 		final Button viewJobsBtn = new Button("View Jobs");
 		final Button setJobCapacityBtn = new Button("Set Job Capacity");
-//		final TextField capacityField = new TextField();
-//		final HBox capacityBox = new HBox();
-//		capacityBox.getChildren().addAll(setJobCapacityBtn, capacityField);
-
-//		String text = capacityField.getCharacters().toString();
-//		setJobCapacityBtn.setOnAction(event -> {
-//			boolean isNumber = true;
-//
-//			for (int i = 0; i < text.length(); i++) {
-//				if (text.charAt(i) < '0' || text.charAt(i) > '9') {
-//					isNumber = false;
-//				}
-//			}
-//
-//			if (isNumber) {
-//				try {
-//					data.setJobCollectionCapacity(Integer.valueOf(text));
-//				} catch (UrbanParksSystemOperationException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-
-
 		final Button logOutBtn = new Button("Log out");
 		
 		viewJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);

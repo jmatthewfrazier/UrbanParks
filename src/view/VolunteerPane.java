@@ -20,15 +20,16 @@ public class VolunteerPane extends StackPane {
 	private static final int MAX_BUTTON_WIDTH = 800;
 
 	private final UrbanParksData data;
-	private Pane pane;
+//	private Pane pane;
 	private HBox userInfo;
 
 	public VolunteerPane(UrbanParksData data, HBox userInfo) {
 		super();
 		this.data = data;
-		this.pane = getVolunteerPane();
+//		this.pane = getVolunteerPane();
 		this.setAlignment(Pos.CENTER);
 		this.userInfo = userInfo;
+		getVolunteerPane();
 	}
 
 	public final Pane getVolunteerPane() {
@@ -84,7 +85,7 @@ public class VolunteerPane extends StackPane {
 //			logout(root);
 		});
 
-		return border;
+		return this;
 	}
 
 	private final VBox getMyJobsPane() {
