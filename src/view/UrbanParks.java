@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -280,6 +281,20 @@ public final class UrbanParks extends Application {
 //
 //		return grid;
 //	}
+
+	private final HBox getUserInfo() {
+		HBox userInfo = new HBox();
+		userInfo.setAlignment(Pos.CENTER);
+		userInfo.setMinHeight(15);
+		Text user = new Text("User: " + data.getCurrentUser().getFullName());
+		user.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+		Text role = new Text("Role: " + data.getCurrentUser().getUserRole());
+		role.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+		HBox.setHgrow(user, Priority.ALWAYS);
+		HBox.setHgrow(role, Priority.ALWAYS);
+		userInfo.getChildren().addAll(user, role);
+		return userInfo;
+	}
 	
 	public final void logout(Pane root){
 		data.storeCollectionsIntoFile();
