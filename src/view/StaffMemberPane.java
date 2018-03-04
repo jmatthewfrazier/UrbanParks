@@ -77,7 +77,8 @@ public class StaffMemberPane extends StackPane {
 
 		logOutBtn.setOnAction(event -> {
 			getChildren().remove(border);
-//			logout(root);
+			StackPane root = (StackPane) this.getParent();
+			UrbanParks.logout(root);
 		});
 
 		return this;
