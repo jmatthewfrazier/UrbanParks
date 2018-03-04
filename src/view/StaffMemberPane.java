@@ -18,8 +18,6 @@ public class StaffMemberPane extends StackPane {
 
 	private final UrbanParksData data;
 	private final HBox userInfo;
-//	private Pane pane;
-//	private ArrayList<Job> jobList;
 	private ToggleGroup jobGroup;
 
 
@@ -27,12 +25,11 @@ public class StaffMemberPane extends StackPane {
 		super();
 		this.data = data;
 		this.userInfo = userInfo;
-//		this.pane = getStaffMemberPane();
 		this.setAlignment(Pos.CENTER);
 		getStaffMemberPane();
 	}
 
-	private final Pane getStaffMemberPane() {
+	private final void getStaffMemberPane() {
 		final BorderPane border = new BorderPane();
 		final VBox v = new VBox();
 		v.setAlignment(Pos.TOP_CENTER);
@@ -61,18 +58,11 @@ public class StaffMemberPane extends StackPane {
 		getChildren().add(border);
 
 		viewJobsBtn.setOnAction(event -> {
-			border.setRight(getJobsPane());
-			Button backbtn = new Button("Back");
-			backbtn.setOnAction( event1 -> {
-				border.setRight(null);
-				border.setTop(null);
-			});
-			border.setTop(backbtn);
+			border.setCenter(getJobsPane(border));
 		});
 		
 		setJobCapacityBtn.setOnAction(event -> {
-			getChildren().remove(border);
-			getChildren().add(getJobCapacityPane());
+			border.setCenter(getJobCapacityPane(border));
 		});
 
 		logOutBtn.setOnAction(event -> {
@@ -80,14 +70,19 @@ public class StaffMemberPane extends StackPane {
 			StackPane root = (StackPane) this.getParent();
 			UrbanParks.logout(root);
 		});
-
-		return this;
 	}
 
-	private final ScrollPane getJobsPane() {
+	private final ScrollPane getJobsPane(Pane root) {
 		final ScrollPane sp = new ScrollPane();
 		final VBox myJobsPane = new VBox();
 		final Label label = new Label("Upcoming Jobs");
+
+		Button backBtn = new Button("Back");
+		myJobsPane.getChildren().add(backBtn);
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getStaffMemberPane();
+		});
 		
 		sp.setHbarPolicy(ScrollBarPolicy.NEVER);
 		sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -137,10 +132,19 @@ public class StaffMemberPane extends StackPane {
 		return sp;
 	}
 	
-	private final Pane getJobCapacityPane() {
+	private final Pane getJobCapacityPane(Pane root) {
 		final BorderPane border = new BorderPane();
 		final VBox jobCapacityData = new VBox();
-		
+
+		Button backBtn = new Button("Back");
+		jobCapacityData.getChildren().add(backBtn);
+
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getStaffMemberPane();
+		});
+
+
 		final Text title = new Text("Set the maximum number of pending park " + 
 				"jobs:");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
