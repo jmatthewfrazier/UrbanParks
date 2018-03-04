@@ -4,10 +4,7 @@ import exceptions.InvalidJobEndDateException;
 import exceptions.InvalidJobLengthException;
 import exceptions.JobCollectionDuplicateKeyException;
 import exceptions.MaxPendingJobsException;
-import model.Job;
-import model.JobCollection;
-import model.JobID;
-import model.Park;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,13 +16,15 @@ import static org.junit.Assert.assertTrue;
 public class JobCollectionTest {
 
     private JobCollection jobCollection;
-
     private LocalDateTime todayDate;
+    private ParkManager creator;
 
     @Before
     public void setUp() {
         jobCollection = new JobCollection();
         todayDate = LocalDateTime.now();
+        creator = new ParkManager("Test", "PM",
+                new UserID("testpm"));
     }
 
     @Test
@@ -57,10 +56,11 @@ public class JobCollectionTest {
     public void isAtMaxCapacity_OneFewerJobsThanMaxExists_False() {
         for (int i = 0; i < jobCollection.getMaxCapacity() - 1; i++) {
             try {
-                jobCollection.addJob(new Job("Job " + i, new Park(),
+                jobCollection.addJob(new Job("Job " + i,
+                        new Park("Test Park", new ParkID(1)),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
                         LocalDateTime.now().plusDays(i * 2 + 2),
-                        "test job"));
+                        "test job", creator));
             } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
                     | InvalidJobEndDateException | InvalidJobLengthException e) {
                 e.getMessage();
@@ -74,10 +74,11 @@ public class JobCollectionTest {
     public void isAtMaxCapacity_MaxJobsExist_True() {
         for (int i = 0; i < jobCollection.getMaxCapacity(); i++) {
             try {
-                jobCollection.addJob(new Job("Job " + i, new Park(),
+                jobCollection.addJob(new Job("Job " + i,
+                        new Park("Test Park", new ParkID(1)),
                         new JobID(i), LocalDateTime.now().plusDays(i * 2),
                         LocalDateTime.now().plusDays(i * 2 + 2),
-                        "test job"));
+                        "test job", creator));
             } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
                     | InvalidJobEndDateException | InvalidJobLengthException e) {
                 e.printStackTrace();

@@ -5,25 +5,23 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import model.*;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import model.UrbanParksData;
+import model.User;
+import model.UserID;
+import model.UserRole;
 
 public final class UrbanParks extends Application {
-	
-	public static final int MINIMUM_REMOVAL_BUFFER = 2;
 
 	private final UrbanParksData data;
 
@@ -40,6 +38,8 @@ public final class UrbanParks extends Application {
 
 		Pane root = new Pane();
 		displayLoginPane(root);
+//		root.getChildren().add(new VolunteerPane(data));
+
 
 		Scene scene = new Scene(root);
 
@@ -54,7 +54,7 @@ public final class UrbanParks extends Application {
 		primaryStage.show();
 	}
 
-	private final void displayLoginPane(Pane root) {
+	protected final void displayLoginPane(Pane root) {
 		final GridPane grid = new GridPane();
 
 		grid.setAlignment(Pos.CENTER);
@@ -79,206 +79,207 @@ public final class UrbanParks extends Application {
 		hbBtn.setAlignment(Pos.BOTTOM_CENTER);
 		hbBtn.getChildren().add(btn);
 		grid.add(hbBtn, 1, 4);
-		root.getChildren().add(grid);
 
-//		UserRole role = UserRole.NULL_USER;
+		root.getChildren().add(grid);
 
 		btn.setOnAction(event -> {
 			final UserID userID = new UserID(userTextField.getText());
 			data.loginUserID(userID);
 
-//			role = data.getCurrentUser().getUserRole();
 			if (data.getCurrentUser().equals(User.getNullUser())) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Message");
-				alert.setContentText("Invalid usernamer");
+				alert.setContentText("Invalid username");
 				
 				alert.showAndWait();
 			} else if (data.getCurrentUser().getUserRole()
 					.equals(UserRole.VOLUNTEER)) {
 				root.getChildren().remove(grid);
-				DisplayVolunteerPane(root);
-
+				root.getChildren().add(new VolunteerPane(data));
+			} else if (data.getCurrentUser().getUserRole().equals(UserRole
+					.PARK_MANAGER)) {
+				root.getChildren().remove(grid);
+				root.getChildren().add(new ParkManagerPane(data));
 			}
 		});
 		}
 	
-	public final void DisplayVolunteerPane(Pane root){
-		final BorderPane border = new BorderPane();
-
-		Text text = new Text("User: " + data.getCurrentUser().getFullName()
-				+ "\tlogin as Volunteer");
-		text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		border.setTop(text);
-
-		final HBox hbox = new HBox();
-	    hbox.setPadding(new Insets(15, 12, 15, 12));
-	    hbox.setSpacing(10);
-	    hbox.setStyle("-fx-background-color: #336699;");
-
-	    Button buttonSignUp = new Button("Sign up");
-	    buttonSignUp.setPrefSize(100, 20);
-
-	    Button buttonUnvolunteer = new Button("Unvolunteer");
-	    buttonUnvolunteer.setPrefSize(100, 20);
-	    hbox.getChildren().addAll(buttonSignUp, buttonUnvolunteer);
-	    
-	    Button buttonViewMyJob = new Button("View My Job");
-	    buttonViewMyJob.setPrefSize(100, 20);
-	    
-	    Button buttonLogout = new Button("Log out");
-	    buttonLogout.setPrefSize(100, 20);
-	    hbox.getChildren().addAll(buttonViewMyJob, buttonLogout);
-
-	    border.setBottom(hbox);
-	    root.getChildren().add(border);
-	    
-	    buttonSignUp.setOnAction(event -> {
-	    	root.getChildren().remove(border);
-	    	DisplaySignUpPane(root);
-	    });
-	    
-	    buttonUnvolunteer.setOnAction(event -> {
-	    	root.getChildren().remove(border);
-	    	DisplayUnvolunteerPane(root);
-	    });
-	    
-	    buttonViewMyJob.setOnAction(event -> {
-	    	root.getChildren().remove(border);
-	    	ViewMyJobPane(root);
-	    });
-	    
-	    buttonLogout.setOnAction(event -> {
-	    	root.getChildren().remove(border);
-	    	logout(root);
-	    });		
-	}
-
-	
-	public final void DisplaySignUpPane(Pane root){
-		BorderPane bord = new BorderPane();
-		
-		final VBox vb = new VBox();
-		vb.setPadding(new Insets(10));
-		vb.setSpacing(10);
-		
-		Text name = new Text("Available Jobs");
-		name.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-		vb.getChildren().add(name);
-		
-		ArrayList<Job> futureJobList = data.getAllFutureJobs();
-		ArrayList<Job> volunteerJobList = (ArrayList<Job>) ((Volunteer) data.getCurrentUser()).getJobList();
-		
-		if (futureJobList.size() == 0){
-			Text message = new Text("Sorry, there is currently no available jobs");
-			message.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-			bord.setCenter(message);
-		}
-		else{
-			for (int i = 0; i< futureJobList.size(); i++){
-				if (!volunteerJobList.contains(futureJobList.get(i)) &&
-						((Volunteer) data.getCurrentUser()).canSignUpForJob(futureJobList.get(i))){
-					Job theJob = futureJobList.get(i);
-					Button btn = new Button();
-					btn.setText(futureJobList.get(i).getName());
-					btn.setOnAction(event -> {
-						final Pane displayPane = displayJobDetail(theJob);
-						bord.setRight(displayPane);
-					});
-					vb.getChildren().add(btn);
-				}
-			}
-			//Trying to add buttons on the bottom to confirm sign up or cancel that will bring the user to the previous page
-			
-//			final HBox hb = new HBox();
-//			final HBox hbBtn = new HBox(10);
-//			hbBtn.setAlignment(Pos.BOTTOM_CENTER);
-//			final Button btnConfirm = new Button();
-//			final Button btnCancel = new Button();
-//			btnConfirm.setText("Confirm");
-//			btnCancel.setText("Cancel");
-//			btnConfirm.setOnAction(event -> {
-//				((Volunteer) data.getCurrentUser()).signUpForJob(theJob);
-//			});
-//			
-//			btnCancel.setOnAction(event -> {
-//				
-//			});
-//			hb.getChildren().addAll(btnConfirm, btnCancel);
-//			
+//	public final void DisplayVolunteerPane(Pane root){
+//		final BorderPane border = new BorderPane();
+//
+//		Text text = new Text("User: " + data.getCurrentUser().getFullName()
+//				+ "\tlogin as Volunteer");
+//		text.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//		border.setTop(text);
+//
+//		final HBox hbox = new HBox();
+//	    hbox.setPadding(new Insets(15, 12, 15, 12));
+//	    hbox.setSpacing(10);
+//	    hbox.setStyle("-fx-background-color: #336699;");
+//
+//	    Button buttonSignUp = new Button("Sign up");
+//	    buttonSignUp.setPrefSize(100, 20);
+//
+//	    Button buttonUnvolunteer = new Button("Unvolunteer");
+//	    buttonUnvolunteer.setPrefSize(100, 20);
+//	    hbox.getChildren().addAll(buttonSignUp, buttonUnvolunteer);
+//
+//	    Button buttonViewMyJob = new Button("View My Job");
+//	    buttonViewMyJob.setPrefSize(100, 20);
+//
+//	    Button buttonLogout = new Button("Log out");
+//	    buttonLogout.setPrefSize(100, 20);
+//	    hbox.getChildren().addAll(buttonViewMyJob, buttonLogout);
+//
+//	    border.setBottom(hbox);
+//	    root.getChildren().add(border);
+//
+//	    buttonSignUp.setOnAction(event -> {
+//	    	root.getChildren().remove(border);
+//	    	DisplaySignUpPane(root);
+//	    });
+//
+//	    buttonUnvolunteer.setOnAction(event -> {
+//	    	root.getChildren().remove(border);
+//	    	DisplayUnvolunteerPane(root);
+//	    });
+//
+//	    buttonViewMyJob.setOnAction(event -> {
+//	    	root.getChildren().remove(border);
+//	    	ViewMyJobPane(root);
+//	    });
+//
+//	    buttonLogout.setOnAction(event -> {
+//	    	root.getChildren().remove(border);
+//	    	logout(root);
+//	    });
+//	}
+//
+//
+//	public final void DisplaySignUpPane(Pane root){
+//		BorderPane bord = new BorderPane();
+//
+//		final VBox vb = new VBox();
+//		vb.setPadding(new Insets(10));
+//		vb.setSpacing(10);
+//
+//		Text name = new Text("Available Jobs");
+//		name.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+//		vb.getChildren().add(name);
+//
+//		ArrayList<Job> futureJobList = data.getAllFutureJobs();
+//		ArrayList<Job> volunteerJobList = (ArrayList<Job>) ((Volunteer) data.getCurrentUser()).getJobList();
+//
+//		if (futureJobList.size() == 0){
+//			Text message = new Text("Sorry, there is currently no available jobs");
+//			message.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+//			bord.setCenter(message);
+//		}
+//		else{
+//			for (int i = 0; i< futureJobList.size(); i++){
+//				if (!volunteerJobList.contains(futureJobList.get(i)) &&
+//						((Volunteer) data.getCurrentUser()).canSignUpForJob(futureJobList.get(i))){
+//					Job theJob = futureJobList.get(i);
+//					Button btn = new Button();
+//					btn.setText(futureJobList.get(i).getName());
+//					btn.setOnAction(event -> {
+//						final Pane displayPane = displayJobDetail(theJob);
+//						bord.setRight(displayPane);
+//					});
+//					vb.getChildren().add(btn);
+//				}
+//			}
+//			//Trying to add buttons on the bottom to confirm sign up or cancel that will bring the user to the previous page
+//
+////			final HBox hb = new HBox();
+////			final HBox hbBtn = new HBox(10);
+////			hbBtn.setAlignment(Pos.BOTTOM_CENTER);
+////			final Button btnConfirm = new Button();
+////			final Button btnCancel = new Button();
+////			btnConfirm.setText("Confirm");
+////			btnCancel.setText("Cancel");
+////			btnConfirm.setOnAction(event -> {
+////				((Volunteer) data.getCurrentUser()).signUpForJob(theJob);
+////			});
+////
+////			btnCancel.setOnAction(event -> {
+////
+////			});
+////			hb.getChildren().addAll(btnConfirm, btnCancel);
+////
+////			bord.setLeft(vb);
+////			bord.setBottom(hb);
+//		}
+//		root.getChildren().add(bord);
+//	}
+//
+//	public final void DisplayUnvolunteerPane(Pane root) {
+//		BorderPane bord = new BorderPane();
+//
+//		final VBox vb = new VBox();
+//		vb.setPadding(new Insets(10));
+//		vb.setSpacing(10);
+//
+//		Text name = new Text("Sign Up Jobs");
+//		name.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+//		vb.getChildren().add(name);
+//
+//		ArrayList<Job> volunteerJobList = (ArrayList<Job>) ((Volunteer) data.getCurrentUser()).getJobList();
+//
+//		if (volunteerJobList.size() == 0){
+//			Text message = new Text("Sorry, you don't have Job sign up already");
+//			message.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+//			bord.setLeft(message);
+//		}
+//		else{
+//			for (int i = 0; i < volunteerJobList.size(); i++){
+//				if (volunteerJobList.get(i).isJobStartAfterEqualDate(
+//							LocalDateTime.now().plusDays(MINIMUM_REMOVAL_BUFFER))){
+//					Job theJob = volunteerJobList.get(i);
+//					Button btn = new Button();
+//					btn.setText(volunteerJobList.get(i).getName());
+//					btn.setOnAction(event -> {
+//						bord.setRight(displayJobDetail(theJob));
+//					});
+//					vb.getChildren().add(btn);
+//				}
+//			}
 //			bord.setLeft(vb);
-//			bord.setBottom(hb);
-		}
-		root.getChildren().add(bord);
-	}
-	
-	public final void DisplayUnvolunteerPane(Pane root) {
-		BorderPane bord = new BorderPane();
-		
-		final VBox vb = new VBox();
-		vb.setPadding(new Insets(10));
-		vb.setSpacing(10);
-		
-		Text name = new Text("Sign Up Jobs");
-		name.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-		vb.getChildren().add(name);
-		
-		ArrayList<Job> volunteerJobList = (ArrayList<Job>) ((Volunteer) data.getCurrentUser()).getJobList();
-		
-		if (volunteerJobList.size() == 0){
-			Text message = new Text("Sorry, you don't have Job sign up already");
-			message.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
-			bord.setLeft(message);
-		}
-		else{
-			for (int i = 0; i < volunteerJobList.size(); i++){
-				if (volunteerJobList.get(i).isJobStartAfterEqualDate(
-							LocalDateTime.now().plusDays(MINIMUM_REMOVAL_BUFFER))){
-					Job theJob = volunteerJobList.get(i);
-					Button btn = new Button();
-					btn.setText(volunteerJobList.get(i).getName());
-					btn.setOnAction(event -> {
-						bord.setRight(displayJobDetail(theJob));
-					});
-					vb.getChildren().add(btn);
-				}
-			}
-			bord.setLeft(vb);
-		}
-		root.getChildren().add(bord);
-	}
-	
-	public final void ViewMyJobPane(Pane root){
-		ScrollPane scroll = new ScrollPane();
-		
-		Volunteer vol = (Volunteer) data.getCurrentUser();
-		ArrayList<Job> jobList = (ArrayList<Job>) vol.getJobList();
-		
-		for (int i = 0; i < jobList.size(); i++){
-			//TO-DO I am not sure how to set the size of this scroll pane
-		}
-		root.getChildren().add(scroll);
-	}
-	
-	public final Pane displayJobDetail(Job theJob){
-		GridPane grid = new GridPane();
-		
-		final Label jobName = new Label("Job Name: " + theJob.getName());
-		grid.add(jobName, 0, 0);
-		
-		final Label parkName = new Label("Park Name: " + theJob.getPark().toString());
-		grid.add(parkName, 0, 2);
-		
-		final Label startTime = new Label("Start Time: " + 
-					theJob.getBeginDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-		grid.add(startTime, 0, 4);
-		
-		final Label endTime = new Label("End Time: " + 
-				theJob.getEndDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-		grid.add(endTime, 0, 6);
-		
-		return grid;
-	}
+//		}
+//		root.getChildren().add(bord);
+//	}
+//
+//	public final void ViewMyJobPane(Pane root){
+//		ScrollPane scroll = new ScrollPane();
+//
+//		Volunteer vol = (Volunteer) data.getCurrentUser();
+//		ArrayList<Job> jobList = (ArrayList<Job>) vol.getJobList();
+//
+//		for (int i = 0; i < jobList.size(); i++){
+//			//TO-DO I am not sure how to set the size of this scroll pane
+//		}
+//		root.getChildren().add(scroll);
+//	}
+//
+//	public final Pane displayJobDetail(Job theJob){
+//		GridPane grid = new GridPane();
+//
+//		final Label jobName = new Label("Job Name: " + theJob.getName());
+//		grid.add(jobName, 0, 0);
+//
+//		final Label parkName = new Label("Park Name: " + theJob.getPark().toString());
+//		grid.add(parkName, 0, 2);
+//
+//		final Label startTime = new Label("Start Time: " +
+//					theJob.getBeginDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//		grid.add(startTime, 0, 4);
+//
+//		final Label endTime = new Label("End Time: " +
+//				theJob.getEndDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//		grid.add(endTime, 0, 6);
+//
+//		return grid;
+//	}
 	
 	public final void logout(Pane root){
 		data.storeCollectionsIntoFile();

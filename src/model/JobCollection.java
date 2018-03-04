@@ -34,6 +34,16 @@ public final class JobCollection implements Serializable {
         }
     }
 
+    public int getLargestIDNumber() {
+        int max = 0;
+
+        for (JobID id : jobMap.keySet()) {
+            max = Math.max(max, id.getJobIDNumber());
+        }
+
+        return max;
+    }
+
     /**
      * Pre: capacity must be an Integer that is greater than or equal to 0.
      */
@@ -143,7 +153,7 @@ public final class JobCollection implements Serializable {
      */
     public void removeJobFromCollection(final Job jobToRemove,
                                         final UserID jobRemoverUserID)
-            throws LessThanMinDaysAwayException, UserNotFoundException,
+            throws LessThanMinDaysAwayException,
             JobIDNotFoundInCollectionException {
 
         JobID jobToRemoveID = jobToRemove.getID();

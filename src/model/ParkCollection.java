@@ -24,6 +24,16 @@ public final class ParkCollection implements Serializable {
 		}
 	}
 
+	public final int getLargestIDNumber() {
+		int max = 0;
+
+		for (ParkID id : parkMap.keySet()) {
+			max = Math.max(max, id.getParkIDNumber());
+		}
+
+		return max;
+	}
+
 	public final boolean isEmpty() {
 		return this.parkMap.isEmpty();
 	}
