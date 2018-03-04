@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+
 import exceptions.UrbanParksSystemOperationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +25,8 @@ public class StaffMemberPane extends StackPane {
 	private final UrbanParksData data;
 	private final HBox userInfo;
 	private Pane pane;
+	private ArrayList<Job> jobList;
+	private ToggleGroup jobGroup;
 
 
 	public StaffMemberPane(UrbanParksData data, HBox userInfo) {
@@ -94,6 +98,11 @@ public class StaffMemberPane extends StackPane {
 			});
 			border.setTop(backbtn);
 		});
+		
+		setJobCapacityBtn.setOnAction(event -> {
+			getChildren().remove(border);
+			getChildren().add(getJobCapacityPane());
+		});
 
 		logOutBtn.setOnAction(event -> {
 			getChildren().remove(border);
@@ -129,10 +138,14 @@ public class StaffMemberPane extends StackPane {
 
 		hbox.getChildren().addAll(vbox1, vbox2);
 		myJobsPane.getChildren().add(hbox);
-
+		
+		int i = 0;
 		for (final Job job : data.getJobs().getList()) {
 			final HBox jobEntry = new HBox();
-			final RadioButton rb = new RadioButton();
+			final RadioButton rb = new RadioButton("" + i);
+			rb.setToggleGroup(jobGroup);
+			if (i == 0) rb.setSelected(true);
+			i++;
 			final Label nameField = new Label(job.getName());
 			final Label startField =
 					new Label(job.getBeginDateTime().toString());
@@ -150,5 +163,51 @@ public class StaffMemberPane extends StackPane {
 		sp.setContent(myJobsPane);
 
 		return sp;
+	}
+	
+	private final Pane getJobCapacityPane() {
+		final BorderPane border = new BorderPane();
+		final VBox jobCapacityData = new VBox();
+		
+		final Text title = new Text("Set the maximum number of pending park " + 
+				"jobs:");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+		Insets titleMargins = new Insets(20, 10, 0, 0);
+        VBox.setMargin(title, titleMargins);
+        
+        final Text currentNum = new Text("Current maximum number of jobs: " +
+				data.getCurrentMaxJobs());
+        currentNum.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        
+        final TextField capacityField = new TextField();
+        final Button setJobCapacityBtn = new Button("Set New Job Capacity");
+		final HBox capacityBox = new HBox();
+		capacityBox.getChildren().addAll(setJobCapacityBtn, capacityField);
+		
+		jobCapacityData.getChildren().addAll(title, currentNum, capacityBox);
+
+		String text = capacityField.getCharacters().toString();
+		setJobCapacityBtn.setOnAction(event -> {
+			boolean isNumber = true;
+
+			for (int i = 0; i < text.length(); i++) {
+				if (text.charAt(i) < '0' || text.charAt(i) > '9') {
+					isNumber = false;
+				}
+			}
+
+			if (isNumber) {
+				try {
+					data.setJobCollectionCapacity(Integer.valueOf(text));
+				} catch (UrbanParksSystemOperationException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		border.setTop(userInfo);
+		border.setCenter(jobCapacityData);
+		
+		return border;
 	}
 }
