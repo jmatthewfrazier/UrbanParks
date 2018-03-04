@@ -87,20 +87,25 @@ public final class UrbanParks extends Application {
 			final UserID userID = new UserID(userTextField.getText());
 			data.loginUserID(userID);
 
+
 			if (data.getCurrentUser().equals(User.getNullUser())) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Message");
 				alert.setContentText("Invalid username");
-				
+
 				alert.showAndWait();
-			} else if (data.getCurrentUser().getUserRole()
-					.equals(UserRole.VOLUNTEER)) {
+			} else {
 				root.getChildren().remove(grid);
-				root.getChildren().add(new VolunteerPane(data));
-			} else if (data.getCurrentUser().getUserRole().equals(UserRole
-					.PARK_MANAGER)) {
-				root.getChildren().remove(grid);
-				root.getChildren().add(new ParkManagerPane(data));
+				if (data.getCurrentUser().getUserRole()
+						.equals(UserRole.VOLUNTEER)) {
+					root.getChildren().add(new VolunteerPane(data));
+				} else if (data.getCurrentUser().getUserRole()
+						.equals(UserRole.PARK_MANAGER)) {
+					root.getChildren().add(new ParkManagerPane(data));
+				} else if (data.getCurrentUser().getUserRole()
+						.equals(UserRole.STAFF_MEMBER)) {
+					root.getChildren().add(new StaffMemberPane(data));
+				}
 			}
 		});
 		}

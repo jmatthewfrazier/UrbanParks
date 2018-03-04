@@ -79,9 +79,9 @@ public final class JobCollection implements Serializable {
      * @param end is the end of the date range (date must be valid).
      * @return a list of all jobs that fall within the specified date range.
      */
-    public ArrayList<Job> getJobsInDateRange(final LocalDateTime start,
+    public List<Job> getJobsInDateRange(final LocalDateTime start,
     		final LocalDateTime end) {
-    	ArrayList<Job> jobs = new ArrayList<Job>();
+    	List<Job> jobs = new ArrayList<>();
 
     	for (Job job : this.getList()) {
     		if (job.isJobStartAfterEqualDate(start) &&
@@ -91,7 +91,7 @@ public final class JobCollection implements Serializable {
     	return jobs;
     }
 
-    public ArrayList<Job> getAllFutureJobsFromToday() {
+    public List<Job> getAllFutureJobsFromToday() {
         return getJobsInDateRange(LocalDateTime.now(),
                 LocalDateTime.now().plusDays(Job.MAX_NUM_DAYS_FROM_TODAY));
     }
@@ -119,6 +119,8 @@ public final class JobCollection implements Serializable {
             throw new InvalidJobEndDateException("Sorry, the end date of that" +
                     "job is too far in the future");
         } else if (jobMap.containsKey(jobToAdd.getID())) {
+            System.out.println(jobToAdd.getID());
+            System.out.println(jobMap.get(jobToAdd.getID()));
             throw new JobCollectionDuplicateKeyException("A Job matching that" +
                     "key value is already present in the Job collection.");
         } else {

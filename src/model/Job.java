@@ -27,7 +27,7 @@ public final class Job implements Serializable {
     	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
-        this.ID = ID;
+        this.ID = jobID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;

@@ -51,6 +51,8 @@ public class UrbanParksData implements Serializable {
 	    if (jobs.isEmpty()) {
 		    try {
 			    jobs.addJob(job);
+			    System.out.println(jobs.containsJobID(new JobID(2)));
+
 			    jobs.addJob(new Job("Petting Zoo Clean Up", park,
 					    new JobID(2), LocalDateTime.now().plusDays(7),
 					    LocalDateTime.now().plusDays(8),
@@ -129,6 +131,8 @@ public class UrbanParksData implements Serializable {
 			    e.printStackTrace();
 		    }
 
+
+		    System.out.println(vol.getJobList().size());
 		    if (vol.getJobList().size() == 0) {
 			    try {
 				    assign(vol, job);
@@ -145,8 +149,8 @@ public class UrbanParksData implements Serializable {
     public void assign(Volunteer volunteer, Job job)
 		    throws VolunteerDailyJobLimitException,
 		    LessThanMinDaysAwayException {
-	    volunteer.signUpForJob(job);
 	    job.addVolunteer(volunteer);
+	    volunteer.signUpForJob(job);
     }
 
     public void cancelAssignment(Volunteer volunteer, Job job) {
@@ -165,8 +169,8 @@ public class UrbanParksData implements Serializable {
                     this.getCurrentUser().getID());
         } catch (JobIDNotFoundInCollectionException e) {
             throw new UrbanParksSystemOperationException(e.getMsgString());
-        } catch (UserNotFoundException e) {
-            throw new UrbanParksSystemOperationException(e.getMsgString());
+//        } catch (UserNotFoundException e) {
+//            throw new UrbanParksSystemOperationException(e.getMsgString());
         } catch (LessThanMinDaysAwayException e) {
             throw new UrbanParksSystemOperationException(e.getMsgString());
         }
@@ -213,12 +217,12 @@ public class UrbanParksData implements Serializable {
 //        return jobList;
 //    }
 
-    public ArrayList<Job> getAllFutureJobs() {
+    public List<Job> getAllFutureJobs() {
         //TODO - do we implement some business rule check here also?
         return jobs.getAllFutureJobsFromToday();
     }
 
-    public ArrayList<Job> getJobsInDateRange(final LocalDateTime start,
+    public List<Job> getJobsInDateRange(final LocalDateTime start,
     	final LocalDateTime end) {
     	return jobs.getJobsInDateRange(start, end);
     }
