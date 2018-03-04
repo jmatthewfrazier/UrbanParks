@@ -2,6 +2,7 @@ package view;
 
 import exceptions.UrbanParksSystemOperationException;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -27,10 +28,11 @@ public class ParkManagerPane extends Pane {
 
 	private final Pane getParkManagerPane() {
 		final BorderPane border = new BorderPane();
-		final VBox v = new VBox();
+		final HBox menuBox = new HBox();
+		menuBox.setAlignment(Pos.CENTER);
 
-		v.setPadding(new Insets(15, 12, 15, 12));
-		v.setSpacing(10);
+		menuBox.setPadding(new Insets(15, 12, 15, 12));
+		menuBox.setSpacing(10);
 
 		final Button viewUpcomingJobsBtn = new Button("View Upcoming Jobs");
 
@@ -38,29 +40,34 @@ public class ParkManagerPane extends Pane {
 
 		final Button logOutBtn = new Button("Log out");
 
-		v.getChildren().addAll(viewUpcomingJobsBtn, makeNewJobsBtn, logOutBtn);
+		final Button backBtn = new Button("Back");
+		backBtn.setOnAction(event -> {
+			border.setCenter(null);
+			menuBox.getChildren().remove(backBtn);
+		});
 
-		border.setBottom(v);
+		menuBox.getChildren().addAll(viewUpcomingJobsBtn, makeNewJobsBtn, logOutBtn);
+
+		border.setTop(menuBox);
 		getChildren().add(border);
 
 		viewUpcomingJobsBtn.setOnAction(event -> {
-			border.setRight(getUpcomingJobsPane());
-			Button backbtn = new Button("Back");
-			backbtn.setOnAction( event1 -> {
-				border.setRight(null);
-				border.setTop(null);
-			});
-			border.setTop(backbtn);
+			border.setCenter(getUpcomingJobsPane());
+			menuBox.getChildren().add(backBtn);
 		});
 
 		makeNewJobsBtn.setOnAction(event -> {
-			border.setRight(getNewJobFormPane());
-			Button backbtn = new Button("Back");
-			backbtn.setOnAction( event1 -> {
-				border.setRight(null);
-				border.setTop(null);
-			});
-			border.setTop(backbtn);
+//			this.pane = getNewJobFormPane();
+//			border.setCenter(getNewJobFormPane());
+//			Button backbtn = new Button("Back");
+//			backbtn.setOnAction( event1 -> {
+//				border.setRight(null);
+//				border.setTop(null);
+//			});
+//			border.setRight(backbtn);
+
+			border.setCenter(getNewJobFormPane());
+			menuBox.getChildren().add(backBtn);
 		});
 
 		logOutBtn.setOnAction(event -> {
@@ -73,6 +80,14 @@ public class ParkManagerPane extends Pane {
 
 	private final VBox getUpcomingJobsPane() {
 		final VBox myJobsPane = new VBox();
+
+//		final HBox backBox = new HBox();
+//		Button backBtn = new Button("Back");
+//		backBtn.setOnAction(event -> this.pane = getParkManagerPane());
+//		backBox.getChildren().add(backBtn);
+//		backBox.setAlignment(Pos.BASELINE_RIGHT);
+//		myJobsPane.getChildren().add(backBox);
+
 		final Label label = new Label("My Upcoming Jobs");
 
 		myJobsPane.setSpacing(15);
