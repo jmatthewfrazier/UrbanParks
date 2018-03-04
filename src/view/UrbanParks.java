@@ -24,6 +24,10 @@ import java.util.ArrayList;
 public final class UrbanParks extends Application {
 	
 	public static final int MINIMUM_REMOVAL_BUFFER = 2;
+	
+	private static final int DEFAULT_V_SPACING = 10;
+	
+	private static final int MAX_BUTTON_WIDTH = 800;
 
 	private final UrbanParksData data;
 
@@ -99,6 +103,10 @@ public final class UrbanParks extends Application {
 				root.getChildren().remove(grid);
 				DisplayVolunteerPane(root);
 
+			} else if (data.getCurrentUser().getUserRole()
+					.equals(UserRole.PARK_MANAGER)) {
+				root.getChildren().remove(grid);
+				DisplayParkManagerPane(root);
 			}
 		});
 		}
@@ -248,6 +256,38 @@ public final class UrbanParks extends Application {
 		root.getChildren().add(bord);
 	}
 	
+	public final void DisplayParkManagerPane(Pane root) {
+		BorderPane border = new BorderPane();
+        
+        border.setTop(getUserInfo());
+        
+        VBox menu = new VBox(DEFAULT_V_SPACING);
+        menu.setAlignment(Pos.TOP_CENTER);
+        
+        Text title = new Text("Park Manager Main Menu");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+		Insets titleMargins = new Insets(20, 10, 0, 0);
+        VBox.setMargin(title, titleMargins);
+        
+        Button allJobs = new Button("View All Jobs");
+        Button myJobs = new Button("View My Submitted Jobs");
+        Button submitJob = new Button("Submit New Job");
+        Button removeJob = new Button("Unsubmit a Job");
+        Button signOut = new Button("Sign Out");
+        
+        allJobs.setMaxWidth(MAX_BUTTON_WIDTH);
+        myJobs.setMaxWidth(MAX_BUTTON_WIDTH);
+        submitJob.setMaxWidth(MAX_BUTTON_WIDTH);
+        removeJob.setMaxWidth(MAX_BUTTON_WIDTH);
+        signOut.setMaxWidth(MAX_BUTTON_WIDTH);
+        
+        menu.getChildren().addAll(title, allJobs, myJobs, submitJob, removeJob, 
+        		signOut);
+        border.setCenter(menu);
+        
+        root.getChildren().add(border);
+	}
+	
 	public final void ViewMyJobPane(Pane root){
 		ScrollPane scroll = new ScrollPane();
 		
@@ -279,6 +319,20 @@ public final class UrbanParks extends Application {
 		
 		return grid;
 	}
+	
+    private final HBox getUserInfo() {
+        HBox userInfo = new HBox();
+        userInfo.setAlignment(Pos.CENTER);
+        userInfo.setMinHeight(15);
+        Text user = new Text("User: " + data.getCurrentUser().getFullName());
+        user.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        Text role = new Text("Role: " + data.getCurrentUser().getUserRole());
+        role.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        HBox.setHgrow(user, Priority.ALWAYS);
+        HBox.setHgrow(role, Priority.ALWAYS);
+        userInfo.getChildren().addAll(user, role);
+        return userInfo;
+    }
 	
 	public final void logout(Pane root){
 		data.storeCollectionsIntoFile();
