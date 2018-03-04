@@ -17,10 +17,12 @@ public class ParkManagerPane extends Pane {
 
 	private final UrbanParksData data;
 	private Pane pane;
+	private HBox userInfo;
 
-	public ParkManagerPane(UrbanParksData data) {
+	public ParkManagerPane(UrbanParksData data, HBox userInfo) {
 		this.data = data;
 		this.pane = getParkManagerPane();
+		this.userInfo = userInfo;
 	}
 
 	private final Pane getParkManagerPane() {

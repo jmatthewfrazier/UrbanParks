@@ -17,11 +17,13 @@ public class VolunteerPane extends Pane {
 
 	private final UrbanParksData data;
 	private Pane pane;
+	private HBox userInfo;
 
-	public VolunteerPane(UrbanParksData data) {
+	public VolunteerPane(UrbanParksData data, HBox userInfo) {
 		super();
 		this.data = data;
 		this.pane = getVolunteerPane();
+		this.userInfo = userInfo;
 	}
 
 	public final BorderPane getVolunteerPane() {

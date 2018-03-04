@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -36,13 +37,14 @@ public final class UrbanParks extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Urban Parks");
-
-		Pane root = new Pane();
+		
+		StackPane root = new StackPane();
+		root.setAlignment(Pos.CENTER);
 		displayLoginPane(root);
 //		root.getChildren().add(new VolunteerPane(data));
 
 
-		Scene scene = new Scene(root);
+//		Scene scene = new Scene(root);
 
 //		final MenuBar menuBar = new MenuBar();
 //
@@ -50,12 +52,12 @@ public final class UrbanParks extends Application {
 //
 //		menuBar.getMenus().add(menuFile);
 
-		primaryStage.setScene(scene);
-		primaryStage.sizeToScene();
+		primaryStage.setScene(new Scene(root, 900, 550));
+//		primaryStage.sizeToScene();
 		primaryStage.show();
 	}
 
-	protected final void displayLoginPane(Pane root) {
+	protected final void displayLoginPane(StackPane root) {
 		final GridPane grid = new GridPane();
 
 		grid.setAlignment(Pos.CENTER);
@@ -96,15 +98,16 @@ public final class UrbanParks extends Application {
 				alert.showAndWait();
 			} else {
 				root.getChildren().remove(grid);
+				HBox userInfo = getUserInfo();
 				if (data.getCurrentUser().getUserRole()
 						.equals(UserRole.VOLUNTEER)) {
-					root.getChildren().add(new VolunteerPane(data));
+					root.getChildren().add(new VolunteerPane(data, userInfo));
 				} else if (data.getCurrentUser().getUserRole()
 						.equals(UserRole.PARK_MANAGER)) {
-					root.getChildren().add(new ParkManagerPane(data));
+					root.getChildren().add(new ParkManagerPane(data, userInfo));
 				} else if (data.getCurrentUser().getUserRole()
 						.equals(UserRole.STAFF_MEMBER)) {
-					root.getChildren().add(new StaffMemberPane(data));
+					root.getChildren().add(new StaffMemberPane(data, userInfo));
 				}
 			}
 		});
@@ -287,21 +290,22 @@ public final class UrbanParks extends Application {
 //		return grid;
 //	}
 
-	private final HBox getUserInfo() {
-		HBox userInfo = new HBox();
-		userInfo.setAlignment(Pos.CENTER);
-		userInfo.setMinHeight(15);
-		Text user = new Text("User: " + data.getCurrentUser().getFullName());
-		user.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
-		Text role = new Text("Role: " + data.getCurrentUser().getUserRole());
-		role.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
-		HBox.setHgrow(user, Priority.ALWAYS);
-		HBox.setHgrow(role, Priority.ALWAYS);
-		userInfo.getChildren().addAll(user, role);
-		return userInfo;
-	}
+    private final HBox getUserInfo() {
+        HBox userInfo = new HBox();
+        userInfo.setAlignment(Pos.CENTER);
+        userInfo.setMinHeight(15);
+        userInfo.setSpacing(20);
+        Text user = new Text("User: " + data.getCurrentUser().getFullName());
+        user.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        Text role = new Text("Role: " + data.getCurrentUser().getUserRole());
+        role.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        HBox.setHgrow(user, Priority.ALWAYS);
+        HBox.setHgrow(role, Priority.ALWAYS);
+        userInfo.getChildren().addAll(user, role);
+        return userInfo;
+    }
 	
-	public final void logout(Pane root){
+	public final void logout(StackPane root){
 		data.storeCollectionsIntoFile();
 		displayLoginPane(root);
 	}
