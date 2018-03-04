@@ -62,8 +62,13 @@ public class StaffMemberPane extends Pane {
 		getChildren().add(border);
 
 		viewJobsBtn.setOnAction(event -> {
-			getChildren().remove(border);
-			getChildren().add(getJobsPane());
+			border.setRight(getJobsPane());
+			Button backbtn = new Button("Back");
+			backbtn.setOnAction( event1 -> {
+				border.setRight(null);
+				border.setTop(null);
+			});
+			border.setTop(backbtn);
 		});
 
 		logOutBtn.setOnAction(event -> {

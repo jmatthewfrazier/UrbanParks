@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -42,13 +43,23 @@ public class VolunteerPane extends Pane {
 		getChildren().add(border);
 
 		viewMyJobsBtn.setOnAction(event -> {
-			getChildren().remove(border);
-			getChildren().add(getMyJobsPane());
+			border.setRight(getMyJobsPane());
+			Button backbtn = new Button("Back");
+			backbtn.setOnAction( event1 -> {
+				border.setRight(null);
+				border.setTop(null);
+			});
+			border.setTop(backbtn);
 		});
 
 		viewFutureJobsBtn.setOnAction(event -> {
-			getChildren().remove(border);
-			getChildren().add(getFutureJobsPane());
+			border.setRight(getFutureJobsPane());
+			Button backbtn = new Button("Back");
+			backbtn.setOnAction( event1 -> {
+					border.setRight(null);
+					border.setTop(null);
+			});
+			border.setTop(backbtn);
 		});
 
 		buttonLogout.setOnAction(event -> {
@@ -140,7 +151,7 @@ public class VolunteerPane extends Pane {
 						parkField, signUpBtn);
 				jobEntry.setSpacing(15);
 
-				myJobsPane.getChildren().add(jobEntry);
+				myJobsPane.getChildren().addAll(jobEntry, new Separator());
 			}
 		}
 
