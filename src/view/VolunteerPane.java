@@ -4,10 +4,7 @@ import exceptions.LessThanMinDaysAwayException;
 import exceptions.VolunteerDailyJobLimitException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -20,19 +17,17 @@ public class VolunteerPane extends StackPane {
 	private static final int MAX_BUTTON_WIDTH = 800;
 
 	private final UrbanParksData data;
-//	private Pane pane;
 	private HBox userInfo;
 
 	public VolunteerPane(UrbanParksData data, HBox userInfo) {
 		super();
 		this.data = data;
-//		this.pane = getVolunteerPane();
 		this.setAlignment(Pos.CENTER);
 		this.userInfo = userInfo;
 		getVolunteerPane();
 	}
 
-	public final Pane getVolunteerPane() {
+	public final void getVolunteerPane() {
 		final BorderPane border = new BorderPane();
 		final VBox v = new VBox();
 		v.setAlignment(Pos.TOP_CENTER);
@@ -60,37 +55,29 @@ public class VolunteerPane extends StackPane {
 		border.setCenter(v);
 		getChildren().add(border);
 
-		viewMyJobsBtn.setOnAction(event -> {
-			border.setRight(getMyJobsPane());
-			Button backbtn = new Button("Back");
-			backbtn.setOnAction( event1 -> {
-				border.setRight(null);
-				border.setTop(null);
-			});
-			border.setTop(backbtn);
-		});
+		viewMyJobsBtn.setOnAction(event ->
+				border.setCenter(getMyJobsPane(border)));
 
-		viewFutureJobsBtn.setOnAction(event -> {
-			border.setRight(getFutureJobsPane());
-			Button backbtn = new Button("Back");
-			backbtn.setOnAction( event1 -> {
-					border.setRight(null);
-					border.setTop(null);
-			});
-			border.setTop(backbtn);
-		});
+		viewFutureJobsBtn.setOnAction(event ->
+				border.setCenter(getFutureJobsPane(border)));
 
 		logOutBtn.setOnAction(event -> {
 			getChildren().remove(border);
 //			logout(root);
 		});
-
-		return this;
 	}
 
-	private final VBox getMyJobsPane() {
+	private final ScrollPane getMyJobsPane(Pane root) {
 		final VBox myJobsPane = new VBox();
 		final Label label = new Label("My Jobs");
+
+		Button backBtn = new Button("Back");
+		myJobsPane.getChildren().add(backBtn);
+
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getVolunteerPane();
+		});
 
 		myJobsPane.setSpacing(15);
 		myJobsPane.setPadding(new Insets(10, 0, 0, 10));
@@ -119,19 +106,30 @@ public class VolunteerPane extends StackPane {
 			}
 		}
 
-		return myJobsPane;
+		final ScrollPane sp = new ScrollPane();
+		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+		sp.setContent(myJobsPane);
+
+		return sp;
 	}
 
-	private final VBox getFutureJobsPane() {
+	private final ScrollPane getFutureJobsPane(Pane root) {
 		final VBox myJobsPane = new VBox();
 		final Label label = new Label("Jobs");
+
+		Button backBtn = new Button("Back");
+		myJobsPane.getChildren().add(backBtn);
+
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getVolunteerPane();
+		});
 
 		myJobsPane.setSpacing(15);
 		myJobsPane.setPadding(new Insets(10, 0, 0, 10));
 
 		myJobsPane.getChildren().add(label);
-
-		System.out.println(data.getAllFutureJobs().size());
 
 		for (final Job job : data.getAllFutureJobs()) {
 			if (!job.hasVolunteer(data.getCurrentUser())) {
@@ -173,7 +171,12 @@ public class VolunteerPane extends StackPane {
 			}
 		}
 
-		return myJobsPane;
+		final ScrollPane sp = new ScrollPane();
+		sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+		sp.setContent(myJobsPane);
+
+		return sp;
 	}
 
 
