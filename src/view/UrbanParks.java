@@ -57,7 +57,6 @@ public final class UrbanParks extends Application {
 	}
 
 	protected final static void displayLoginPane(StackPane root) {
-		
 		final GridPane grid = new GridPane();
 
 		grid.setAlignment(Pos.CENTER);
@@ -88,6 +87,7 @@ public final class UrbanParks extends Application {
 		btn.setOnAction(event -> {
 			final UserID userID = new UserID(userTextField.getText());
 			data.loginUserID(userID);
+
 
 			if (data.getCurrentUser().equals(User.getNullUser())) {
 				Alert alert = new Alert(AlertType.ERROR);

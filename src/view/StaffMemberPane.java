@@ -5,11 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -22,17 +18,18 @@ public class StaffMemberPane extends StackPane {
 
 	private final UrbanParksData data;
 	private final HBox userInfo;
-	private Pane pane;
+	private ToggleGroup jobGroup;
 
 
 	public StaffMemberPane(UrbanParksData data, HBox userInfo) {
+		super();
 		this.data = data;
 		this.userInfo = userInfo;
-		this.pane = getStaffMemberPane();
 		this.setAlignment(Pos.CENTER);
+		getStaffMemberPane();
 	}
 
-	private final Pane getStaffMemberPane() {
+	private final void getStaffMemberPane() {
 		final BorderPane border = new BorderPane();
 		final VBox v = new VBox();
 		v.setAlignment(Pos.TOP_CENTER);
@@ -46,39 +43,14 @@ public class StaffMemberPane extends StackPane {
         VBox.setMargin(title, titleMargins);
 
 		final Button viewJobsBtn = new Button("View Jobs");
-
 		final Button setJobCapacityBtn = new Button("Set Job Capacity");
-//		final TextField capacityField = new TextField();
-//		final HBox capacityBox = new HBox();
-//		capacityBox.getChildren().addAll(setJobCapacityBtn, capacityField);
-
-//		String text = capacityField.getCharacters().toString();
-//		setJobCapacityBtn.setOnAction(event -> {
-//			boolean isNumber = true;
-//
-//			for (int i = 0; i < text.length(); i++) {
-//				if (text.charAt(i) < '0' || text.charAt(i) > '9') {
-//					isNumber = false;
-//				}
-//			}
-//
-//			if (isNumber) {
-//				try {
-//					data.setJobCollectionCapacity(Integer.valueOf(text));
-//				} catch (UrbanParksSystemOperationException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-
-
 		final Button logOutBtn = new Button("Log out");
 		
 		viewJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 		setJobCapacityBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 		logOutBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 
-		v.getChildren().addAll(title, viewJobsBtn, setJobCapacityBtn, 
+		v.getChildren().addAll(title, viewJobsBtn, setJobCapacityBtn,
 				logOutBtn);
 		
 		border.setTop(userInfo);
@@ -86,27 +58,31 @@ public class StaffMemberPane extends StackPane {
 		getChildren().add(border);
 
 		viewJobsBtn.setOnAction(event -> {
-			border.setRight(getJobsPane());
-			Button backbtn = new Button("Back");
-			backbtn.setOnAction( event1 -> {
-				border.setRight(null);
-				border.setTop(null);
-			});
-			border.setTop(backbtn);
+			border.setCenter(getJobsPane(border));
+		});
+		
+		setJobCapacityBtn.setOnAction(event -> {
+			border.setCenter(getJobCapacityPane(border));
 		});
 
 		logOutBtn.setOnAction(event -> {
 			getChildren().remove(border);
-//			logout(root);
+			StackPane root = (StackPane) this.getParent();
+			UrbanParks.logout(root);
 		});
-
-		return this;
 	}
 
-	private final ScrollPane getJobsPane() {
+	private final ScrollPane getJobsPane(Pane root) {
 		final ScrollPane sp = new ScrollPane();
 		final VBox myJobsPane = new VBox();
 		final Label label = new Label("Upcoming Jobs");
+
+		Button backBtn = new Button("Back");
+		myJobsPane.getChildren().add(backBtn);
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getStaffMemberPane();
+		});
 		
 		sp.setHbarPolicy(ScrollBarPolicy.NEVER);
 		sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -129,10 +105,14 @@ public class StaffMemberPane extends StackPane {
 
 		hbox.getChildren().addAll(vbox1, vbox2);
 		myJobsPane.getChildren().add(hbox);
-
+		
+		int i = 0;
 		for (final Job job : data.getJobs().getList()) {
 			final HBox jobEntry = new HBox();
-			final RadioButton rb = new RadioButton();
+			final RadioButton rb = new RadioButton("" + i);
+			rb.setToggleGroup(jobGroup);
+			if (i == 0) rb.setSelected(true);
+			i++;
 			final Label nameField = new Label(job.getName());
 			final Label startField =
 					new Label(job.getBeginDateTime().toString());
@@ -150,5 +130,60 @@ public class StaffMemberPane extends StackPane {
 		sp.setContent(myJobsPane);
 
 		return sp;
+	}
+	
+	private final Pane getJobCapacityPane(Pane root) {
+		final BorderPane border = new BorderPane();
+		final VBox jobCapacityData = new VBox();
+
+		Button backBtn = new Button("Back");
+		jobCapacityData.getChildren().add(backBtn);
+
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getStaffMemberPane();
+		});
+
+
+		final Text title = new Text("Set the maximum number of pending park " + 
+				"jobs:");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+		Insets titleMargins = new Insets(20, 10, 0, 0);
+        VBox.setMargin(title, titleMargins);
+        
+        final Text currentNum = new Text("Current maximum number of jobs: " +
+				data.getCurrentMaxJobs());
+        currentNum.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        
+        final TextField capacityField = new TextField();
+        final Button setJobCapacityBtn = new Button("Set New Job Capacity");
+		final HBox capacityBox = new HBox();
+		capacityBox.getChildren().addAll(setJobCapacityBtn, capacityField);
+		
+		jobCapacityData.getChildren().addAll(title, currentNum, capacityBox);
+
+		String text = capacityField.getCharacters().toString();
+		setJobCapacityBtn.setOnAction(event -> {
+			boolean isNumber = true;
+
+			for (int i = 0; i < text.length(); i++) {
+				if (text.charAt(i) < '0' || text.charAt(i) > '9') {
+					isNumber = false;
+				}
+			}
+
+			if (isNumber) {
+				try {
+					data.setJobCollectionCapacity(Integer.valueOf(text));
+				} catch (UrbanParksSystemOperationException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		border.setTop(userInfo);
+		border.setCenter(jobCapacityData);
+		
+		return border;
 	}
 }

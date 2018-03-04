@@ -286,6 +286,10 @@ public class UrbanParksData implements Serializable {
     public <U extends User> U getCurrentUser() {
 	    return (U) currentUser;
     }
+    
+    public int getCurrentMaxJobs() {
+    	return jobs.getMaxCapacity();
+    }
 
     //////////////import and export to the collections/////////////////////////
 
