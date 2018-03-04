@@ -24,7 +24,7 @@ import model.UserRole;
 
 public final class UrbanParks extends Application {
 
-	private final UrbanParksData data;
+	private static UrbanParksData data;
 
 	public static void main(String[] args) { launch(args); }
 
@@ -56,7 +56,8 @@ public final class UrbanParks extends Application {
 		primaryStage.show();
 	}
 
-	protected final void displayLoginPane(StackPane root) {
+	protected final static void displayLoginPane(StackPane root) {
+		
 		final GridPane grid = new GridPane();
 
 		grid.setAlignment(Pos.CENTER);
@@ -288,7 +289,7 @@ public final class UrbanParks extends Application {
 //		return grid;
 //	}
 
-    private final HBox getUserInfo() {
+    private final static HBox getUserInfo() {
         HBox userInfo = new HBox();
         userInfo.setAlignment(Pos.CENTER);
         userInfo.setMinHeight(15);
@@ -303,8 +304,9 @@ public final class UrbanParks extends Application {
         return userInfo;
     }
 	
-	public final void logout(StackPane root){
+	public final static void logout(StackPane root){
 		data.storeCollectionsIntoFile();
+		data = new UrbanParksData();
 		displayLoginPane(root);
 	}
 	

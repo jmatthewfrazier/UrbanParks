@@ -10,6 +10,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import model.Job;
 import model.UrbanParksData;
@@ -66,7 +67,8 @@ public class VolunteerPane extends Pane {
 
 		buttonLogout.setOnAction(event -> {
 			getChildren().remove(border);
-//			logout(root);
+			StackPane root = (StackPane) this.getParent();
+			UrbanParks.logout(root);
 		});
 
 		return border;
