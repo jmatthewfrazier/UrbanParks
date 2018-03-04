@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -88,7 +87,6 @@ public final class UrbanParks extends Application {
 		btn.setOnAction(event -> {
 			final UserID userID = new UserID(userTextField.getText());
 			data.loginUserID(userID);
-
 
 			if (data.getCurrentUser().equals(User.getNullUser())) {
 				Alert alert = new Alert(AlertType.ERROR);

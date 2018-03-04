@@ -1,17 +1,11 @@
 package view;
 
-import java.util.ArrayList;
-
 import exceptions.UrbanParksSystemOperationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -25,11 +19,12 @@ public class StaffMemberPane extends StackPane {
 	private final UrbanParksData data;
 	private final HBox userInfo;
 	private Pane pane;
-	private ArrayList<Job> jobList;
+//	private ArrayList<Job> jobList;
 	private ToggleGroup jobGroup;
 
 
 	public StaffMemberPane(UrbanParksData data, HBox userInfo) {
+		super();
 		this.data = data;
 		this.userInfo = userInfo;
 		this.pane = getStaffMemberPane();
@@ -50,7 +45,6 @@ public class StaffMemberPane extends StackPane {
         VBox.setMargin(title, titleMargins);
 
 		final Button viewJobsBtn = new Button("View Jobs");
-
 		final Button setJobCapacityBtn = new Button("Set Job Capacity");
 //		final TextField capacityField = new TextField();
 //		final HBox capacityBox = new HBox();
@@ -82,7 +76,7 @@ public class StaffMemberPane extends StackPane {
 		setJobCapacityBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 		logOutBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 
-		v.getChildren().addAll(title, viewJobsBtn, setJobCapacityBtn, 
+		v.getChildren().addAll(title, viewJobsBtn, setJobCapacityBtn,
 				logOutBtn);
 		
 		border.setTop(userInfo);

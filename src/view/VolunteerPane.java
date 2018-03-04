@@ -3,18 +3,21 @@ package view;
 import exceptions.LessThanMinDaysAwayException;
 import exceptions.VolunteerDailyJobLimitException;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import model.Job;
 import model.UrbanParksData;
 
-public class VolunteerPane extends Pane {
+public class VolunteerPane extends StackPane {
+
+	private static final int MAX_BUTTON_WIDTH = 800;
 
 	private final UrbanParksData data;
 	private Pane pane;
@@ -24,24 +27,36 @@ public class VolunteerPane extends Pane {
 		super();
 		this.data = data;
 		this.pane = getVolunteerPane();
+		this.setAlignment(Pos.CENTER);
 		this.userInfo = userInfo;
 	}
 
-	public final BorderPane getVolunteerPane() {
+	public final Pane getVolunteerPane() {
 		final BorderPane border = new BorderPane();
 		final VBox v = new VBox();
+		v.setAlignment(Pos.TOP_CENTER);
 
 		v.setPadding(new Insets(15, 12, 15, 12));
 		v.setSpacing(10);
 
+		Text title = new Text("Volunteer Main Menu");
+		title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+		Insets titleMargins = new Insets(20, 10, 0, 0);
+		VBox.setMargin(title, titleMargins);
+
 		final Button viewMyJobsBtn = new Button("View My Jobs");
-
 		final Button viewFutureJobsBtn = new Button("View Future Jobs");
+		final Button logOutBtn = new Button("Log out");
 
-		final Button buttonLogout = new Button("Log out");
-		v.getChildren().addAll(viewMyJobsBtn, viewFutureJobsBtn, buttonLogout);
+		viewMyJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);
+		viewFutureJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);
+		logOutBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 
-		border.setBottom(v);
+		v.getChildren().addAll(title, viewMyJobsBtn, viewFutureJobsBtn,
+				logOutBtn);
+
+		border.setTop(userInfo);
+		border.setCenter(v);
 		getChildren().add(border);
 
 		viewMyJobsBtn.setOnAction(event -> {
@@ -64,7 +79,7 @@ public class VolunteerPane extends Pane {
 			border.setTop(backbtn);
 		});
 
-		buttonLogout.setOnAction(event -> {
+		logOutBtn.setOnAction(event -> {
 			getChildren().remove(border);
 //			logout(root);
 		});
