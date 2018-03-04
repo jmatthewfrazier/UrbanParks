@@ -1,8 +1,6 @@
 package tests;
 
-import model.Job;
-import model.JobID;
-import model.Park;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,24 +11,22 @@ import static org.junit.Assert.*;
 public class JobTest {
 
     private String jobNameFoo = "A Job Named Foo";
-
     private String jobNameBar = "A Job Named Bar";
-
     private LocalDateTime beginDateTime;
-    
     private Job testJob;
-
 	private Park parkWestSide;
-
 	private Park parkEastSide;
+	private ParkManager creator;
 
     @Before
     public void setUp() {
         beginDateTime = LocalDateTime.now();
+        creator = new ParkManager("Test", "PM",
+		        new UserID("testpm"));
     	testJob = new Job("Test", parkEastSide, new JobID(1),
-    			beginDateTime, beginDateTime.plusDays(1), "test");
-		parkWestSide = new Park();
-		parkEastSide = new Park();
+    			beginDateTime, beginDateTime.plusDays(1), "test", creator);
+		parkWestSide = new Park("West Side Park", new ParkID(1));
+		parkEastSide = new Park("East Side Park", new ParkID(2));
     }
     
     
@@ -38,12 +34,12 @@ public class JobTest {
     public void isStartAtEndDate_StartAtEndDate_True(){
     	final Job job = new Job(jobNameFoo, parkWestSide, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(
-    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job");
+    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job", creator);
     	
     	final Job test_Job = new Job(jobNameBar, parkEastSide, new JobID(2),
     			beginDateTime.plusDays(Job.MAX_JOB_LENGTH_IN_DAYS), 
     			beginDateTime.plusDays(2*Job.MAX_JOB_LENGTH_IN_DAYS), 
-    			"test job2");
+    			"test job2", creator);
     	
     	assertTrue("Volunteer cannot sign up for this job!!",
     			job.isStartAtEndDate(test_Job));
@@ -53,12 +49,12 @@ public class JobTest {
     public void isStartAtEndDate_NotStartAtEndDate_False(){
     	final Job job = new Job(jobNameFoo, parkWestSide, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(
-    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job");
+    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job", creator);
     	
     	final Job test_Job = new Job(jobNameBar, parkEastSide, new JobID(2),
     			beginDateTime.plusDays(Job.MAX_JOB_LENGTH_IN_DAYS-1), 
     			beginDateTime.plusDays(2*Job.MAX_JOB_LENGTH_IN_DAYS-1), 
-    			"test job2");
+    			"test job2", creator);
     	
     	assertFalse("Volunteer can sign up for this job!!",
     			job.isStartAtEndDate(test_Job));
@@ -69,11 +65,11 @@ public class JobTest {
     	final Job job = new Job(jobNameBar, parkEastSide, new JobID(2),
     			beginDateTime.plusDays(Job.MAX_JOB_LENGTH_IN_DAYS + 2),
     			beginDateTime.plusDays(2 * Job.MAX_JOB_LENGTH_IN_DAYS + 2),
-    			"test job2");
+    			"test job2", creator);
     	
     	final Job test_Job = new Job(jobNameFoo, parkWestSide, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(
-    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job");
+    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job", creator);
     	
     	assertFalse("Volunteer cannot sign up for this job!!",
     			job.isEndAtStartDate(test_Job));
@@ -84,11 +80,11 @@ public class JobTest {
     	final Job job = new Job(jobNameBar, parkEastSide, new JobID(2),
     			beginDateTime.plusDays(Job.MAX_JOB_LENGTH_IN_DAYS - 1),
     			beginDateTime.plusDays(2 * Job.MAX_JOB_LENGTH_IN_DAYS - 1), 
-    			"test job2");
+    			"test job2", creator);
     	
     	final Job test_Job = new Job(jobNameFoo, parkWestSide, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(
-    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job");
+    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job", creator);
     	
     	assertFalse("Volunteer can sign up for this job!!",
     			job.isEndAtStartDate(test_Job));
@@ -98,13 +94,13 @@ public class JobTest {
     public void isOverlapping_Overlapping_True(){
     	final Job job = new Job(jobNameFoo, parkWestSide, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(
-    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job");
+    					Job.MAX_JOB_LENGTH_IN_DAYS), "test job", creator);
     	
     	final Job test_Job = new Job(jobNameBar, parkEastSide, new JobID(2),
     			beginDateTime.plusDays(Job.MAX_JOB_LENGTH_IN_DAYS).minusHours(
     			Job.MAX_JOB_LENGTH_IN_DAYS), beginDateTime.plusDays(
     			2*Job.MAX_JOB_LENGTH_IN_DAYS).minusHours(
-    			Job.MAX_JOB_LENGTH_IN_DAYS), "test job2");
+    			Job.MAX_JOB_LENGTH_IN_DAYS), "test job2", creator);
     	
     	assertTrue("Volunteer cannot sign up for this job!!",
     			job.isOverlapping(test_Job));
@@ -114,13 +110,13 @@ public class JobTest {
     public void isOverlapping_NotOverlapping_False(){
     	final Job job = new Job(jobNameFoo, parkWestSide, new JobID(1),
     			beginDateTime, beginDateTime.plusDays(
-    			Job.MAX_JOB_LENGTH_IN_DAYS), "test job");
+    			Job.MAX_JOB_LENGTH_IN_DAYS), "test job", creator);
     	
     	final Job test_Job = new Job(jobNameBar, parkEastSide, new JobID(2),
     			beginDateTime.plusDays(Job.MAX_JOB_LENGTH_IN_DAYS).plusHours(
     			Job.MAX_JOB_LENGTH_IN_DAYS), beginDateTime.plusDays(
     			2*Job.MAX_JOB_LENGTH_IN_DAYS).plusHours(
-    			Job.MAX_JOB_LENGTH_IN_DAYS), "test job2");
+    			Job.MAX_JOB_LENGTH_IN_DAYS), "test job2", creator);
     	
     	assertFalse("Volunteer can sign up for this job!!",
     			job.isOverlapping(test_Job));
@@ -129,7 +125,7 @@ public class JobTest {
 	@Test
 	public void testJobConstructor_SameDatesNameFooWestside_NotNullTrue() {
 		assertNotNull(new Job(jobNameFoo, parkWestSide, new JobID(1),
-				beginDateTime, beginDateTime, "test job"));
+				beginDateTime, beginDateTime, "test job", creator));
 		//fail("Not yet implemented");
 	}
 
@@ -138,7 +134,7 @@ public class JobTest {
 		LocalDateTime dayMaxDaysMinusOneDay =
 				beginDateTime.plusDays((Job.MAX_JOB_LENGTH_IN_DAYS - 2));
 		Job jobMaxDaysMinusOne = new Job(jobNameFoo, parkWestSide, new JobID(1),
-                beginDateTime, dayMaxDaysMinusOneDay, "test job");
+                beginDateTime, dayMaxDaysMinusOneDay, "test job", creator);
 		assertTrue(jobMaxDaysMinusOne.isJobLengthValid());
 	}
 
@@ -147,7 +143,7 @@ public class JobTest {
 		LocalDateTime dayMaxDaysExactly =
 				beginDateTime.plusDays((Job.MAX_JOB_LENGTH_IN_DAYS - 1));
 		Job jobMaxDaysExactly = new Job(jobNameFoo, parkWestSide, new JobID(1),
-                beginDateTime, dayMaxDaysExactly, "test job");
+                beginDateTime, dayMaxDaysExactly, "test job", creator);
 		assertTrue(jobMaxDaysExactly.isJobLengthValid());
 	}
 
@@ -156,7 +152,7 @@ public class JobTest {
 		LocalDateTime dayMaxDaysPlusOneDay =
 				beginDateTime.plusDays((Job.MAX_JOB_LENGTH_IN_DAYS));
 		Job jobMaxDaysPlusOne = new Job(jobNameFoo, parkWestSide, new JobID(1),
-                beginDateTime, dayMaxDaysPlusOneDay, "test job");
+                beginDateTime, dayMaxDaysPlusOneDay, "test job", creator);
 		assertFalse(jobMaxDaysPlusOne.isJobLengthValid());
 	}
 
@@ -167,7 +163,7 @@ public class JobTest {
 				        .plusDays(Job.getMaximumValidDayRangeFromToday() - 2),
 		        LocalDateTime.now()
 				        .plusDays(Job.getMaximumValidDayRangeFromToday() - 1),
-		        "test job");
+		        "test job", creator);
         assertTrue(test_Job.isJobWithinValidDateRange());
     }
 
@@ -178,7 +174,7 @@ public class JobTest {
 				        .plusDays(Job.getMaximumValidDayRangeFromToday() - 1),
 		        LocalDateTime.now()
                         .plusDays(Job.getMaximumValidDayRangeFromToday()),
-		        "test job");
+		        "test job", creator);
         assertTrue(test_Job.isJobWithinValidDateRange());
     }
 
@@ -189,7 +185,7 @@ public class JobTest {
 				        .plusDays(Job.getMaximumValidDayRangeFromToday() + 1),
 		        LocalDateTime.now()
                         .plusDays(Job.getMaximumValidDayRangeFromToday() + 2),
-                "test job");
+                "test job", creator);
         assertFalse(test_Job.isJobWithinValidDateRange());
     }
     

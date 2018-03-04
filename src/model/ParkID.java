@@ -11,6 +11,10 @@ public final class ParkID implements Serializable {
         this.parkID = parkID;
     }
 
+    public int getParkIDNumber() {
+    	return parkID;
+    }
+
 	@Override
 	public boolean equals(Object other) {
 		if (other == this) {

@@ -1,55 +1,66 @@
 package model;
 
+import exceptions.VolunteerDailyJobLimitException;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Job implements Serializable {
 
     public static final int MAX_NUM_DAYS_FROM_TODAY = 75;
     public static final int MAX_JOB_LENGTH_IN_DAYS = 3;
 
-//	private List<Volunteer> volunteerList;
+	private List<Volunteer> volunteerList;
     private String name;
     private Park park;
     private JobID ID;
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
-//    private ParkManager jobCreator;
+    private ParkManager jobCreator;
 
-    public Job(final String name, final Park park, final JobID ID,
-               final LocalDateTime beginDate,
-               final LocalDateTime endDate, final String description/*,
-               final ParkManager jobCreator*/) {
-//    	volunteerList = new ArrayList<>();
+    public Job(final String name, final Park park, JobID jobID,
+               final LocalDateTime beginDate, final LocalDateTime endDate,
+               final String description, final ParkManager jobCreator) {
+    	volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
         this.ID = ID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
-//        this.jobCreator = jobCreator;
+        this.jobCreator = jobCreator;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-//    public void addVolunteer(final Volunteer volunteer)
-//		    throws VolunteerDailyJobLimitException {
-//
-//    	for (Job job : volunteer.getJobList()) {
-//    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
-//				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
-//    			if (this.getBeginDateTime().equals(date) || this
-//					    .getEndDateTime().equals(date)) {
-//    				throw new VolunteerDailyJobLimitException();
-//			    }
-//		    }
-//	    }
-//
-//        this.volunteerList.add(volunteer);
-//    }
+    public final void addVolunteer(final Volunteer volunteer)
+		    throws VolunteerDailyJobLimitException {
+
+    	for (Job job : volunteer.getJobList()) {
+    		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
+				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
+    			if (this.getBeginDateTime().equals(date)
+					    || this.getEndDateTime().equals(date)) {
+    				throw new VolunteerDailyJobLimitException();
+			    }
+		    }
+	    }
+
+        this.volunteerList.add(volunteer);
+    }
+
+    public final boolean hasVolunteer(Volunteer volunteer) {
+    	return this.volunteerList.contains(volunteer);
+    }
+
+    public final void removeVolunteer(Volunteer volunteer) {
+    	this.volunteerList.remove(volunteer);
+    }
 
     /**
      * A method to determine if this Job spans an acceptable range of days.

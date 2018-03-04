@@ -1,24 +1,19 @@
 package tests;
 
-import static org.junit.Assert.*;
-
-import java.time.LocalDateTime;
-
+import exceptions.LessThanMinDaysAwayException;
+import exceptions.VolunteerDailyJobLimitException;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import exceptions.LessThanMinDaysAwayException;
-import exceptions.VolunteerDailyJobLimitException;
-import model.Job;
-import model.JobID;
-import model.Park;
-import model.UserID;
-import model.Volunteer;
+import java.time.LocalDateTime;
+
+import static org.junit.Assert.assertTrue;
 
 public class VolunteerTest {
 	
 	private Park parkEastSide;
-	
+	private ParkManager pm;
 	private Volunteer testVolunteer = new Volunteer("first", "last",
 		new UserID("VolTest"));
 	
@@ -26,14 +21,15 @@ public class VolunteerTest {
 	
 	private LocalDateTime endDateTime = beginDateTime.plusDays(1);
 	
-	private Job testJobInVolList = new Job("Test", parkEastSide, new JobID(1), 
-		beginDateTime, endDateTime, "test");
+	private Job testJobInVolList;
 	
 	@Before
 	public void setup() throws VolunteerDailyJobLimitException, 
 		LessThanMinDaysAwayException {
-
+		pm = new ParkManager("Test", "PM", new UserID("testpm"));
 		testVolunteer.signUpForJob(testJobInVolList);
+		testJobInVolList = new Job("Test", parkEastSide, new JobID
+				(1), beginDateTime, endDateTime, "test", pm);
 	}
 	
 	@Test(expected = LessThanMinDaysAwayException.class)
@@ -44,7 +40,7 @@ public class VolunteerTest {
 			.plusDays(testVolunteer.getMinDaysAwaySignUp() - 1);
 		Job jobLessThanMinDaysAway = new Job("Test1", parkEastSide, 
 			new JobID(2), beginDateLessThanMinDaysAway, 
-			beginDateLessThanMinDaysAway.plusDays(1), "test");
+			beginDateLessThanMinDaysAway.plusDays(1), "test", pm);
 
 		testVolunteer.signUpForJob(jobLessThanMinDaysAway);
 	}
@@ -56,7 +52,7 @@ public class VolunteerTest {
 		LocalDateTime beginDateOnJobEndDateInVolList = endDateTime;
 		Job jobBeginsOnJobEndDateInVolList = new Job("Test2", parkEastSide, 
 			new JobID(2), beginDateOnJobEndDateInVolList, 
-			beginDateOnJobEndDateInVolList.plusDays(2), "test");
+			beginDateOnJobEndDateInVolList.plusDays(2), "test", pm);
 		
 		testVolunteer.signUpForJob(jobBeginsOnJobEndDateInVolList);
 	}
@@ -68,7 +64,7 @@ public class VolunteerTest {
 		LocalDateTime endDateOnJobStartDateInVolList = beginDateTime;
 		Job jobEndsOnJobStartDateInVolList = new Job("Test3", parkEastSide, 
 			new JobID(2), endDateOnJobStartDateInVolList.minusDays(1), 
-			endDateOnJobStartDateInVolList, "test");
+			endDateOnJobStartDateInVolList, "test", pm);
 		
 		testVolunteer.signUpForJob(jobEndsOnJobStartDateInVolList);
 	}
@@ -79,7 +75,7 @@ public class VolunteerTest {
 		
 		Job jobOverlapsJobDateInVolList = new Job("Test4", parkEastSide, 
 			new JobID(2), beginDateTime.minusDays(1), endDateTime.plusDays(1), 
-			"test");
+			"test", pm);
 		
 		testVolunteer.signUpForJob(jobOverlapsJobDateInVolList);
 		
