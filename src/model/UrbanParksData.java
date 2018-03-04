@@ -51,8 +51,6 @@ public class UrbanParksData implements Serializable {
 	    if (jobs.isEmpty()) {
 		    try {
 			    jobs.addJob(job);
-			    System.out.println(jobs.containsJobID(new JobID(2)));
-
 			    jobs.addJob(new Job("Petting Zoo Clean Up", park,
 					    new JobID(2), LocalDateTime.now().plusDays(7),
 					    LocalDateTime.now().plusDays(8),
