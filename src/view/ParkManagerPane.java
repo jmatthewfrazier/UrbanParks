@@ -44,13 +44,23 @@ public class ParkManagerPane extends Pane {
 		getChildren().add(border);
 
 		viewUpcomingJobsBtn.setOnAction(event -> {
-			getChildren().remove(border);
-			getChildren().add(getUpcomingJobsPane());
+			border.setRight(getUpcomingJobsPane());
+			Button backbtn = new Button("Back");
+			backbtn.setOnAction( event1 -> {
+				border.setRight(null);
+				border.setTop(null);
+			});
+			border.setTop(backbtn);
 		});
 
 		makeNewJobsBtn.setOnAction(event -> {
-			getChildren().remove(border);
-			getChildren().add(getNewJobFormPane());
+			border.setRight(getNewJobFormPane());
+			Button backbtn = new Button("Back");
+			backbtn.setOnAction( event1 -> {
+				border.setRight(null);
+				border.setTop(null);
+			});
+			border.setTop(backbtn);
 		});
 
 		logOutBtn.setOnAction(event -> {
@@ -92,7 +102,7 @@ public class ParkManagerPane extends Pane {
 					parkField, cancelBtn);
 			jobEntry.setSpacing(15);
 
-			myJobsPane.getChildren().add(jobEntry);
+			myJobsPane.getChildren().addAll(jobEntry, new Separator());
 		}
 
 		return myJobsPane;
