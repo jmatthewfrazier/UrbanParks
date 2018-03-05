@@ -55,7 +55,6 @@ public final class Volunteer extends User {
 				volunteerException = true;
 			}
 		}
-		System.out.println(canAdd);
 		if (canAdd) {
    	    	jobList.add(newJob);
 		} else if (dayException) {
