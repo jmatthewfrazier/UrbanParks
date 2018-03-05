@@ -194,15 +194,15 @@ public class ParkManagerPane extends StackPane {
 		final Button submitBtn = new Button("Submit Job");
 
 		submitBtn.setOnAction(event -> {
-			Park park = new Park(parkTextField.getAccessibleText(),
+			Park park = new Park(parkTextField.getText(),
 					new ParkID(data.getParks().getLargestIDNumber() + 1));
 			LocalDate startDate = startDatePicker.getValue();
 			LocalDate endDate = endDatePicker.getValue();
-			final Job newJob = new Job(jobNameField.getAccessibleText(),
+			final Job newJob = new Job(jobNameField.getCharacters().toString(),
 					park, new JobID(data.getJobs().getLargestIDNumber() + 1),
 					LocalDateTime.of(startDate, LocalTime.MIDNIGHT),
 					LocalDateTime.of(endDate, LocalTime.MIDNIGHT),
-					detailsTextArea.getAccessibleText(), data.getCurrentUser());
+					detailsTextArea.getText(), data.getCurrentUser());
 
 			try {
 				data.addNewJobByParkManager(data.getCurrentUser(), newJob);

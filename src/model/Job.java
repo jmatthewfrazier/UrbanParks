@@ -9,8 +9,8 @@ import java.util.List;
 
 public final class Job implements Serializable {
 
-    public static final int MAX_NUM_DAYS_FROM_TODAY = 75;
-    public static final int MAX_JOB_LENGTH_IN_DAYS = 3;
+    public static final int MAX_NUM_DAYS_FROM_TODAY = 60;
+    public static final int MAX_JOB_LENGTH_IN_DAYS = 4;
 
 	private List<Volunteer> volunteerList;
     private String name;
@@ -19,7 +19,7 @@ public final class Job implements Serializable {
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
-    private ParkManager jobCreator;
+//    private ParkManager jobCreator;
 
     public Job(final String name, final Park park, JobID jobID,
                final LocalDateTime beginDate, final LocalDateTime endDate,
@@ -31,7 +31,7 @@ public final class Job implements Serializable {
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
-        this.jobCreator = jobCreator;
+//        this.jobCreator = jobCreator;
     }
 
     public static int getMaximumValidDayRangeFromToday() {

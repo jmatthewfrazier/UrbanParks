@@ -13,7 +13,7 @@ public final class Volunteer extends User {
 	 * A default minimum number of calendar days after the current date that a
 	 * job begins and a volunteer may sign up for.
 	 */
-	public static int MINIMUM_SIGN_UP_DAYS_OUT = 2;
+	public static int MINIMUM_SIGN_UP_DAYS_OUT = 3;
 
 	private List<Job> jobList;
 

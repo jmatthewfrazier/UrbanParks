@@ -10,7 +10,7 @@ public final class JobCollection implements Serializable {
 
     private int MAX_CAPACITY = 20;
 
-    public final static int MIN_DAYS_REMOVAL_BUFFER = 2;
+    public final static int MIN_DAYS_REMOVAL_BUFFER = 3;
 
     private Map<JobID, Job> jobMap;
 
@@ -155,8 +155,8 @@ public final class JobCollection implements Serializable {
 //        }
         LocalDateTime currentDateTime = LocalDateTime.now();
         // job has to be a min number of days in the future to be cancelled
-        if (currentDateTime.toLocalDate().isBefore(
-                jobToRemove.getBeginDateTime().toLocalDate().plusDays(MIN_DAYS_REMOVAL_BUFFER))) {
+        if (currentDateTime.plusDays(MIN_DAYS_REMOVAL_BUFFER)
+        		.isAfter(jobToRemove.getBeginDateTime())) {
             //Job is too near in the future, not enough buffer time, can't be removed
             throw new LessThanMinDaysAwayException("This job begins soon, it cannot be removed");
         }
