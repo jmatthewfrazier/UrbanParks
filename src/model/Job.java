@@ -19,7 +19,6 @@ public final class Job implements Serializable {
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
-//    private ParkManager jobCreator;
 
     public Job(final String name, final Park park, JobID jobID,
                final LocalDateTime beginDate, final LocalDateTime endDate,
@@ -37,7 +36,14 @@ public final class Job implements Serializable {
     public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
-
+    
+    /**
+     * Checks if a Volunteer is already signed up for a job that has dates that
+     * conflict with this job.
+     * @param volunteer is the volunteer to check for conflicting jobs in.
+     * @throws VolunteerDailyJobLimitException iff the volunteer has a job with 
+     * dates that conflict with thie job's dates.
+     */
     public final void addVolunteer(final Volunteer volunteer)
 		    throws VolunteerDailyJobLimitException {
 
@@ -180,40 +186,12 @@ public final class Job implements Serializable {
     	return description;
     }
 
-//    public void setName(final String name) {
-//        this.name = name;
-//    }
-
     public void setPark(final Park park) {
         this.park = park;
     }
-
-//    public void setBeginDateTime(final LocalDateTime time) {
-//        this.beginDateTime = time;
-//    }
-//
-//    public void setEndDateTime(final LocalDateTime time) {
-//        this.endDateTime = time;
-//    }
     
     public void setDescription(final String description) {
     	this.description = description;
     }
-
-//    public ParkManager getJobCreator() {
-//    	return this.jobCreator;
-//    }
-
-//    public ParkManager getJobCreator() {
-//	    return jobCreator;
-//    }
-
-//    public ArrayList<UserID> getVolunteerUserIDList() {
-//	    ArrayList<UserID> volunteerUserIDList = new ArrayList<>();
-//	    for (Volunteer v : volunteerList) {
-//	        volunteerUserIDList.add(v.getID());
-//        }
-//	    return volunteerUserIDList;
-//    }
 }
 

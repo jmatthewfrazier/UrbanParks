@@ -57,7 +57,15 @@ public final class Volunteer extends User {
 		}
 		jobList.add(newJob);
 	}
-		
+	
+    /**
+     * Tests if the dates of newJob will conflict with any job the Volunteer is
+     * currently signed up for and if the job is far enough in the future.
+     * @param newJob is the job that the Volunteer is interested in signing up 
+     * for.
+     * @return true iff the volunteer won't break any business rules by signing
+     * up for newJob.
+     */
 	public boolean canSignUpForJob(Job newJob) {
 		
 		for (Job job : getJobList()) {
@@ -122,12 +130,6 @@ public final class Volunteer extends User {
     public List<Job> getJobList() {
    	    return new ArrayList<>(jobList);
     }
-
-//    public List<Job> getChronologicalJobList() {
-//   	    List<Job> chronologicalList = new ArrayList<>(jobList);
-//   	    chronologicalList.sort(JobCollection.getChronologicalJobComparator());
-//   	    return chronologicalList;
-//    }
 
     //end Volunteer class
 }

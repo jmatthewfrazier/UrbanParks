@@ -17,7 +17,16 @@ public final class JobCollection implements Serializable {
     public JobCollection() {
         this.jobMap = new HashMap<>();
     }
-
+    
+    /**
+     * Sets the max number of jobs that can be in the system at once.
+     * 
+     * @param user is the User that is currently logged in to the system.
+     * @param capacity is the new job capacity number.
+     * @throws InvalidJobCollectionCapacityException iff capacity is not a valid
+     * number.
+     * @throws InvalidUserException iff user is not of type STAFF_MEMBER.
+     */
     public final void setMaxCapacity(final User user, int capacity)
             throws InvalidJobCollectionCapacityException, InvalidUserException {
         if (user.getUserRole() == UserRole.STAFF_MEMBER) {
@@ -52,7 +61,7 @@ public final class JobCollection implements Serializable {
                 && capacity.intValue() > 0;
     }
 
-    /////////////fetch a collection of jobs //////////////////////////////////////
+    /////////////fetch a collection of jobs ///////////////////////////////////
 
     public List<Job> getList() {
         return new ArrayList<>(jobMap.values());
@@ -148,11 +157,6 @@ public final class JobCollection implements Serializable {
             throw new JobIDNotFoundInCollectionException("JobID not found in collection");
         }
         //check if the user is the one who submitted the job
-//        } else if (!jobToRemove.getJobCreatorUserID().equals(jobRemoverUserID)){
-//            throw new UserNotFoundException("\nThis user did not originally " +
-//                    "submit this job.\nUser not authorized to unsubmit this " +
-//                    "job.\nJob not removed.\n");
-//        }
         LocalDateTime currentDateTime = LocalDateTime.now();
         // job has to be a min number of days in the future to be cancelled
         if (currentDateTime.plusDays(MIN_DAYS_REMOVAL_BUFFER)
@@ -162,17 +166,9 @@ public final class JobCollection implements Serializable {
         }
         //all conditions passed, job is removed from collection
         jobMap.remove(jobToRemoveID);
-
-        //remove any volunteers who may have signed up for this job also
-//        removeVolunteersFromDeletedJob(jobToRemove);
     }
 
-    /////////////////////////recycling ////////////////////////////////////////
-
-//    public static void removeJobFromCollectionStatic(final Job jobToRemove) {
-//        JobID jobToRemoveID = jobToRemove.getID();
-//
-//    }    
+    /////////////////////////recycling ////////////////////////////////////////  
 
      public int size() {
          return jobMap.size();
