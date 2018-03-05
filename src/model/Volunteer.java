@@ -32,38 +32,36 @@ public final class Volunteer extends User {
      * @throws LessThanMinDaysAwayException iff the job is less than the 
      * MINIMUM_SIGN_UP_DAYS_OUT.
      */
-    public void signUpForJob(Job newJob) throws Exception {
+    public void signUpForJob(Job newJob) throws
+		    LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
     	boolean canAdd = true;
-    	Exception e = new Exception();
+    	boolean dayException = false, volunteerException = false;
 
    	    if (newJob.getBeginDateTime().isBefore(LocalDateTime
 		        .now().plusDays(getMinDaysAwaySignUp()))) {
-   	    	e = new LessThanMinDaysAwayException("Job begins too soon");
+   	    	canAdd = false;
+   	    	dayException = true;
         }
 
 		for (Job job : jobList) {
 			if (job.isStartAtEndDate(newJob)) {
 				canAdd = false;
-				e = new VolunteerDailyJobLimitException("Candidate job " +
-						"begins on a date of a job that the volunteer is " +
-						"currently signed up for.");
+				volunteerException = true;
 			} else if (job.isEndAtStartDate(newJob)) {
 				canAdd = false;
-				e = new VolunteerDailyJobLimitException("Candidate job " +
-						"ends on a date of a job that the volunteer is " +
-						"currently signed up for.");
+				volunteerException = true;
 			} else if (job.isOverlapping(newJob)) {
 				canAdd = false;
-				e = new VolunteerDailyJobLimitException("Candidate job " +
-						"is extend across with one of the jobs you have " +
-						"signed up already.");
+				volunteerException = true;
 			}
 		}
 
 		if (canAdd) {
    	    	jobList.add(newJob);
-		} else {
-   	    	throw e;
+		} else if (dayException) {
+   	    	throw new LessThanMinDaysAwayException("Job begins too soon");
+		} else if (volunteerException) {
+   	    	throw new VolunteerDailyJobLimitException();
 		}
 	}
 
@@ -115,7 +113,7 @@ public final class Volunteer extends User {
 		}
 	}
 
-    public int getMinDaysAwaySignUp() {
+    public static int getMinDaysAwaySignUp() {
     	return MINIMUM_SIGN_UP_DAYS_OUT;
     }
 

@@ -57,6 +57,11 @@ public final class Job implements Serializable {
 		    throws VolunteerDailyJobLimitException {
     	boolean canAdd = true;
 
+	    if (this.getBeginDateTime().isBefore(LocalDateTime
+			    .now().plusDays(Volunteer.getMinDaysAwaySignUp()))) {
+		    canAdd = false;
+	    }
+
     	for (Job job : volunteer.getJobList()) {
     		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
 				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
