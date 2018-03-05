@@ -38,4 +38,8 @@ public final class ParkManager extends User {
     public final void removeJob(final Job job) {
         this.myJobs.remove(job);
     }
+
+    public UserID getUserID() {
+        return super.getID();
+    }
 }

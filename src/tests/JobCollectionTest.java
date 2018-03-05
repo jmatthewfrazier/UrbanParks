@@ -110,11 +110,12 @@ public class JobCollectionTest {
 
     @Test
     public void removeJobFromCollection_MinNumberOfDaysInFutureMultiDayStartedPreviousDay_Fail() {
+        Job testJobFoo = new Job("Job ", new Park(),
+                new JobID(23), LocalDateTime.now().minusDays(1),
+                LocalDateTime.now(),
+                "test job");
         try {
-            jobCollection.addJob(new Job("Job " + 1, new Park(),
-                    new JobID(23), LocalDateTime.now(),
-                    LocalDateTime.now().plusDays(1 * 2 + 1),
-                    "test job"));
+            jobCollection.addJob(testJobFoo);
         } catch (MaxPendingJobsException e) {
             e.printStackTrace();
         } catch (InvalidJobLengthException e) {
@@ -124,22 +125,22 @@ public class JobCollectionTest {
         } catch (JobCollectionDuplicateKeyException e) {
             e.printStackTrace();
         }
-        ;
         try {
-            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+            jobCollection.removeJobFromCollection(testJobFoo, new UserID("BadTim"));
         } catch (LessThanMinDaysAwayException | UserNotFoundException |
-                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+                JobIDNotFoundInCollectionException e) {
             e.printStackTrace();
         }
     }
 
     @Test
     public void removeJobFromCollection_MoreThanMinNumberOfDaysInFuture_Pass() {
+        Job testJobFoo = new Job("Job ", new Park(),
+                new JobID(23), LocalDateTime.now().plusDays(10),
+                LocalDateTime.now().plusDays(11),
+                "test job");
         try {
-            jobCollection.addJob(new Job("Job " + 1, new Park(),
-                    new JobID(23), LocalDateTime.now(),
-                    LocalDateTime.now().plusDays(1 * 2 + 1),
-                    "test job"));
+            jobCollection.addJob(testJobFoo);
         } catch (MaxPendingJobsException e) {
             e.printStackTrace();
         } catch (InvalidJobLengthException e) {
@@ -149,24 +150,21 @@ public class JobCollectionTest {
         } catch (JobCollectionDuplicateKeyException e) {
             e.printStackTrace();
         }
-        ;
         try {
-
-            //TODO this logic doesn't make sense, we shouldn't remove a new job
-            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+            jobCollection.removeJobFromCollection(testJobFoo, new UserID("BadTim"));
         } catch (LessThanMinDaysAwayException | UserNotFoundException |
-                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+                JobIDNotFoundInCollectionException e) {
             e.printStackTrace();
         }
     }
-
     @Test
     public void removeJobFromCollection_ExactlyMinNumberOfDaysInFuture_Pass() {
+        Job testJobFoo = new Job("Job ", new Park(),
+                new JobID(23), LocalDateTime.now().plusDays(2),
+                LocalDateTime.now().plusDays(3),
+                "test job");
         try {
-            jobCollection.addJob(new Job("Job " + 1, new Park(),
-                    new JobID(23), LocalDateTime.now(),
-                    LocalDateTime.now().plusDays(1 * 2 + 1),
-                    "test job"));
+            jobCollection.addJob(testJobFoo);
         } catch (MaxPendingJobsException e) {
             e.printStackTrace();
         } catch (InvalidJobLengthException e) {
@@ -176,14 +174,14 @@ public class JobCollectionTest {
         } catch (JobCollectionDuplicateKeyException e) {
             e.printStackTrace();
         }
-        ;
         try {
-            jobCollection.removeJobFromCollection(new JobID(23), new UserID("BadTim"));
+            jobCollection.removeJobFromCollection(testJobFoo, new UserID("BadTim"));
         } catch (LessThanMinDaysAwayException | UserNotFoundException |
-                JobIDNotFoundInCollectionException | UrbanParksSystemOperationException e) {
+                JobIDNotFoundInCollectionException e) {
             e.printStackTrace();
         }
     }
+    }
 
 
-}
+

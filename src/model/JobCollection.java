@@ -129,8 +129,8 @@ public final class JobCollection implements Serializable {
      * @post-condition This method will either have thrown an excepetion due
      * to encountering illegal behavior or it will have removed one Job and
      * be 1 Job smaller in size.  Exception behavior is detailed below
-     * @param jobToRemove //
-     * @param jobRemoverUserID //
+     * @param jobToRemove the Job object that will be removed
+     * @param jobRemoverUserID the UserID of user trying to remove the Job
      * @throws LessThanMinDaysAwayException The job to be deleted was too
      * near in the future, deleting it was not allowed
      * @throws UserNotFoundException The user attempting to delete this Job
@@ -151,7 +151,13 @@ public final class JobCollection implements Serializable {
         if (!jobMap.containsKey(jobToRemoveID)) { // check the job is in the collection
             throw new JobIDNotFoundInCollectionException("JobID not found in collection");
         }
-        //check if the user is the one who submitted the job
+       // check if the user is the one who submitted the job
+        if (!jobToRemove.getJobCreator().getUserID().equals(jobRemoverUserID)) {
+            throw new UserNotFoundException("\nThis user did not originally " +
+            "submit this job.\nUser not authorized to unsubmit this " +
+            "job.\nJob not removed.\n");
+
+        }
 //        } else if (!jobToRemove.getJobCreatorUserID().equals(jobRemoverUserID)){
 //            throw new UserNotFoundException("\nThis user did not originally " +
 //                    "submit this job.\nUser not authorized to unsubmit this " +
