@@ -1,5 +1,6 @@
 package view;
 
+import exceptions.InvalidUserException;
 import exceptions.JobIDNotFoundInCollectionException;
 import exceptions.LessThanMinDaysAwayException;
 import exceptions.UrbanParksSystemOperationException;
@@ -118,7 +119,7 @@ public class ParkManagerPane extends StackPane {
 				try {
 					data.unsubmitParkJob(job);
 					root.setCenter(getUpcomingJobsPane(root));
-				} catch (LessThanMinDaysAwayException
+				} catch (LessThanMinDaysAwayException | InvalidUserException
 						| JobIDNotFoundInCollectionException e) {
 
 					Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -127,9 +128,13 @@ public class ParkManagerPane extends StackPane {
 					if (e instanceof LessThanMinDaysAwayException) {
 						alert.setContentText("Sorry, this job is too soon in " +
 								"the future to cancel.");
-					} else {
+					} else if (e instanceof
+							JobIDNotFoundInCollectionException) {
 						alert.setContentText("Sorry, you do not have " +
 								"permission to cancel this job.");
+					} else {
+						alert.setContentText("Sorry, you may not delete a job" +
+								" that you did not create.");
 					}
 
 					alert.showAndWait();

@@ -4,15 +4,17 @@ import exceptions.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class JobCollection implements Serializable {
-
-    private int MAX_CAPACITY = 10;
 
     private final static int MIN_DAYS_REMOVAL_BUFFER = 3;
 
     private Map<JobID, Job> jobMap;
+    private int MAX_CAPACITY = 10;
 
     public JobCollection() {
         this.jobMap = new HashMap<>();
@@ -88,7 +90,8 @@ public final class JobCollection implements Serializable {
 
     public List<Job> getAllFutureJobsFromToday() {
         return getJobsInDateRange(LocalDateTime.now(),
-                LocalDateTime.now().plusDays(Job.MAX_NUM_DAYS_FROM_TODAY));
+                LocalDateTime.now()
+                        .plusDays(Job.getMaximumValidDayRangeFromToday()));
     }
 
     /////////////add or remove a job /////////////////////////////////////////
@@ -135,7 +138,7 @@ public final class JobCollection implements Serializable {
      * to encountering illegal behavior or it will have removed one Job and
      * be 1 Job smaller in size.  Exception behavior is detailed below
      * @param jobToRemove //
-     * @param jobRemoverUserID //
+     * @param parkManager //
      * @throws LessThanMinDaysAwayException The job to be deleted was too
      * near in the future, deleting it was not allowed
      * @throws UserNotFoundException The user attempting to delete this Job
@@ -147,9 +150,9 @@ public final class JobCollection implements Serializable {
      * was not met.  The collection is not of size n-1.
      */
     public void removeJobFromCollection(final Job jobToRemove,
-                                        final UserID jobRemoverUserID)
+                                        final ParkManager parkManager)
             throws LessThanMinDaysAwayException,
-            JobIDNotFoundInCollectionException {
+            JobIDNotFoundInCollectionException, InvalidUserException {
 
         JobID jobToRemoveID = jobToRemove.getID();
 
@@ -163,6 +166,10 @@ public final class JobCollection implements Serializable {
         		.isAfter(jobToRemove.getBeginDateTime())) {
             //Job is too near in the future, not enough buffer time, can't be removed
             throw new LessThanMinDaysAwayException("This job begins soon, it cannot be removed");
+        }
+
+        if (!parkManager.equals(jobToRemove.getJobCreator())) {
+            throw new InvalidUserException();
         }
         //all conditions passed, job is removed from collection
         jobMap.remove(jobToRemoveID);
@@ -185,16 +192,4 @@ public final class JobCollection implements Serializable {
      public boolean containsJobID(JobID id) {
          return jobMap.containsKey(id);
      }
-
-    public static Comparator<Job> getChronologicalJobComparator() {
-    	class ChronologicalComparator implements Comparator<Job> {
-    		@Override
-            public int compare(Job o1, Job o2) {
-                String s1 = o1.getName();
-                String s2 = o2.getName();
-                return s1.compareTo(s2);
-            }
-    	}
-    	return new ChronologicalComparator();
-    }
 }

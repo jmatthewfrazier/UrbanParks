@@ -88,10 +88,9 @@ public class UrbanParksData implements Serializable {
 					    ParkID(1)), new JobID(10), LocalDateTime.now()
 					    .plusDays(29), LocalDateTime.now().plusDays(30),
 					    "We'll be planting trees.", pm));
-		    } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException |
-				    InvalidJobEndDateException | InvalidJobLengthException e) {
-			    e.printStackTrace();
-		    } catch (UrbanParksSystemOperationException e) {
+		    } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException
+				    | InvalidJobEndDateException | InvalidJobLengthException
+				    | UrbanParksSystemOperationException e) {
 			    e.printStackTrace();
 		    }
 
@@ -99,9 +98,8 @@ public class UrbanParksData implements Serializable {
 		    if (vol.getJobList().size() == 0) {
 			    try {
 				    assign(vol, job);
-			    } catch (VolunteerDailyJobLimitException e) {
-				    e.printStackTrace();
-			    } catch (LessThanMinDaysAwayException e) {
+			    } catch (VolunteerDailyJobLimitException
+					    | LessThanMinDaysAwayException e) {
 				    e.printStackTrace();
 			    }
 
@@ -125,21 +123,12 @@ public class UrbanParksData implements Serializable {
 
     public void unsubmitParkJob(final Job jobToRemove)
 		    throws LessThanMinDaysAwayException,
-		    JobIDNotFoundInCollectionException {
-        try {
-            jobs.removeJobFromCollection(jobToRemove,
-                    this.getCurrentUser().getID());
-	        ((ParkManager) this.getCurrentUser()).removeJob(jobToRemove);
-        } catch (JobIDNotFoundInCollectionException e) {
-            throw new JobIDNotFoundInCollectionException();
-        } catch (LessThanMinDaysAwayException e) {
-            throw new LessThanMinDaysAwayException();
-        }
-
+		    JobIDNotFoundInCollectionException, InvalidUserException {
+        jobs.removeJobFromCollection(jobToRemove, this.getCurrentUser());
+        ((ParkManager) this.getCurrentUser()).removeJob(jobToRemove);
     }
 
     public List<Job> getAllFutureJobs() {
-        //TODO - do we implement some s rule check here also?
         return jobs.getAllFutureJobsFromToday();
     }
 

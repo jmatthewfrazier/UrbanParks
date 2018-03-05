@@ -9,8 +9,8 @@ import java.util.List;
 
 public final class Job implements Serializable {
 
-    public static final int MAX_NUM_DAYS_FROM_TODAY = 60;
-    public static final int MAX_JOB_LENGTH_IN_DAYS = 4;
+    private static final int MAX_NUM_DAYS_FROM_TODAY = 60;
+    private static final int MAX_JOB_LENGTH_IN_DAYS = 4;
 
 	private List<Volunteer> volunteerList;
     private String name;
@@ -19,24 +19,34 @@ public final class Job implements Serializable {
     private LocalDateTime beginDateTime;
     private LocalDateTime endDateTime;
     private String description;
+    private ParkManager jobCreator;
 
     public Job(final String name, final Park park, JobID jobID,
                final LocalDateTime beginDate, final LocalDateTime endDate,
                final String description, final ParkManager jobCreator) {
-    	volunteerList = new ArrayList<>();
+    	this.volunteerList = new ArrayList<>();
         this.name = name;
         this.park = park;
         this.ID = jobID;
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
+        this.jobCreator = jobCreator;
+    }
+
+    public static int getMaxJobLengthInDays() {
+    	return MAX_JOB_LENGTH_IN_DAYS;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
 
-    /**
+	public ParkManager getJobCreator() {
+		return jobCreator;
+	}
+
+	/**
      * Checks if a Volunteer is already signed up for a job that has dates that
      * conflict with this job.
      * @param volunteer is the volunteer to check for conflicting jobs in.
