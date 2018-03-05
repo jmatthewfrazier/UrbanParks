@@ -127,18 +127,10 @@ public final class JobCollection implements Serializable {
 
 
     /**
-     * @pre-condition This method expects this JobCollection class holds Job
-     * objects which in turn posses a JobID object and a UserID object.
-     * These two ID objects will be used to find a Job to remove from this
-     * collection, permanently.
-     * This method verifies the Job being deleted was also created by the
-     * same user.  A user may only delete jobs they created, this ensures
-     * security and appropriate user roles.
-     * @post-condition This method will either have thrown an excepetion due
-     * to encountering illegal behavior or it will have removed one Job and
-     * be 1 Job smaller in size.  Exception behavior is detailed below
-     * @param jobToRemove //
-     * @param parkManager //
+     * Removes jobToRemove from this job collection.
+     * @param jobToRemove is the job that should be removed.
+     * @param parkManager is the Park Manager that is attempting to remove
+     * jobToRemove.
      * @throws LessThanMinDaysAwayException The job to be deleted was too
      * near in the future, deleting it was not allowed
      * @throws UserNotFoundException The user attempting to delete this Job

@@ -32,8 +32,8 @@ public class UrbanParksData implements Serializable {
 
 	    Park park = new Park("Hyde Park", new ParkID(1));
 	    Job job = new Job("Clean Up", park, new JobID(1),
-			    LocalDateTime.now().plusDays(1),
-			    LocalDateTime.now().plusDays(2), "Clean up the park" +
+			    LocalDateTime.now().plusDays(5),
+			    LocalDateTime.now().plusDays(6), "Clean up the park" +
 			    ".", pm);
 
         if (users.isEmpty()) {
@@ -99,16 +99,16 @@ public class UrbanParksData implements Serializable {
 			    try {
 				    assign(vol, job);
 			    } catch (Exception e) {
-			    	//Do nothing
-			    } finally {
-			    	
+				    e.printStackTrace();
 			    }
 
 		    }
 	    }
     }
 
-    public void assign(Volunteer volunteer, Job job) throws Exception {
+    public void assign(Volunteer volunteer, Job job) throws
+		    Exception {
+
     	job.addVolunteer(volunteer);
     	volunteer.signUpForJob(job);
     }

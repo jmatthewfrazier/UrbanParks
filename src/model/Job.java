@@ -88,15 +88,9 @@ public final class Job implements Serializable {
     }
 
     /**
-     * A method to determine if this Job spans an acceptable range of days.
-     * The maximum range of days is determined by client business rules.
-     * LocalDateTime will add n days to the current date with the current date
-     * being counted as 0 not 1.  For example, 12/31/1999 plus 3 days will result in
-     * 1/3/2000.  Valid in this context means the length of time this Job covers is
-     * not in violation of proscribed business rules.
+     * Determines if this Job's length is <= MAX_JOB_LENGTH_IN_DAYS.
      *
-     * @return true if day count of this Job does not violate any business rules
-     * pertaining to the number of days the job spans.
+     * @return true iff day count of this Job is <= MAX_JOB_LENGTH_IN_DAYS.
      */
     public boolean isJobLengthValid() {
 	    LocalDateTime maxValidJobEndDate =
