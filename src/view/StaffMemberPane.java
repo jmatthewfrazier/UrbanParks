@@ -1,6 +1,7 @@
 package view;
 
-import exceptions.UrbanParksSystemOperationException;
+import exceptions.InvalidJobCollectionCapacityException;
+import exceptions.InvalidUserException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -11,6 +12,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import model.Job;
 import model.UrbanParksData;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.function.UnaryOperator;
 
 public class StaffMemberPane extends StackPane {
 	
@@ -57,13 +63,12 @@ public class StaffMemberPane extends StackPane {
 		border.setCenter(v);
 		getChildren().add(border);
 
-		viewJobsBtn.setOnAction(event -> {
-			border.setCenter(getJobsPane(border));
-		});
-		
-		setJobCapacityBtn.setOnAction(event -> {
-			border.setCenter(getJobCapacityPane(border));
-		});
+		viewJobsBtn.setOnAction(event -> border.setCenter(getJobsPane(border,
+				data.getJobs().getList())));
+
+
+		setJobCapacityBtn.setOnAction(event ->
+				border.setCenter(getJobCapacityPane(border)));
 
 		logOutBtn.setOnAction(event -> {
 			getChildren().remove(border);
@@ -72,7 +77,7 @@ public class StaffMemberPane extends StackPane {
 		});
 	}
 
-	private final ScrollPane getJobsPane(Pane root) {
+	private final ScrollPane getJobsPane(BorderPane root, List<Job> jobList) {
 		final ScrollPane sp = new ScrollPane();
 		final VBox myJobsPane = new VBox();
 		final Label label = new Label("Upcoming Jobs");
@@ -103,24 +108,34 @@ public class StaffMemberPane extends StackPane {
 		DatePicker datePicker2 = new DatePicker();
 		vbox2.getChildren().addAll(filterBLbl, datePicker2);
 
-		hbox.getChildren().addAll(vbox1, vbox2);
+
+		Button filterBtn = new Button("Filter");
+		filterBtn.setOnAction(event -> {
+			List<Job> filteredJobs = data.getJobsInDateRange(LocalDateTime.of
+					(datePicker1.getValue(), LocalTime.MIDNIGHT),
+					LocalDateTime.of(datePicker2.getValue(), LocalTime.MIDNIGHT));
+			root.getChildren().clear();
+			root.setCenter(getJobsPane(root, filteredJobs));
+		});
+
+		hbox.getChildren().addAll(vbox1, vbox2, filterBtn);
 		myJobsPane.getChildren().add(hbox);
 		
-		int i = 0;
-		for (final Job job : data.getJobs().getList()) {
+		for (final Job job : jobList) {
 			final HBox jobEntry = new HBox();
-			final RadioButton rb = new RadioButton("" + i);
-			rb.setToggleGroup(jobGroup);
-			if (i == 0) rb.setSelected(true);
-			i++;
+
 			final Label nameField = new Label(job.getName());
 			final Label startField =
-					new Label(job.getBeginDateTime().toString());
+					new Label(job.getBeginDateTime().getMonth() + " " + job
+							.getBeginDateTime().getDayOfMonth() + ", " + job
+							.getBeginDateTime().getYear());
 			final Label endField =
-					new Label(job.getEndDateTime().toString());
+					new Label(job.getEndDateTime().getMonth() + " " + job
+							.getEndDateTime().getDayOfMonth() + ", " + job
+							.getEndDateTime().getYear());
 			final Label parkField = new Label(job.getPark().toString());
 
-			jobEntry.getChildren().addAll(rb, nameField, startField, endField,
+			jobEntry.getChildren().addAll(nameField, startField, endField,
 					parkField);
 			jobEntry.setSpacing(15);
 
@@ -132,7 +147,7 @@ public class StaffMemberPane extends StackPane {
 		return sp;
 	}
 	
-	private final Pane getJobCapacityPane(Pane root) {
+	private final Pane getJobCapacityPane(BorderPane root) {
 		final BorderPane border = new BorderPane();
 		final VBox jobCapacityData = new VBox();
 
@@ -156,29 +171,45 @@ public class StaffMemberPane extends StackPane {
         currentNum.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
         
         final TextField capacityField = new TextField();
+
+		UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+			String input = change.getText();
+			if (input.matches("[0-9]*")) {
+				return change;
+			}
+			return null;
+		};
+        capacityField.setTextFormatter(new TextFormatter<String>(integerFilter));
+
         final Button setJobCapacityBtn = new Button("Set New Job Capacity");
 		final HBox capacityBox = new HBox();
 		capacityBox.getChildren().addAll(setJobCapacityBtn, capacityField);
 		
 		jobCapacityData.getChildren().addAll(title, currentNum, capacityBox);
 
-		String text = capacityField.getCharacters().toString();
+
 		setJobCapacityBtn.setOnAction(event -> {
-			boolean isNumber = true;
+			try {
+				data.setJobCollectionCapacity(Integer.valueOf(capacityField
+						.getText()));
+			} catch (InvalidJobCollectionCapacityException | InvalidUserException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Urban Parks");
+				alert.setHeaderText("Job Capacity Error");
 
-			for (int i = 0; i < text.length(); i++) {
-				if (text.charAt(i) < '0' || text.charAt(i) > '9') {
-					isNumber = false;
+				if (e instanceof InvalidJobCollectionCapacityException) {
+					alert.setContentText("Sorry, the capacity you specified " +
+							"is invalid. Please choose a non-negative integer" +
+							".");
+				} else {
+					alert.setContentText("Sorry, you do not have permission " +
+							"to change the job collection capacity.");
 				}
+
 			}
 
-			if (isNumber) {
-				try {
-					data.setJobCollectionCapacity(Integer.valueOf(text));
-				} catch (UrbanParksSystemOperationException e) {
-					e.printStackTrace();
-				}
-			}
+			root.getChildren().clear();
+			root.setCenter(getJobCapacityPane(root));
 		});
 
 		border.setTop(userInfo);

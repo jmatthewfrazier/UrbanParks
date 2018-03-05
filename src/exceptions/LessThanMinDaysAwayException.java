@@ -2,7 +2,11 @@ package exceptions;
 
 public class LessThanMinDaysAwayException extends Exception {
 
-	private String msgString = "";
+	private String msgString;
+
+	public LessThanMinDaysAwayException() {
+		this("");
+	}
 
 	public LessThanMinDaysAwayException(final String paramMsgString) {
 

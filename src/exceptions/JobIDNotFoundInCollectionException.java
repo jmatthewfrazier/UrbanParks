@@ -1,10 +1,11 @@
 package exceptions;
 
-/**
- * Created by dave on 2/17/18.
- */
 public class JobIDNotFoundInCollectionException extends Exception {
-    private String msgString = "";
+    private String msgString;
+
+    public JobIDNotFoundInCollectionException() {
+        this("");
+    }
 
     public JobIDNotFoundInCollectionException(final String paramMsgString) {
 

@@ -57,20 +57,6 @@ public final class JobCollection implements Serializable {
     public List<Job> getList() {
         return new ArrayList<>(jobMap.values());
     }
-
-//    public ArrayList<Job> getJobArrayListFilterByUserID(final UserID paramUserID) {
-//        ArrayList<Job> jobsFilteredByUserID = new ArrayList<>();
-//            for (Job j : this.getJobMap().values()) {
-//                if (j.getJobCreatorUserID().equals(paramUserID)) {
-//                    jobsFilteredByUserID.add(j);
-//                }
-//        } return jobsFilteredByUserID;
-//    }
-
-
-//    private Map<JobID, Job> getJobMap() {
-//        return jobMap;
-//    }
     
     /**
      * Creates and returns a list of all jobs in a specified date range.
@@ -119,8 +105,6 @@ public final class JobCollection implements Serializable {
             throw new InvalidJobEndDateException("Sorry, the end date of that" +
                     "job is too far in the future");
         } else if (jobMap.containsKey(jobToAdd.getID())) {
-            System.out.println(jobToAdd.getID());
-            System.out.println(jobMap.get(jobToAdd.getID()));
             throw new JobCollectionDuplicateKeyException("A Job matching that" +
                     "key value is already present in the Job collection.");
         } else {

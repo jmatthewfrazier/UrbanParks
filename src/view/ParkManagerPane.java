@@ -1,5 +1,7 @@
 package view;
 
+import exceptions.JobIDNotFoundInCollectionException;
+import exceptions.LessThanMinDaysAwayException;
 import exceptions.UrbanParksSystemOperationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,7 +72,7 @@ public class ParkManagerPane extends StackPane {
 		});
 	}
 
-	private final ScrollPane getUpcomingJobsPane(Pane root) {
+	private final ScrollPane getUpcomingJobsPane(BorderPane root) {
 		final VBox myJobsPane = new VBox();
 		final Label label = new Label("My Upcoming Jobs");
 		final Button backBtn = new Button("Back");
@@ -93,17 +95,35 @@ public class ParkManagerPane extends StackPane {
 			final HBox jobEntry = new HBox();
 			final Label nameField = new Label(job.getName());
 			final Label startField =
-					new Label(job.getBeginDateTime().toString());
+					new Label(job.getBeginDateTime().getMonth() + " " + job
+							.getBeginDateTime().getDayOfMonth() + ", " + job
+							.getBeginDateTime().getYear());
 			final Label endField =
-					new Label(job.getEndDateTime().toString());
+					new Label(job.getEndDateTime().getMonth() + " " + job
+							.getEndDateTime().getDayOfMonth() + ", " + job
+							.getEndDateTime().getYear());
 			final Label parkField = new Label(job.getPark().toString());
 			final Button cancelBtn = new Button("Cancel");
 
 			cancelBtn.setOnAction(event -> {
 				try {
 					data.unsubmitParkJob(job);
-				} catch (UrbanParksSystemOperationException e) {
-					e.printStackTrace();
+					root.setCenter(getUpcomingJobsPane(root));
+				} catch (LessThanMinDaysAwayException
+						| JobIDNotFoundInCollectionException e) {
+
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Urban Parks");
+					alert.setHeaderText("Invalid Job Cancellation");
+					if (e instanceof LessThanMinDaysAwayException) {
+						alert.setContentText("Sorry, this job is too soon in " +
+								"the future to cancel.");
+					} else {
+						alert.setContentText("Sorry, you do not have " +
+								"permission to cancel this job.");
+					}
+
+					alert.showAndWait();
 				}
 			});
 
@@ -176,8 +196,16 @@ public class ParkManagerPane extends StackPane {
 					detailsTextArea.getAccessibleText(), data.getCurrentUser());
 
 			try {
-				data.addNewJobByParkManager(data.getCurrentUser(),
-						newJob);
+				data.addNewJobByParkManager(data.getCurrentUser(), newJob);
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				alert.setTitle("Urban Parks");
+				alert.setHeaderText("New job submitted.");
+				alert.setContentText("Your job was successfully submitted!");
+
+				alert.showAndWait();
+
+				root.getChildren().clear();
+				getParkManagerPane();
 			} catch (UrbanParksSystemOperationException e) {
 				e.printStackTrace(); //TODO
 			}
