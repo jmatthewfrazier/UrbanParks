@@ -1,10 +1,7 @@
 package exceptions;
 
-/**
- * Created by dave on 2/8/18.
- */
 public class JobCollectionDuplicateKeyException extends Exception {
-    private String msgString = "";
+    private String msgString;
 
     public JobCollectionDuplicateKeyException(final String paramString) {
 
