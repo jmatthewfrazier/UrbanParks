@@ -8,19 +8,19 @@ import java.util.*;
 
 public final class JobCollection implements Serializable {
 
-    private int MAX_CAPACITY = 20;
+    private int MAX_CAPACITY = 10;
 
-    public final static int MIN_DAYS_REMOVAL_BUFFER = 3;
+    private final static int MIN_DAYS_REMOVAL_BUFFER = 3;
 
     private Map<JobID, Job> jobMap;
 
     public JobCollection() {
         this.jobMap = new HashMap<>();
     }
-    
+
     /**
      * Sets the max number of jobs that can be in the system at once.
-     * 
+     *
      * @param user is the User that is currently logged in to the system.
      * @param capacity is the new job capacity number.
      * @throws InvalidJobCollectionCapacityException iff capacity is not a valid
@@ -61,7 +61,7 @@ public final class JobCollection implements Serializable {
                 && capacity.intValue() > 0;
     }
 
-    /////////////fetch a collection of jobs ///////////////////////////////////
+    /////////////fetch a collection of jobs //////////////////////////////////////
 
     public List<Job> getList() {
         return new ArrayList<>(jobMap.values());
@@ -168,11 +168,7 @@ public final class JobCollection implements Serializable {
         jobMap.remove(jobToRemoveID);
     }
 
-    /////////////////////////recycling ////////////////////////////////////////  
-
-     public int size() {
-         return jobMap.size();
-     }
+    /////////////////////////recycling ////////////////////////////////////////
 
      public int getMaxCapacity() {
          return MAX_CAPACITY;
@@ -201,7 +197,4 @@ public final class JobCollection implements Serializable {
     	}
     	return new ChronologicalComparator();
     }
-
-
-    //end Job Collection class
 }

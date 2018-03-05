@@ -88,42 +88,6 @@ public class UrbanParksData implements Serializable {
 					    ParkID(1)), new JobID(10), LocalDateTime.now()
 					    .plusDays(29), LocalDateTime.now().plusDays(30),
 					    "We'll be planting trees.", pm));
-//			    jobs.addJob(new Job("Bird House Making", parks.getPark(new
-//					    ParkID(1)), new JobID(11), LocalDateTime.now()
-//					    .plusDays(23), LocalDateTime.now().plusDays(24),
-//					    "Make some bird houses for the swallows.", pm));
-//			    jobs.addJob(new Job("Picnic Bench Cleaning", parks.getPark(new
-//					    ParkID(1)), new JobID(12), LocalDateTime.now()
-//					    .plusDays(13), LocalDateTime.now().plusDays(13),
-//					    "Cleaning picnic benches for the spring.", pm));
-//			    jobs.addJob(new Job("Nature Trail Maintenance", parks.getPark
-//					    (new ParkID(2)), new JobID(13), LocalDateTime.now()
-//					    .plusDays(31), LocalDateTime.now().plusDays(32),
-//					    "Maintenance on the nature trail.", pm));
-//			    jobs.addJob(new Job("Dock Maintenance", parks.getPark(new
-//					    ParkID(2)), new JobID(14), LocalDateTime.now()
-//					    .plusDays(20), LocalDateTime.now().plusDays(21),
-//					    "Replacing boards on the dock at the lake.", pm));
-//			    jobs.addJob(new Job("Bridge Construction", parks.getPark(new
-//					    ParkID(2)), new JobID(15), LocalDateTime.now()
-//					    .plusDays(47), LocalDateTime.now().plusDays(48),
-//					    "Build a bridge for the washed out trail.", pm));
-//			    jobs.addJob(new Job("Remove Weeds", parks.getPark(new
-//					    ParkID(2)), new JobID(16), LocalDateTime.now()
-//					    .plusDays(50), LocalDateTime.now().plusDays(51),
-//					    "Removing hazardous plants.", pm));
-//			    jobs.addJob(new Job("Squirrel Habitat", parks.getPark(new
-//					    ParkID(1)), new JobID(17), LocalDateTime.now()
-//					    .plusDays(60), LocalDateTime.now().plusDays(61),
-//					    "Construct a squirrel habitat for the petting zoo.", pm));
-//			    jobs.addJob(new Job("Ranger Station Landscaping", parks.getPark
-//					    (new ParkID(1)), new JobID(18), LocalDateTime.now()
-//					    .plusDays(38), LocalDateTime.now().plusDays(39),
-//					    "Landscaping around the ranger station.", pm));
-//			    jobs.addJob(new Job("Trail Sign Construction", parks.getPark
-//					    (new ParkID(2)), new JobID(19), LocalDateTime.now()
-//					    .plusDays(42), LocalDateTime.now().plusDays(43),
-//					    "Build new trail markers.", pm));
 		    } catch (MaxPendingJobsException | JobCollectionDuplicateKeyException |
 				    InvalidJobEndDateException | InvalidJobLengthException e) {
 			    e.printStackTrace();
@@ -174,19 +138,8 @@ public class UrbanParksData implements Serializable {
 
     }
 
-    /**
-     * Updates Volunteer's job list so that if a job was removed from the
-     * master list, it will be removed from the Volunteer's job list.
-     */
-    public void updateVolunteerList() {
-    	if (getCurrentUser().getUserRole() == UserRole.VOLUNTEER) {
-    		Volunteer user = (Volunteer) currentUser;
-    		user.updateJobList(getJobs());
-    	}
-    }
-
     public List<Job> getAllFutureJobs() {
-        //TODO - do we implement some business rule check here also?
+        //TODO - do we implement some s rule check here also?
         return jobs.getAllFutureJobsFromToday();
     }
 
@@ -220,19 +173,6 @@ public class UrbanParksData implements Serializable {
         } catch (InvalidUserException e) {
         	throw new InvalidUserException("You must be a "
         			+ "Staff Member to do that.");
-        }
-    }
-
-    public int getJobCollectionCapacity() {
-        return jobs.getMaxCapacity();
-    }
-
-    public User getUserByUserID (final UserID userIDToSearchFor)
-            throws UserNotFoundException {
-        if (users.containsUserID(userIDToSearchFor)) {
-            return users.getUser(userIDToSearchFor);
-        } else {
-            throw new UserNotFoundException("That User ID was not found.");
         }
     }
 

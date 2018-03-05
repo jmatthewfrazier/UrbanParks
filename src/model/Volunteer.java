@@ -57,11 +57,11 @@ public final class Volunteer extends User {
 		}
 		jobList.add(newJob);
 	}
-	
+
     /**
      * Tests if the dates of newJob will conflict with any job the Volunteer is
      * currently signed up for and if the job is far enough in the future.
-     * @param newJob is the job that the Volunteer is interested in signing up 
+     * @param newJob is the job that the Volunteer is interested in signing up
      * for.
      * @return true iff the volunteer won't break any business rules by signing
      * up for newJob.
@@ -105,31 +105,13 @@ public final class Volunteer extends User {
     		jobList.remove(jobToRemove);
 		}
 	}
-    
-    /**
-     * Removes jobs from jobList that are no longer on the list of all jobs.
-     * 
-     * @param masterJobs is the current master job list.
-     */
-    public void updateJobList(JobCollection masterJobs) {
-    	for (Job job : jobList) {
-    		if (!masterJobs.containsJobID(job.getID())) {
-    			this.removeJobFromMyRegisteredJobs(job);
-    		}
-    	}
-    }
-    
+
     public int getMinDaysAwaySignUp() {
     	return MINIMUM_SIGN_UP_DAYS_OUT;
     }
-    
-    public void setMinDaysAwaySignUp(int newValue) {
-    	MINIMUM_SIGN_UP_DAYS_OUT = newValue;
-    }
+
 
     public List<Job> getJobList() {
    	    return new ArrayList<>(jobList);
     }
-
-    //end Volunteer class
 }

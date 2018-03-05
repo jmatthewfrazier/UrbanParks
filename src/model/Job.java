@@ -30,18 +30,17 @@ public final class Job implements Serializable {
         this.beginDateTime = beginDate;
         this.endDateTime = endDate;
         this.description = description;
-//        this.jobCreator = jobCreator;
     }
 
     public static int getMaximumValidDayRangeFromToday() {
         return MAX_NUM_DAYS_FROM_TODAY;
     }
-    
+
     /**
      * Checks if a Volunteer is already signed up for a job that has dates that
      * conflict with this job.
      * @param volunteer is the volunteer to check for conflicting jobs in.
-     * @throws VolunteerDailyJobLimitException iff the volunteer has a job with 
+     * @throws VolunteerDailyJobLimitException iff the volunteer has a job with
      * dates that conflict with thie job's dates.
      */
     public final void addVolunteer(final Volunteer volunteer)
@@ -188,10 +187,6 @@ public final class Job implements Serializable {
 
     public void setPark(final Park park) {
         this.park = park;
-    }
-    
-    public void setDescription(final String description) {
-    	this.description = description;
     }
 }
 
