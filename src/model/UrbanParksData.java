@@ -108,9 +108,7 @@ public class UrbanParksData implements Serializable {
 	    }
     }
 
-    public void assign(Volunteer volunteer, Job job) throws
-		    Exception {
-
+    public void assign(Volunteer volunteer, Job job) throws Exception {
     	job.addVolunteer(volunteer);
     	volunteer.signUpForJob(job);
     }
