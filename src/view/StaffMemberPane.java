@@ -2,6 +2,7 @@ package view;
 
 import exceptions.InvalidJobCollectionCapacityException;
 import exceptions.InvalidUserException;
+import exceptions.UrbanParksSystemOperationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -24,8 +25,6 @@ public class StaffMemberPane extends StackPane {
 
 	private final UrbanParksData data;
 	private final HBox userInfo;
-	private ToggleGroup jobGroup;
-
 
 	public StaffMemberPane(UrbanParksData data, HBox userInfo) {
 		super();
@@ -205,8 +204,8 @@ public class StaffMemberPane extends StackPane {
 					alert.setContentText("Sorry, you do not have permission " +
 							"to change the job collection capacity.");
 				}
-
 			}
+
 
 			root.getChildren().clear();
 			root.setCenter(getJobCapacityPane(root));
