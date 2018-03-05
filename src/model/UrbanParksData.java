@@ -98,8 +98,7 @@ public class UrbanParksData implements Serializable {
 		    if (vol.getJobList().size() == 0) {
 			    try {
 				    assign(vol, job);
-			    } catch (VolunteerDailyJobLimitException
-					    | LessThanMinDaysAwayException e) {
+			    } catch (Exception e) {
 				    e.printStackTrace();
 			    }
 
@@ -107,11 +106,11 @@ public class UrbanParksData implements Serializable {
 	    }
     }
 
-    public void assign(Volunteer volunteer, Job job)
-		    throws VolunteerDailyJobLimitException,
-		    LessThanMinDaysAwayException {
-	    job.addVolunteer(volunteer);
-	    volunteer.signUpForJob(job);
+    public void assign(Volunteer volunteer, Job job) throws
+		    Exception {
+
+    	job.addVolunteer(volunteer);
+    	volunteer.signUpForJob(job);
     }
 
     public void cancelAssignment(Volunteer volunteer, Job job) {

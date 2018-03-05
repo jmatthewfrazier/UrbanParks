@@ -55,18 +55,23 @@ public final class Job implements Serializable {
      */
     public final void addVolunteer(final Volunteer volunteer)
 		    throws VolunteerDailyJobLimitException {
+    	boolean canAdd = true;
 
     	for (Job job : volunteer.getJobList()) {
     		for (LocalDateTime date = job.getBeginDateTime(); date.compareTo
 				    (job.endDateTime) <= 0; date = date.plusDays(1)) {
     			if (this.getBeginDateTime().equals(date)
 					    || this.getEndDateTime().equals(date)) {
-    				throw new VolunteerDailyJobLimitException();
+    				canAdd = false;
 			    }
 		    }
 	    }
 
-        this.volunteerList.add(volunteer);
+		if (canAdd) {
+    		this.volunteerList.add(volunteer);
+		} else {
+			throw new VolunteerDailyJobLimitException();
+		}
     }
 
     public final boolean hasVolunteer(Volunteer volunteer) {

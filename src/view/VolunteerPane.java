@@ -195,8 +195,7 @@ public class VolunteerPane extends StackPane {
 			try {
 				data.assign(data.getCurrentUser(), job);
 				root.setCenter(getFutureJobsPane(root));
-			} catch (VolunteerDailyJobLimitException | 
-					LessThanMinDaysAwayException e) {
+			} catch (Exception e) {
 
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setTitle("Urban Parks");
@@ -206,14 +205,13 @@ public class VolunteerPane extends StackPane {
 					alert.setContentText("Sorry, you are currently " +
 							"already signed up for a job on this " + 
 							"date.");
-				} else {
+				} else if (e instanceof LessThanMinDaysAwayException){
 					alert.setContentText("Sorry, this job is too soon" +
 							" in the future to sign up for.");
 				}
 
 				alert.showAndWait();
 			}
-			root.setCenter(getFutureJobsPane(root));
 		});
 		
 		buttonBox.getChildren().addAll(backBtn, signUpBtn);

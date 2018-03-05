@@ -32,30 +32,39 @@ public final class Volunteer extends User {
      * @throws LessThanMinDaysAwayException iff the job is less than the 
      * MINIMUM_SIGN_UP_DAYS_OUT.
      */
-    public void signUpForJob(Job newJob) throws VolunteerDailyJobLimitException,
-		    LessThanMinDaysAwayException {
+    public void signUpForJob(Job newJob) throws Exception {
+    	boolean canAdd = true;
+    	Exception e = new Exception();
 
    	    if (newJob.getBeginDateTime().isBefore(LocalDateTime
 		        .now().plusDays(getMinDaysAwaySignUp()))) {
-   	    	throw new LessThanMinDaysAwayException("Job begins too soon");
+   	    	e = new LessThanMinDaysAwayException("Job begins too soon");
         }
 
 		for (Job job : jobList) {
 			if (job.isStartAtEndDate(newJob)) {
-				throw new VolunteerDailyJobLimitException("Candidate job " +
+				canAdd = false;
+				e = new VolunteerDailyJobLimitException("Candidate job " +
 						"begins on a date of a job that the volunteer is " +
 						"currently signed up for.");
 			} else if (job.isEndAtStartDate(newJob)) {
-				throw new VolunteerDailyJobLimitException("Candidate job " +
+				canAdd = false;
+				e = new VolunteerDailyJobLimitException("Candidate job " +
 						"ends on a date of a job that the volunteer is " +
 						"currently signed up for.");
 			} else if (job.isOverlapping(newJob)) {
-				throw new VolunteerDailyJobLimitException("Candidate job " +
+				canAdd = false;
+				e = new VolunteerDailyJobLimitException("Candidate job " +
 						"is extend across with one of the jobs you have " +
 						"signed up already.");
 			}
 		}
-		jobList.add(newJob);
+
+		if (canAdd) {
+   	    	jobList.add(newJob);
+		} else {
+   	    	throw e;
+		}
 	}
 
     /**

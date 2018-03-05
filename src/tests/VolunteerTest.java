@@ -24,8 +24,7 @@ public class VolunteerTest {
 	private Job testJobInVolList;
 	
 	@Before
-	public void setup() throws VolunteerDailyJobLimitException, 
-		LessThanMinDaysAwayException {
+	public void setup() throws Exception {
 		pm = new ParkManager("Test", "PM", new UserID("testpm"));
 		testVolunteer.signUpForJob(testJobInVolList);
 		testJobInVolList = new Job("Test", parkEastSide, new JobID
@@ -34,7 +33,7 @@ public class VolunteerTest {
 	
 	@Test(expected = LessThanMinDaysAwayException.class)
 	public void signUpForJob_jobLessThanMinDaysInFuture_throwsException() 
-		throws LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
+		throws Exception {
 		
 		LocalDateTime beginDateLessThanMinDaysAway = LocalDateTime.now()
 			.plusDays(testVolunteer.getMinDaysAwaySignUp() - 1);
@@ -47,7 +46,7 @@ public class VolunteerTest {
 	
 	@Test(expected = VolunteerDailyJobLimitException.class)
 	public void signUpForJob_jobBeginsOnJobEndDateInVolList_throwsException() 
-		throws LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
+		throws Exception {
 		
 		LocalDateTime beginDateOnJobEndDateInVolList = endDateTime;
 		Job jobBeginsOnJobEndDateInVolList = new Job("Test2", parkEastSide, 
@@ -59,7 +58,7 @@ public class VolunteerTest {
 	
 	@Test(expected = VolunteerDailyJobLimitException.class)
 	public void signUpForJob_jobEndsOnJobStartDateInVolList_throwsException() 
-		throws LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
+		throws Exception {
 		
 		LocalDateTime endDateOnJobStartDateInVolList = beginDateTime;
 		Job jobEndsOnJobStartDateInVolList = new Job("Test3", parkEastSide, 
@@ -71,7 +70,7 @@ public class VolunteerTest {
 	
 	@Test(expected = VolunteerDailyJobLimitException.class)
 	public void signUpForJob_jobOverlapsJobDateInVolList_throwsException() 
-		throws LessThanMinDaysAwayException, VolunteerDailyJobLimitException {
+		throws Exception {
 		
 		Job jobOverlapsJobDateInVolList = new Job("Test4", parkEastSide, 
 			new JobID(2), beginDateTime.minusDays(1), endDateTime.plusDays(1), 
