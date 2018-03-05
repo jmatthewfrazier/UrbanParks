@@ -6,6 +6,8 @@ import exceptions.UrbanParksSystemOperationException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -15,6 +17,7 @@ import model.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class ParkManagerPane extends StackPane {
 
@@ -44,16 +47,18 @@ public class ParkManagerPane extends StackPane {
 		Insets titleMargins = new Insets(20, 10, 0, 0);
 		VBox.setMargin(title, titleMargins);
 
-		final Button viewUpcomingJobsBtn = new Button("View Upcoming Jobs");
+		final Button viewUpcomingJobsBtn = new Button("View My Upcoming Jobs");
+		final Button viewAllJobsBtn = new Button("View All Jobs");
 		final Button makeNewJobsBtn = new Button("Add New Job");
 		final Button logOutBtn = new Button("Log out");
 
 		viewUpcomingJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);
+		viewAllJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 		makeNewJobsBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 		logOutBtn.setMaxWidth(MAX_BUTTON_WIDTH);
 
-		v.getChildren().addAll(title, viewUpcomingJobsBtn, makeNewJobsBtn,
-				logOutBtn);
+		v.getChildren().addAll(title, viewUpcomingJobsBtn, viewAllJobsBtn, 
+				makeNewJobsBtn, logOutBtn);
 
 		border.setTop(userInfo);
 		border.setCenter(v);
@@ -61,6 +66,9 @@ public class ParkManagerPane extends StackPane {
 
 		viewUpcomingJobsBtn.setOnAction(event ->
 				border.setCenter(getUpcomingJobsPane(border)));
+		
+		viewAllJobsBtn.setOnAction(event ->
+				border.setCenter(getJobsPane(border, null, null)));
 
 		makeNewJobsBtn.setOnAction(event ->
 				border.setCenter(getNewJobFormPane(border)));
@@ -91,7 +99,8 @@ public class ParkManagerPane extends StackPane {
 
 		myJobsPane.getChildren().add(label);
 
-		for (final Job job : ((ParkManager) data.getCurrentUser()).getMyFutureJobs()) {
+		for (final Job job : ((ParkManager) data.getCurrentUser())
+				.getMyFutureJobs()) {
 			final HBox jobEntry = new HBox();
 			final Label nameField = new Label(job.getName());
 			final Label startField =
@@ -103,7 +112,7 @@ public class ParkManagerPane extends StackPane {
 							.getEndDateTime().getDayOfMonth() + ", " + job
 							.getEndDateTime().getYear());
 			final Label parkField = new Label(job.getPark().toString());
-			final Button cancelBtn = new Button("Cancel");
+			final Button cancelBtn = new Button("Delete");
 
 			cancelBtn.setOnAction(event -> {
 				try {
@@ -207,7 +216,19 @@ public class ParkManagerPane extends StackPane {
 				root.getChildren().clear();
 				getParkManagerPane();
 			} catch (UrbanParksSystemOperationException e) {
-				e.printStackTrace(); //TODO
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Urban Parks");
+				alert.setHeaderText("Invalid Job Sign Up");
+//				if (e instanceof VolunteerDailyJobLimitException) {
+//					alert.setContentText("Sorry, you are currently " +
+//							"already signed up for a job on this " + 
+//							"date.");
+//				} else {
+//					alert.setContentText("Sorry, this job is too soon" +
+//							" in the future to sign up for.");
+//				}
+				alert.setContentText(e.getMsgString());
+				alert.showAndWait();
 			}
 		});
 
@@ -215,5 +236,161 @@ public class ParkManagerPane extends StackPane {
 				parkBox, detailsBox, submitBtn);
 
 		return form;
+	}
+	
+	private final ScrollPane getJobsPane(BorderPane root, LocalDate start, 
+			LocalDate end) {
+		final ScrollPane sp = new ScrollPane();
+		final VBox myJobsPane = new VBox();
+		final Label label = new Label("Upcoming Jobs");
+		List<Job> selectedJobList;
+		LocalDate startDate = start;
+		LocalDate endDate = end;
+
+		Button backBtn = new Button("Back");
+		myJobsPane.getChildren().add(backBtn);
+		backBtn.setOnAction(event -> {
+			root.getChildren().clear();
+			getParkManagerPane();
+		});
+		
+		sp.setHbarPolicy(ScrollBarPolicy.NEVER);
+		sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+
+		myJobsPane.setSpacing(15);
+		myJobsPane.setPadding(new Insets(10, 0, 0, 10));
+
+		myJobsPane.getChildren().add(label);
+
+		HBox hbox = new HBox();
+		hbox.setAlignment(Pos.BOTTOM_LEFT);
+		hbox.setSpacing(10);
+		
+		VBox vbox1 = new VBox();
+		Label filterALbl = new Label("Start of Date Range");
+		DatePicker datePicker1 = new DatePicker(startDate);
+		vbox1.getChildren().addAll(filterALbl, datePicker1);
+
+		VBox vbox2 = new VBox();
+		Label filterBLbl = new Label("End of Date Range");
+		DatePicker datePicker2 = new DatePicker(endDate);
+		vbox2.getChildren().addAll(filterBLbl, datePicker2);
+		
+		Button goBtn = new Button("Go");
+		goBtn.setOnAction(event -> {
+			LocalDate startingDate = datePicker1.getValue();
+			LocalDate endingDate = datePicker2.getValue();
+			if ((startingDate == null) || (endingDate == null)) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Message");
+				alert.setContentText("Please select two dates.");
+				alert.showAndWait();
+			} else if (endingDate.isBefore(startingDate)) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Message");
+				alert.setContentText("The start of the date range must come " + 
+				"before the end of the date range.\nPlease try again.");
+				alert.showAndWait();
+			} else {
+				root.setCenter(getJobsPane(root, startingDate, endingDate));
+			}
+		});
+		
+		Button clearBtn = new Button("Clear");
+		clearBtn.setOnAction(event -> {
+			root.setCenter(getJobsPane(root, null, null));
+		});
+		
+		if (startDate == null || endDate == null) {
+			selectedJobList = data.getJobs().getList();
+		} else {
+			selectedJobList = data.getJobsInDateRange(startDate.atStartOfDay(), 
+					endDate.atStartOfDay());
+		}
+
+		Label rangeText = new Label("Select a Date Range");
+		hbox.getChildren().addAll(rangeText, vbox1, vbox2, goBtn, clearBtn);
+		myJobsPane.getChildren().add(hbox);
+		
+		for (final Job job : selectedJobList) {
+			final HBox jobEntry = new HBox();
+			jobEntry.setAlignment(Pos.CENTER_LEFT);
+			final Label nameField = new Label(job.getName());
+			final Label startField =
+					new Label(job.getBeginDateTime().getMonth() + " " + job
+							.getBeginDateTime().getDayOfMonth() + ", " + job
+							.getBeginDateTime().getYear());
+			final Label endField =
+					new Label(job.getEndDateTime().getMonth() + " " + job
+							.getEndDateTime().getDayOfMonth() + ", " + job
+							.getEndDateTime().getYear());
+			final Label parkField = new Label(job.getPark().toString());
+			final Button viewBtn = new Button("View Details");
+			viewBtn.setOnAction(event -> {
+				myJobsPane.getChildren().clear();
+				myJobsPane.getChildren().add(viewJobDetailsPane(job, root, 
+						startDate, endDate));
+			});
+
+			jobEntry.getChildren().addAll(nameField, startField, endField,
+					parkField, viewBtn);
+			jobEntry.setSpacing(15);
+
+			myJobsPane.getChildren().addAll(jobEntry, new Separator());
+		}
+		
+		sp.setContent(myJobsPane);
+
+		return sp;
+	}
+	
+	private final VBox viewJobDetailsPane(Job job, BorderPane root, 
+			LocalDate start, LocalDate end) {
+		VBox jobDetails = new VBox();
+		jobDetails.setAlignment(Pos.CENTER_LEFT);
+		
+		Button backBtn = new Button("Back");
+		backBtn.setOnAction(event -> {
+			root.setCenter(getJobsPane(root, start, end));
+		});
+
+		Text title = new Text("Job Details");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+		Insets titleMargins = new Insets(20, 10, 0, 0);
+        VBox.setMargin(title, titleMargins);
+        
+		Insets dataMargins = new Insets(10, 10, 0, 0);
+		
+        Text jobTitle = new Text("Job Title: " + job.getName());
+        jobTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobTitle, dataMargins);
+        
+        Text jobID = new Text("Job ID: " + job.getID().getJobIDNumber());
+        jobID.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobID, dataMargins);
+        
+        Text jobStart = new Text("Start Date: " + job.getBeginDateTime()
+        		.toLocalDate());
+        jobStart.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobStart, dataMargins);
+        
+        Text jobEnd = new Text("End Date: " + job.getEndDateTime()
+        		.toLocalDate());
+        jobEnd.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobEnd, dataMargins);
+        
+        Text jobPark = new Text("Location: " + job.getPark());
+        jobPark.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobPark, dataMargins);
+        
+        Text jobDescription = new Text("Description: " + job.getDescription());
+        jobDescription.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobDescription, dataMargins);
+        jobDescription.setWrappingWidth(800);
+        
+        jobDetails.getChildren().addAll(backBtn, title, jobTitle, jobID, 
+        		jobStart, jobEnd, jobPark, jobDescription);
+		
+		return jobDetails;
 	}
 }

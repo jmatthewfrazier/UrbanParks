@@ -101,7 +101,7 @@ public class VolunteerPane extends StackPane {
 								.getEndDateTime().getDayOfMonth() + ", " + job
 								.getEndDateTime().getYear());
 				final Label parkField = new Label(job.getPark().toString());
-				final Button cancelBtn = new Button("Cancel");
+				final Button cancelBtn = new Button("Unvolunteer");
 
 				cancelBtn.setOnAction(event -> {
 					data.cancelAssignment(data.getCurrentUser(), job);
@@ -157,25 +157,8 @@ public class VolunteerPane extends StackPane {
 				final Button signUpBtn = new Button("Sign Up");
 
 				signUpBtn.setOnAction(event -> {
-					try {
-						data.assign(data.getCurrentUser(), job);
-						root.setCenter(getFutureJobsPane(root));
-					} catch (VolunteerDailyJobLimitException | LessThanMinDaysAwayException e) {
-
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Urban Parks");
-						alert.setHeaderText("Invalid Job Sign Up");
-
-						if (e instanceof VolunteerDailyJobLimitException) {
-							alert.setContentText("Sorry, you are currently " +
-									"already signed up for a job on this date.");
-						} else {
-							alert.setContentText("Sorry, this job is too soon" +
-									" in the future to sign up for.");
-						}
-
-						alert.showAndWait();
-					}
+					myJobsPane.getChildren().clear();
+					myJobsPane.getChildren().add(viewJobDetailsPane(job, root));
 				});
 
 				jobEntry.getChildren().addAll(nameField, startField, endField,
@@ -192,5 +175,87 @@ public class VolunteerPane extends StackPane {
 		sp.setContent(myJobsPane);
 
 		return sp;
+	}
+	
+	private final VBox viewJobDetailsPane(Job job, BorderPane root) {
+		VBox jobDetails = new VBox();
+		jobDetails.setAlignment(Pos.CENTER_LEFT);
+		
+		HBox buttonBox = new HBox();
+		buttonBox.setAlignment(Pos.CENTER);
+		buttonBox.setSpacing(20);
+		
+		Button backBtn = new Button("Cancel");
+		backBtn.setOnAction(event -> {
+			root.setCenter(getFutureJobsPane(root));
+		});
+		
+		Button signUpBtn = new Button("Sign Up");
+		signUpBtn.setOnAction(event -> {
+			try {
+				data.assign(data.getCurrentUser(), job);
+				root.setCenter(getFutureJobsPane(root));
+			} catch (VolunteerDailyJobLimitException | 
+					LessThanMinDaysAwayException e) {
+
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Urban Parks");
+				alert.setHeaderText("Invalid Job Sign Up");
+
+				if (e instanceof VolunteerDailyJobLimitException) {
+					alert.setContentText("Sorry, you are currently " +
+							"already signed up for a job on this " + 
+							"date.");
+				} else {
+					alert.setContentText("Sorry, this job is too soon" +
+							" in the future to sign up for.");
+				}
+
+				alert.showAndWait();
+			}
+			root.setCenter(getFutureJobsPane(root));
+		});
+		
+		buttonBox.getChildren().addAll(backBtn, signUpBtn);
+
+		Text title = new Text("Job Details");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 18));
+		Insets titleMargins = new Insets(20, 10, 0, 0);
+        VBox.setMargin(title, titleMargins);
+        
+		Insets dataMargins = new Insets(10, 10, 0, 0);
+		
+        Text jobTitle = new Text("Job Title: " + job.getName());
+        jobTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobTitle, dataMargins);
+        
+        Text jobID = new Text("Job ID: " + job.getID().getJobIDNumber());
+        jobID.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobID, dataMargins);
+        
+        Text jobStart = new Text("Start Date: " + job.getBeginDateTime()
+        		.toLocalDate());
+        jobStart.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobStart, dataMargins);
+        
+        Text jobEnd = new Text("End Date: " + job.getEndDateTime()
+        		.toLocalDate());
+        jobEnd.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobEnd, dataMargins);
+        
+        Text jobPark = new Text("Location: " + job.getPark());
+        jobPark.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobPark, dataMargins);
+        
+        Text jobDescription = new Text("Description: " + 
+        		job.getDescription());
+        jobDescription.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        VBox.setMargin(jobDescription, dataMargins);
+        jobDescription.setWrappingWidth(800);
+        
+        jobDetails.getChildren().addAll(buttonBox, title, jobTitle, jobID, 
+        		jobStart, jobEnd, jobPark, jobDescription);
+		
+		return jobDetails;
 	}
 }
